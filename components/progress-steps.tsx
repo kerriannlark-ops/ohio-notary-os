@@ -6,11 +6,11 @@ export function ProgressSteps({
   active: number;
 }) {
   return (
-    <div className="grid gap-3 md:grid-cols-4">
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       {steps.map((step, index) => (
         <div
           key={step}
-          className={`rounded-[22px] px-4 py-3 text-sm ${
+          className={`rounded-[22px] px-4 py-3 text-sm leading-6 ${
             index <= active ? "bg-ink text-parchment" : "bg-parchment/80 text-walnut"
           }`}
         >

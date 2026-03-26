@@ -9,12 +9,12 @@ const dashboardNavItems = [
 
 export function DashboardNav() {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1">
       {dashboardNavItems.map((item) => (
         <Link
           key={item.href}
           href={item.href}
-          className="rounded-full bg-parchment px-4 py-2 text-sm text-walnut"
+          className="shrink-0 rounded-full bg-parchment px-4 py-2 text-sm text-walnut"
         >
           {item.label}
         </Link>

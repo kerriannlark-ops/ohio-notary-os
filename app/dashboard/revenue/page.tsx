@@ -12,11 +12,11 @@ import {
 export default function DashboardRevenuePage() {
   return (
     <div className="space-y-6">
-      <section className="rounded-[32px] bg-white/80 p-6 shadow-card">
+      <section className="rounded-[28px] bg-white/80 p-5 shadow-card sm:rounded-[32px] sm:p-6">
         <p className="text-xs uppercase tracking-[0.26em] text-rust">Revenue view</p>
-        <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mt-3 flex flex-col gap-4 2xl:flex-row 2xl:items-end 2xl:justify-between">
           <div>
-            <h1 className="font-serif text-4xl text-ink md:text-5xl">How the business starts making money</h1>
+            <h1 className="font-serif text-4xl leading-tight text-ink md:text-5xl md:leading-none">How the business starts making money</h1>
             <p className="mt-3 max-w-3xl text-sm text-walnut/75">
               Build from employer and low-risk mobile work into RON, specialty appointments, and signing-agent packages.
             </p>
@@ -47,7 +47,7 @@ export default function DashboardRevenuePage() {
       </div>
 
       <SectionCard title="Three-lane business model" eyebrow="Build all 3, not just 1">
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 lg:grid-cols-3">
           {businessLanes.map((lane) => (
             <div key={lane.title} className="rounded-[22px] bg-parchment/80 p-4">
               <p className="font-semibold text-ink">{lane.title}</p>
@@ -58,7 +58,7 @@ export default function DashboardRevenuePage() {
       </SectionCard>
 
       <SectionCard title="Service packages" eyebrow="Offer design">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
           {servicePackages.map((service) => (
             <div key={service.title} className="rounded-[22px] bg-parchment/80 p-4">
               <p className="font-semibold text-ink">{service.title}</p>

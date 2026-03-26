@@ -37,7 +37,7 @@ export default function HomePage() {
         />
       </SectionCard>
 
-      <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid gap-6 2xl:grid-cols-[1.1fr_0.9fr]">
         <SectionCard title="Pricing snapshot" eyebrow="Ohio-compliant quoting">
           <ul className="space-y-3 text-sm text-walnut/80">
             {pricingSnapshot.map((item) => (

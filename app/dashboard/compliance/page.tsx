@@ -6,11 +6,11 @@ import { complianceRules, lawfulActChecklist, ohioRiskPoints } from "@/lib/dashb
 export default function DashboardCompliancePage() {
   return (
     <div className="space-y-6">
-      <section className="rounded-[32px] bg-white/80 p-6 shadow-card">
+      <section className="rounded-[28px] bg-white/80 p-5 shadow-card sm:rounded-[32px] sm:p-6">
         <p className="text-xs uppercase tracking-[0.26em] text-rust">Compliance view</p>
-        <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mt-3 flex flex-col gap-4 2xl:flex-row 2xl:items-end 2xl:justify-between">
           <div>
-            <h1 className="font-serif text-4xl text-ink md:text-5xl">Ohio compliance guardrails</h1>
+            <h1 className="font-serif text-4xl leading-tight text-ink md:text-5xl md:leading-none">Ohio compliance guardrails</h1>
             <p className="mt-3 max-w-3xl text-sm text-walnut/75">
               Keep these rules in front of you while you commission, start offering services, and later add RON.
             </p>

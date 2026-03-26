@@ -18,7 +18,7 @@ export default function BookingDetailsPage({
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[1.35fr_1fr]">
+    <div className="grid gap-6 2xl:grid-cols-[1.35fr_1fr]">
       <SectionCard title={appointment.clientName} eyebrow="Appointment detail">
         <div className="flex flex-wrap gap-2">
           <StatusBadge label={appointment.status} tone={appointment.blocked ? "danger" : "warning"} />

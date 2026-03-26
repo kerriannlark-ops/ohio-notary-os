@@ -16,7 +16,7 @@ export default function PricingPage() {
   return (
     <div className="space-y-6">
       <PublicHero title="Transparent pricing with Ohio fee caps clearly separated." subtitle="Statutory act fees, travel, after-hours, specialty surcharges, and RON technology fees are shown as distinct line items." />
-      <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid gap-6 2xl:grid-cols-[1.1fr_0.9fr]">
         <SectionCard title="Pricing rules" eyebrow="Client-facing disclosures">
           <ul className="space-y-3">
             <li>- In-person and in-person electronic notarial acts are capped by Ohio law at up to $5 per act.</li>

@@ -29,7 +29,7 @@ export default function JournalDetailPage({
       : ["Date and time", "Act type", "Signer name", "ID method", "Notes"];
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[1.25fr_1fr]">
+    <div className="grid gap-6 2xl:grid-cols-[1.25fr_1fr]">
       <SectionCard title={`Journal ${appointment.id}`} eyebrow="Entry requirements">
         <p className="text-sm text-walnut/75">
           {appointment.clientName} · {formatDateTime(appointment.scheduledStart)} · {formatLabel(appointment.serviceType)}

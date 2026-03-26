@@ -20,7 +20,7 @@ export default function BookNowPage() {
     <div className="space-y-6">
       <PublicHero title="Book your appointment in one guided flow." subtitle="The booking engine screens readiness, applies Ohio fee rules, blocks unsupported services, and creates a secure client portal after quote acceptance." />
       <ProgressSteps steps={bookingSteps} active={5} />
-      <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+      <div className="grid gap-6 2xl:grid-cols-[1.15fr_0.85fr]">
         <SectionCard title="Public booking flow" eyebrow="Eight steps">
           <ol className="space-y-3 text-sm text-walnut/78">
             <li>1. Choose service mode: mobile, RON, or not sure.</li>

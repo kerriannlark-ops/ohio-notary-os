@@ -13,11 +13,11 @@ function toneForStatus(status: "done" | "in_progress" | "next" | "blocked") {
 export default function DashboardLaunchPage() {
   return (
     <div className="space-y-6">
-      <section className="rounded-[32px] bg-white/80 p-6 shadow-card">
+      <section className="rounded-[28px] bg-white/80 p-5 shadow-card sm:rounded-[32px] sm:p-6">
         <p className="text-xs uppercase tracking-[0.26em] text-rust">Launch view</p>
-        <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mt-3 flex flex-col gap-4 2xl:flex-row 2xl:items-end 2xl:justify-between">
           <div>
-            <h1 className="font-serif text-4xl text-ink md:text-5xl">Commission + business launch plan</h1>
+            <h1 className="font-serif text-4xl leading-tight text-ink md:text-5xl md:leading-none">Commission + business launch plan</h1>
             <p className="mt-3 max-w-3xl text-sm text-walnut/75">
               A task-by-task view of the Ohio commission path, RON add-on, and business formation sequence.
             </p>
@@ -28,7 +28,7 @@ export default function DashboardLaunchPage() {
 
       <div className="space-y-6">
         <SectionCard title="Core filing references" eyebrow="Budget + paperwork">
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
             {feeReferences.map((item) => (
               <div key={item.label} className="rounded-[22px] bg-parchment/80 p-4">
                 <p className="font-semibold text-ink">{item.label}</p>
@@ -40,7 +40,7 @@ export default function DashboardLaunchPage() {
         </SectionCard>
 
         <SectionCard title="Critical timing windows" eyebrow="Do not miss these">
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 lg:grid-cols-3">
             {filingWindows.map((item) => (
               <div key={item.title} className="rounded-[22px] bg-parchment/80 p-4">
                 <p className="font-semibold text-ink">{item.title}</p>

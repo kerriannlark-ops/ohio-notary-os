@@ -16,6 +16,15 @@ body {
   font-family: var(--font-sans), sans-serif;
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 ::selection {
   background: rgba(169, 79, 55, 0.2);
 }

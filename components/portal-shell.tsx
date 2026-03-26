@@ -21,16 +21,16 @@ export function PortalShell({
 }) {
   return (
     <div className="space-y-6">
-      <section className="rounded-[28px] bg-white/80 p-6 shadow-card">
+      <section className="rounded-[28px] bg-white/80 p-5 shadow-card sm:p-6">
         <p className="text-xs uppercase tracking-[0.26em] text-rust">Client portal</p>
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-4">
-          <h1 className="font-serif text-4xl text-ink">{title}</h1>
-          <div className="flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-col gap-4 2xl:flex-row 2xl:items-center 2xl:justify-between">
+          <h1 className="font-serif text-3xl text-ink sm:text-4xl">{title}</h1>
+          <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1">
             {portalNav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-full bg-parchment px-4 py-2 text-sm text-walnut"
+                className="shrink-0 rounded-full bg-parchment px-4 py-2 text-sm text-walnut"
               >
                 {item.label}
               </Link>

@@ -30,11 +30,11 @@ function toneForStatus(status: "done" | "in_progress" | "next" | "blocked") {
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
-      <section className="rounded-[32px] bg-white/80 p-6 shadow-card">
+      <section className="rounded-[28px] bg-white/80 p-5 shadow-card sm:rounded-[32px] sm:p-6">
         <p className="text-xs uppercase tracking-[0.26em] text-rust">Dashboard app first</p>
-        <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mt-3 flex flex-col gap-4 2xl:flex-row 2xl:items-end 2xl:justify-between">
           <div>
-            <h1 className="font-serif text-4xl text-ink md:text-5xl">Ohio Notary Launch Command Center</h1>
+            <h1 className="font-serif text-4xl leading-tight text-ink md:text-5xl md:leading-none">Ohio Notary Launch Command Center</h1>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-walnut/75">
               This dashboard now tracks the full journey: commission prep, Ohio filing steps,
               oath and seal readiness, RON expansion, business formation, pricing, and the first
@@ -100,7 +100,7 @@ export default function DashboardPage() {
       </div>
 
       <SectionCard title="Launch phases" eyebrow="From zero to operating business">
-        <div className="grid gap-4 xl:grid-cols-2">
+        <div className="grid gap-4 2xl:grid-cols-2">
           {launchPhases.map((phase) => (
             <Link
               key={phase.slug}

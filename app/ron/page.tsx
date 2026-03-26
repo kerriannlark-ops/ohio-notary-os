@@ -18,7 +18,7 @@ export default function RonPage() {
   );
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[1.2fr_0.9fr]">
+    <div className="grid gap-6 2xl:grid-cols-[1.2fr_0.9fr]">
       <SectionCard title="RON queue" eyebrow="Online sessions">
         <div className="space-y-3">
           {ronAppointments.map((appointment) => (
