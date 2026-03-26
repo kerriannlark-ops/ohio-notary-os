@@ -1,0 +1,499 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  OWNER
+  ASSISTANT
+  BOOKKEEPER
+}
+
+enum ClientType {
+  INDIVIDUAL
+  EMPLOYER
+  LAW_FIRM
+  TITLE_COMPANY
+  HOSPITAL
+  FACILITY
+  OTHER
+}
+
+enum ContactMethod {
+  SMS
+  EMAIL
+  PHONE
+}
+
+enum AppointmentChannel {
+  EMPLOYER
+  PRIVATE
+}
+
+enum ServiceMode {
+  IN_PERSON
+  ELECTRONIC_IN_PERSON
+  RON
+}
+
+enum FacilityType {
+  OFFICE
+  HOME
+  HOSPITAL
+  NURSING_HOME
+  HOSPICE
+  JAIL_DETENTION
+  TITLE_AUTO
+  REAL_ESTATE
+  EMPLOYER_INTERNAL
+  ONLINE
+  OTHER
+}
+
+enum AppointmentStatus {
+  LEAD
+  AWAITING_DOCUMENTS
+  AWAITING_ID_CONFIRMATION
+  QUOTED
+  BOOKED
+  EN_ROUTE
+  SIGNER_NOT_READY
+  COMPLETED
+  REFUSED
+  CANCELLED
+  NO_SHOW
+  FOLLOW_UP_NEEDED
+}
+
+enum ComplianceSeverity {
+  INFO
+  WARNING
+  BLOCK
+}
+
+enum JournalMode {
+  TRADITIONAL
+  RON
+}
+
+enum PaymentStatus {
+  DRAFT
+  SENT
+  PAID
+  VOID
+}
+
+enum ReviewChannel {
+  SMS
+  EMAIL
+}
+
+enum SessionStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  ABORTED
+}
+
+enum PortalAuthProvider {
+  MAGIC_LINK
+  SMS_OTP
+  CLERK
+  SUPABASE
+}
+
+enum PaymentProvider {
+  STRIPE
+  MANUAL
+}
+
+enum PaymentIntentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELED
+}
+
+enum ClientMessageSenderType {
+  NOTARY
+  CLIENT
+  SYSTEM
+}
+
+enum ClientMessageType {
+  BOOKING_CONFIRMATION
+  REMINDER
+  MISSING_INFO_REQUEST
+  UPLOAD_REQUEST
+  QUOTE_ACCEPTED
+  INVOICE_SENT
+  APPOINTMENT_FOLLOW_UP
+  REVIEW_REQUEST
+  REPEAT_CLIENT_OUTREACH
+}
+
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  role         UserRole       @default(OWNER)
+  createdAt    DateTime       @default(now())
+  profile      NotaryProfile?
+  auditEntries AuditLog[]     @relation("ActorAuditEntries")
+}
+
+model NotaryProfile {
+  id                          String   @id @default(cuid())
+  userId                      String   @unique
+  legalName                   String
+  commissionNumber            String
+  commissionIssueDate         DateTime
+  commissionExpirationDate    DateTime
+  ronAuthorized               Boolean  @default(false)
+  ronIssueDate                DateTime?
+  ronExpirationDate           DateTime?
+  oathCompleted               Boolean  @default(false)
+  bciDate                     DateTime?
+  baseCity                    String
+  baseCounty                  String
+  businessModeEnabled         Boolean  @default(true)
+  employerModeEnabled         Boolean  @default(true)
+  businessEntityType          String?
+  businessEntityName          String?
+  einStatus                   Boolean  @default(false)
+  sealOrdered                 Boolean  @default(false)
+  journalTypeConfigured       String?
+  eSealConfigured             Boolean  @default(false)
+  eSignatureConfigured        Boolean  @default(false)
+  ronPlatformConfigured       Boolean  @default(false)
+  initialEducationCompleted   Boolean  @default(false)
+  ronEducationCompleted       Boolean  @default(false)
+  initialApplicationFiled     Boolean  @default(false)
+  ronApplicationFiled         Boolean  @default(false)
+  initialProviderFeeReference Int      @default(130)
+  ronProviderFeeReference     Int      @default(250)
+  initialFilingFeeReference   Int      @default(15)
+  ronFilingFeeReference       Int      @default(20)
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+  user                        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TravelZone {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  label     String
+  minMiles  Float
+  maxMiles  Float?
+  baseFee   Int
+  zipCodes  Json?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Client {
+  id                     String         @id @default(cuid())
+  type                   ClientType     @default(INDIVIDUAL)
+  name                   String
+  email                  String?        @unique
+  phone                  String?
+  preferredContactMethod ContactMethod  @default(SMS)
+  referralSource         String?
+  notes                  String?
+  createdAt              DateTime       @default(now())
+  appointments           Appointment[]
+  portalUsers            PortalUser[]
+  publicLeads            PublicLead[]
+}
+
+model Appointment {
+  id                  String               @id @default(cuid())
+  clientId            String
+  channel             AppointmentChannel
+  serviceMode         ServiceMode
+  serviceType         String
+  documentType        String
+  facilityType        FacilityType
+  status              AppointmentStatus    @default(LEAD)
+  requestedAt         DateTime             @default(now())
+  scheduledStart      DateTime?
+  scheduledEnd        DateTime?
+  addressLine1        String?
+  city                String?
+  state               String?              @default("OH")
+  zip                 String?
+  travelMiles         Float?
+  urgentLevel         String?
+  afterHours          Boolean              @default(false)
+  specialInstructions String?
+  complianceStatus    String?              @default("pending")
+  refusalReason       String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  client              Client               @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  signers             Signer[]
+  acts                NotarialAct[]
+  quote               Quote?
+  invoice             Invoice?
+  journalEntries      JournalEntry[]
+  ronSession          RONSession?
+  complianceFlags     ComplianceFlag[]
+  reviewRequests      ReviewRequest[]
+  mileageLog          MileageLog?
+  disclosures         BookingDisclosure?
+  documentUploads     DocumentUpload[]
+  clientMessages      ClientMessage[]
+  checklistItems      PortalChecklistItem[]
+  paymentIntents      PaymentIntent[]
+}
+
+model Signer {
+  id                        String       @id @default(cuid())
+  appointmentId             String
+  fullName                  String
+  email                     String?
+  phone                     String?
+  idMethod                  String?
+  idType                    String?
+  idExpirationDate          DateTime?
+  personalKnowledge         Boolean      @default(false)
+  address                   String?
+  appearedInPerson          Boolean      @default(false)
+  appearedByRON             Boolean      @default(false)
+  credentialAnalysisPassed  Boolean      @default(false)
+  identityProofingPassed    Boolean      @default(false)
+  signatureCaptured         Boolean      @default(false)
+  notes                     String?
+  appointment               Appointment  @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  acts                      NotarialAct[]
+}
+
+model NotarialAct {
+  id               String       @id @default(cuid())
+  appointmentId    String
+  signerId         String
+  actType          String
+  actCount         Int
+  certificateType  String?
+  documentTitle    String
+  completedAt      DateTime?
+  refusedAt        DateTime?
+  completionStatus String
+  sealApplied      Boolean      @default(false)
+  signatureApplied Boolean      @default(false)
+  notes            String?
+  appointment      Appointment  @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  signer           Signer       @relation(fields: [signerId], references: [id], onDelete: Cascade)
+}
+
+model Quote {
+  id                   String      @id @default(cuid())
+  appointmentId        String      @unique
+  traditionalActFee    Int         @default(0)
+  ronActFee            Int         @default(0)
+  technologyFee        Int         @default(0)
+  travelFee            Int         @default(0)
+  afterHoursFee        Int         @default(0)
+  specialtyFee         Int         @default(0)
+  printingFee          Int         @default(0)
+  total                Int
+  travelFeeDisclosed   Boolean     @default(false)
+  travelFeeAccepted    Boolean     @default(false)
+  blocked              Boolean     @default(false)
+  blockReason          String?
+  createdAt            DateTime    @default(now())
+  appointment          Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  appointmentId String        @unique
+  invoiceNumber String        @unique
+  subtotal      Int
+  total         Int
+  paymentStatus PaymentStatus @default(DRAFT)
+  paymentMethod String?
+  paidAt        DateTime?
+  exportedAt    DateTime?
+  notes         String?
+  appointment   Appointment   @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model JournalEntry {
+  id                String      @id @default(cuid())
+  appointmentId     String
+  mode              JournalMode
+  entryDataJson     Json
+  tamperHash        String
+  chronologicalIndex Int
+  completedAt       DateTime?
+  exportStatus      String?
+  createdAt         DateTime    @default(now())
+  appointment       Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model RONSession {
+  id                         String        @id @default(cuid())
+  appointmentId              String        @unique
+  platformName               String
+  sessionUrl                 String?
+  audioVideoVerified         Boolean       @default(false)
+  credentialAnalysisVerified Boolean       @default(false)
+  identityProofingVerified   Boolean       @default(false)
+  recordingUrl               String?
+  recordingSavedAt           DateTime?
+  techFeeCharged             Int           @default(0)
+  sessionStatus              SessionStatus @default(PENDING)
+  failureReason              String?
+  appointment                Appointment   @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model ComplianceFlag {
+  id            String             @id @default(cuid())
+  appointmentId String
+  severity      ComplianceSeverity
+  code          String
+  message       String
+  resolved      Boolean            @default(false)
+  resolvedAt    DateTime?
+  createdAt     DateTime           @default(now())
+  appointment   Appointment        @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model ReviewRequest {
+  id              String        @id @default(cuid())
+  appointmentId   String
+  channel         ReviewChannel
+  sentAt          DateTime?
+  responseTracked Boolean       @default(false)
+  reviewUrl       String?
+  appointment     Appointment   @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model MileageLog {
+  id            String      @id @default(cuid())
+  appointmentId String      @unique
+  miles         Float
+  startOdometer Float?
+  endOdometer   Float?
+  purpose       String?
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  entityType  String
+  entityId    String
+  action      String
+  actorId     String?
+  createdAt   DateTime @default(now())
+  metadataJson Json?
+  actor       User?    @relation("ActorAuditEntries", fields: [actorId], references: [id], onDelete: SetNull)
+}
+
+model PublicLead {
+  id                   String   @id @default(cuid())
+  clientId             String?
+  source               String
+  landingPage          String
+  serviceModeRequested String
+  documentType         String
+  urgencyLevel         String
+  locationType         String
+  zip                  String?
+  quoted               Boolean  @default(false)
+  booked               Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  client               Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+}
+
+model PortalUser {
+  id           String             @id @default(cuid())
+  clientId     String
+  email        String             @unique
+  phone        String?
+  authProvider PortalAuthProvider @default(MAGIC_LINK)
+  createdAt    DateTime           @default(now())
+  client       Client             @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  sessions     PortalSession[]
+  uploads      DocumentUpload[]
+}
+
+model PortalSession {
+  id           String     @id @default(cuid())
+  portalUserId String
+  lastLoginAt  DateTime?
+  deviceMeta   Json?
+  createdAt    DateTime   @default(now())
+  portalUser   PortalUser @relation(fields: [portalUserId], references: [id], onDelete: Cascade)
+}
+
+model DocumentUpload {
+  id                     String     @id @default(cuid())
+  appointmentId          String
+  uploadedByPortalUserId String
+  fileName               String
+  storagePath            String
+  mimeType               String
+  reviewed               Boolean    @default(false)
+  flagged                Boolean    @default(false)
+  createdAt              DateTime   @default(now())
+  appointment            Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  uploadedBy             PortalUser @relation(fields: [uploadedByPortalUserId], references: [id], onDelete: Cascade)
+}
+
+model BookingDisclosure {
+  id                         String      @id @default(cuid())
+  appointmentId              String      @unique
+  travelFeeAccepted          Boolean     @default(false)
+  cancellationPolicyAccepted Boolean     @default(false)
+  privacyPolicyAccepted      Boolean     @default(false)
+  portalTermsAccepted        Boolean     @default(false)
+  acceptedAt                 DateTime?
+  acceptedIp                 String?
+  createdAt                  DateTime    @default(now())
+  appointment                Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model ClientMessage {
+  id            String                  @id @default(cuid())
+  appointmentId String
+  senderType    ClientMessageSenderType
+  messageType   ClientMessageType
+  body          String
+  readAt        DateTime?
+  createdAt     DateTime                @default(now())
+  appointment   Appointment             @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model PortalChecklistItem {
+  id            String      @id @default(cuid())
+  appointmentId String
+  type          String
+  label         String
+  completed     Boolean     @default(false)
+  completedAt   DateTime?
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model PaymentIntent {
+  id            String              @id @default(cuid())
+  appointmentId String
+  invoiceId     String?
+  provider      PaymentProvider
+  amount        Int
+  status        PaymentIntentStatus @default(PENDING)
+  createdAt     DateTime            @default(now())
+  appointment   Appointment         @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model LandingPageStat {
+  id          String   @id @default(cuid())
+  slug        String
+  visits      Int      @default(0)
+  conversions Int      @default(0)
+  createdAt   DateTime @default(now())
+}
