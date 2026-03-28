@@ -5,7 +5,7 @@ import { createMockCalendarEvent } from "@/lib/integrations/mocks";
 
 export async function POST(request: Request) {
   const payload = await request.json();
-  const booking = createBooking(payload);
+  const booking = await createBooking(payload);
   const calendar = await createMockCalendarEvent({
     title: `${payload.clientName} notary appointment`,
     startsAt: payload.appointmentDate,

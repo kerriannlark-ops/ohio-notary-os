@@ -2,9 +2,12 @@ import Link from "next/link";
 
 const dashboardNavItems = [
   { href: "/dashboard", label: "Overview" },
-  { href: "/dashboard/launch", label: "Launch Plan" },
+  { href: "/dashboard/launch", label: "Launch" },
   { href: "/dashboard/compliance", label: "Compliance" },
   { href: "/dashboard/revenue", label: "Revenue" },
+  { href: "/dashboard/tasks", label: "Tasks" },
+  { href: "/dashboard/readiness", label: "Readiness" },
+  { href: "/dashboard/goals", label: "Goals" },
 ] as const;
 
 export function DashboardNav() {

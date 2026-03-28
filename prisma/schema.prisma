@@ -118,6 +118,39 @@ enum PaymentIntentStatus {
   CANCELED
 }
 
+enum LaunchPhase {
+  COMMISSION
+  OPERATIONS
+  RON
+  BUSINESS
+  REVENUE_SCALE
+}
+
+enum LaunchMilestoneStatus {
+  LOCKED
+  AVAILABLE
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
+enum LaunchMilestoneSourceType {
+  MANUAL
+  DERIVED
+}
+
+enum LaunchTaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
+enum GoalPeriodType {
+  MONTH
+  QUARTER
+}
+
 enum ClientMessageSenderType {
   NOTARY
   CLIENT
@@ -157,6 +190,7 @@ model NotaryProfile {
   ronExpirationDate           DateTime?
   oathCompleted               Boolean  @default(false)
   bciDate                     DateTime?
+  commissionApprovedDate      DateTime?
   baseCity                    String
   baseCounty                  String
   businessModeEnabled         Boolean  @default(true)
@@ -165,6 +199,7 @@ model NotaryProfile {
   businessEntityName          String?
   einStatus                   Boolean  @default(false)
   sealOrdered                 Boolean  @default(false)
+  sealReceivedDate            DateTime?
   journalTypeConfigured       String?
   eSealConfigured             Boolean  @default(false)
   eSignatureConfigured        Boolean  @default(false)
@@ -177,6 +212,15 @@ model NotaryProfile {
   ronProviderFeeReference     Int      @default(250)
   initialFilingFeeReference   Int      @default(15)
   ronFilingFeeReference       Int      @default(20)
+  llcFormed                   Boolean  @default(false)
+  llcFormedDate               DateTime?
+  einObtainedDate             DateTime?
+  businessBankingReady        Boolean  @default(false)
+  eoInsuranceActive           Boolean  @default(false)
+  eoInsuranceRenewalDate      DateTime?
+  googleBusinessProfileLive   Boolean  @default(false)
+  websiteLive                 Boolean  @default(false)
+  employerPrivateSeparationConfirmed Boolean @default(false)
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt
   user                        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -496,4 +540,80 @@ model LandingPageStat {
   visits      Int      @default(0)
   conversions Int      @default(0)
   createdAt   DateTime @default(now())
+}
+
+model LaunchMilestone {
+  id              String                   @id @default(cuid())
+  phase           LaunchPhase
+  code            String                   @unique
+  title           String
+  description     String
+  status          LaunchMilestoneStatus
+  dueDate         DateTime?
+  completedAt     DateTime?
+  sortOrder       Int
+  dependencyCodes Json?
+  blockerReason   String?
+  ownerNotes      String?
+  sourceType      LaunchMilestoneSourceType
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  tasks           LaunchTask[]
+  alerts          LaunchAlert[]
+}
+
+model LaunchTask {
+  id                       String           @id @default(cuid())
+  milestoneId              String
+  title                    String
+  status                   LaunchTaskStatus @default(PENDING)
+  completedAt              DateTime?
+  requiresManualConfirmation Boolean        @default(false)
+  evidenceType             String
+  evidenceValue            String?
+  createdAt                DateTime         @default(now())
+  updatedAt                DateTime         @updatedAt
+  milestone                LaunchMilestone  @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+}
+
+model LaunchAlert {
+  id                 String          @id @default(cuid())
+  code               String          @unique
+  severity           ComplianceSeverity
+  title              String
+  body               String
+  relatedMilestoneId String?
+  dueDate            DateTime?
+  resolvedAt         DateTime?
+  createdAt          DateTime        @default(now())
+  milestone          LaunchMilestone? @relation(fields: [relatedMilestoneId], references: [id], onDelete: SetNull)
+}
+
+model Goal {
+  id                String         @id @default(cuid())
+  periodType        GoalPeriodType
+  startDate         DateTime
+  endDate           DateTime
+  revenueTarget     Int
+  appointmentTarget Int
+  ronTarget         Int
+  mobileTarget      Int
+  reviewTarget      Int
+  b2bOutreachTarget Int
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  snapshots         GoalSnapshot[]
+}
+
+model GoalSnapshot {
+  id                String   @id @default(cuid())
+  goalId            String
+  actualRevenue     Int
+  actualAppointments Int
+  actualRON         Int
+  actualMobile      Int
+  actualReviews     Int
+  actualB2BOutreach Int
+  updatedAt         DateTime @default(now())
+  goal              Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
 }

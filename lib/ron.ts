@@ -1,3 +1,5 @@
+import { canBookServiceAsync, canCompleteServiceAsync } from "./launch";
+
 export interface StartRonSessionInput {
   appointmentId: string;
   clientName: string;
@@ -16,8 +18,12 @@ export interface CompleteRonSessionInput {
   techFeeCharged: number;
 }
 
-export function startRonSession(input: StartRonSessionInput) {
-  const blockers = input.ronAuthorized ? [] : ["RON authorization is not active."];
+export async function startRonSession(input: StartRonSessionInput) {
+  const readiness = await canBookServiceAsync("ron");
+  const blockers = [
+    ...(!input.ronAuthorized ? ["RON authorization is not active."] : []),
+    ...readiness.blockers,
+  ];
 
   return {
     appointmentId: input.appointmentId,
@@ -34,8 +40,11 @@ export function startRonSession(input: StartRonSessionInput) {
   };
 }
 
-export function completeRonSession(input: CompleteRonSessionInput) {
+export async function completeRonSession(input: CompleteRonSessionInput) {
   const blockers: string[] = [];
+  const readiness = await canCompleteServiceAsync("ron");
+
+  blockers.push(...readiness.blockers);
 
   if (!input.audioVideoVerified) {
     blockers.push("Audio-video connection was not verified.");

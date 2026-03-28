@@ -4,5 +4,5 @@ import { completeRonSession } from "@/lib/ron";
 
 export async function POST(request: Request) {
   const payload = await request.json();
-  return NextResponse.json(completeRonSession(payload));
+  return NextResponse.json(await completeRonSession(payload));
 }

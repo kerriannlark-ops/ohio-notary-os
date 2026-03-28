@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { mockAppointments } from "../lib/mockData";
 
 const prisma = new PrismaClient();
+const prismaAny = prisma as any;
 
 async function main() {
   const owner = await prisma.user.upsert({
@@ -17,6 +18,7 @@ async function main() {
           commissionNumber: "OH-2026-0001",
           commissionIssueDate: new Date("2026-03-01"),
           commissionExpirationDate: new Date("2031-03-01"),
+          commissionApprovedDate: new Date("2026-02-26"),
           ronAuthorized: true,
           ronIssueDate: new Date("2026-03-10"),
           ronExpirationDate: new Date("2031-03-01"),
@@ -30,6 +32,7 @@ async function main() {
           businessEntityName: "Ohio Notary OS LLC",
           einStatus: true,
           sealOrdered: true,
+          sealReceivedDate: new Date("2026-03-02"),
           journalTypeConfigured: "hybrid",
           eSealConfigured: true,
           eSignatureConfigured: true,
@@ -38,7 +41,16 @@ async function main() {
           ronEducationCompleted: true,
           initialApplicationFiled: true,
           ronApplicationFiled: true,
-        },
+          llcFormed: true,
+          llcFormedDate: new Date("2026-03-04"),
+          einObtainedDate: new Date("2026-03-05"),
+          businessBankingReady: true,
+          eoInsuranceActive: true,
+          eoInsuranceRenewalDate: new Date("2027-03-10"),
+          googleBusinessProfileLive: true,
+          websiteLive: true,
+          employerPrivateSeparationConfirmed: true,
+        } as any,
       },
     },
     include: { profile: true },
@@ -158,6 +170,23 @@ async function main() {
       },
     });
   }
+
+  await prismaAny.goal.upsert({
+    where: { id: "goal-mar-2026" },
+    update: {},
+    create: {
+      id: "goal-mar-2026",
+      periodType: "MONTH",
+      startDate: new Date("2026-03-01"),
+      endDate: new Date("2026-03-31"),
+      revenueTarget: 2500,
+      appointmentTarget: 24,
+      ronTarget: 6,
+      mobileTarget: 14,
+      reviewTarget: 8,
+      b2bOutreachTarget: 12,
+    },
+  });
 
   console.log(`Seeded owner ${owner.email} with ${mockAppointments.length} appointments.`);
 }
