@@ -7,3 +7,5 @@ node_modules/
 coverage/
 dist/
 build/
+.derivedData/
+node_modules_incomplete_*/
