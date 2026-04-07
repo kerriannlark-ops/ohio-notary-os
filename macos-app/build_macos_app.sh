@@ -12,20 +12,27 @@ RESOURCES_DIR="$CONTENTS_DIR/Resources"
 SEEDED_DIR="$RESOURCES_DIR/SeededCourse"
 APPLICATIONS_READY_DIR="$BUILD_DIR/Applications Ready"
 MODULE_CACHE_DIR="$ROOT_DIR/.derivedData/ModuleCache"
-SOURCE_PDF="/Users/kerriannlark/Desktop/Study Guide with PowerPoint Handouts-2.pdf"
+SOURCE_PDF="/Users/kerriannlark/Desktop/NOTARY LICENSE COURSE/Study Guide with PowerPoint Handouts-2.pdf"
+SOURCE_JSON="$ROOT_DIR/macos-app/SeededCourse/notary-course-content.json"
 
 rm -rf "$APP_DIR"
 rm -f "$ZIP_PATH"
 rm -rf "$APPLICATIONS_READY_DIR"
 mkdir -p "$MACOS_DIR" "$RESOURCES_DIR" "$SEEDED_DIR" "$APPLICATIONS_READY_DIR" "$MODULE_CACHE_DIR"
 
+if [ ! -f "$SOURCE_PDF" ]; then
+  echo "Missing seeded course PDF at: $SOURCE_PDF" >&2
+  exit 1
+fi
+
+PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_course_content.py" --source "$SOURCE_PDF" --output "$SOURCE_JSON"
 python3 "$ROOT_DIR/macos-app/generate_icon_assets.py"
 if command -v iconutil >/dev/null 2>&1; then
   iconutil -c icns "$ROOT_DIR/macos-app/AppIcon.iconset" -o "$ROOT_DIR/macos-app/AppIcon.icns"
 fi
 
-if [ ! -f "$SOURCE_PDF" ]; then
-  echo "Missing seeded course PDF at: $SOURCE_PDF" >&2
+if [ ! -f "$SOURCE_JSON" ]; then
+  echo "Missing generated study JSON at: $SOURCE_JSON" >&2
   exit 1
 fi
 
@@ -33,6 +40,7 @@ swiftc \
   -module-cache-path "$MODULE_CACHE_DIR" \
   -parse-as-library \
   "$ROOT_DIR/macos-app/Models.swift" \
+  "$ROOT_DIR/macos-app/CoursePrepSupport.swift" \
   "$ROOT_DIR/macos-app/SharedTheme.swift" \
   "$ROOT_DIR/macos-app/Bootstrap.swift" \
   "$ROOT_DIR/macos-app/AppLogic.swift" \
@@ -50,6 +58,7 @@ swiftc \
 cp "$ROOT_DIR/macos-app/Info.plist" "$CONTENTS_DIR/Info.plist"
 cp "$ROOT_DIR/macos-app/AppIcon.icns" "$RESOURCES_DIR/AppIcon.icns"
 cp "$SOURCE_PDF" "$SEEDED_DIR/OhioNotaryCoursePacket.pdf"
+cp "$SOURCE_JSON" "$SEEDED_DIR/notary-course-content.json"
 
 cp -R "$APP_DIR" "$APPLICATIONS_READY_DIR/"
 ln -sfn /Applications "$APPLICATIONS_READY_DIR/Applications"

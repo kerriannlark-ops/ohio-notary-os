@@ -42,6 +42,34 @@ enum LaunchEvidenceType: String, Codable, CaseIterable {
     case note
 }
 
+enum FlashcardDifficulty: String, Codable, CaseIterable {
+    case core
+    case challenge
+}
+
+enum QuizMode: String, Codable, CaseIterable {
+    case fullExam
+    case module
+}
+
+enum StudyWorkspaceTab: String, Codable, CaseIterable, Hashable {
+    case reader
+    case outline
+    case flashcards
+    case quiz
+    case cram
+
+    var title: String {
+        switch self {
+        case .reader: return "Reader"
+        case .outline: return "Outline"
+        case .flashcards: return "Flashcards"
+        case .quiz: return "Quiz"
+        case .cram: return "Cram"
+        }
+    }
+}
+
 @Model
 final class CourseDocument {
     @Attribute(.unique) var id: String
@@ -133,6 +161,285 @@ final class DocumentBookmark {
         self.pageNumber = pageNumber
         self.label = label
         self.createdAt = createdAt
+    }
+}
+
+@Model
+final class StudyModule {
+    @Attribute(.unique) var id: String
+    var documentID: String
+    var title: String
+    var summary: String
+    var sortOrder: Int
+    var sourcePageStart: Int
+    var sourcePageEnd: Int
+    var examWeight: Double
+    var keyTermsRaw: String
+    var checklistBulletsRaw: String
+    var commonMistakesRaw: String
+
+    init(
+        id: String,
+        documentID: String,
+        title: String,
+        summary: String,
+        sortOrder: Int,
+        sourcePageStart: Int,
+        sourcePageEnd: Int,
+        examWeight: Double,
+        keyTerms: [String],
+        checklistBullets: [String],
+        commonMistakes: [String]
+    ) {
+        self.id = id
+        self.documentID = documentID
+        self.title = title
+        self.summary = summary
+        self.sortOrder = sortOrder
+        self.sourcePageStart = sourcePageStart
+        self.sourcePageEnd = sourcePageEnd
+        self.examWeight = examWeight
+        self.keyTermsRaw = keyTerms.joined(separator: "\n")
+        self.checklistBulletsRaw = checklistBullets.joined(separator: "\n")
+        self.commonMistakesRaw = commonMistakes.joined(separator: "\n")
+    }
+
+    var keyTerms: [String] {
+        get { keyTermsRaw.split(separator: "\n").map(String.init).filter { !$0.isEmpty } }
+        set { keyTermsRaw = newValue.joined(separator: "\n") }
+    }
+
+    var checklistBullets: [String] {
+        get { checklistBulletsRaw.split(separator: "\n").map(String.init).filter { !$0.isEmpty } }
+        set { checklistBulletsRaw = newValue.joined(separator: "\n") }
+    }
+
+    var commonMistakes: [String] {
+        get { commonMistakesRaw.split(separator: "\n").map(String.init).filter { !$0.isEmpty } }
+        set { commonMistakesRaw = newValue.joined(separator: "\n") }
+    }
+
+    var pageRangeLabel: String {
+        sourcePageStart == sourcePageEnd ? "p. \(sourcePageStart)" : "pp. \(sourcePageStart)-\(sourcePageEnd)"
+    }
+}
+
+@Model
+final class StudyRule {
+    @Attribute(.unique) var id: String
+    var moduleID: String
+    var sortOrder: Int
+    var ruleText: String
+    var isHighPriority: Bool
+    var sourcePagesRaw: String
+
+    init(id: String, moduleID: String, sortOrder: Int, ruleText: String, isHighPriority: Bool, sourcePages: String) {
+        self.id = id
+        self.moduleID = moduleID
+        self.sortOrder = sortOrder
+        self.ruleText = ruleText
+        self.isHighPriority = isHighPriority
+        self.sourcePagesRaw = sourcePages
+    }
+
+    var sourcePages: String {
+        get { sourcePagesRaw }
+        set { sourcePagesRaw = newValue }
+    }
+}
+
+@Model
+final class Flashcard {
+    @Attribute(.unique) var id: String
+    var moduleID: String
+    var sortOrder: Int
+    var prompt: String
+    var answer: String
+    var sourcePagesRaw: String
+    var difficultyRaw: FlashcardDifficulty.RawValue
+    var isHard: Bool
+    var lastReviewedAt: Date?
+
+    init(
+        id: String,
+        moduleID: String,
+        sortOrder: Int,
+        prompt: String,
+        answer: String,
+        sourcePages: String,
+        difficulty: FlashcardDifficulty,
+        isHard: Bool = false,
+        lastReviewedAt: Date? = nil
+    ) {
+        self.id = id
+        self.moduleID = moduleID
+        self.sortOrder = sortOrder
+        self.prompt = prompt
+        self.answer = answer
+        self.sourcePagesRaw = sourcePages
+        self.difficultyRaw = difficulty.rawValue
+        self.isHard = isHard
+        self.lastReviewedAt = lastReviewedAt
+    }
+
+    var sourcePages: String {
+        get { sourcePagesRaw }
+        set { sourcePagesRaw = newValue }
+    }
+
+    var difficulty: FlashcardDifficulty {
+        get { FlashcardDifficulty(rawValue: difficultyRaw) ?? .core }
+        set { difficultyRaw = newValue.rawValue }
+    }
+}
+
+@Model
+final class PracticeQuestion {
+    @Attribute(.unique) var id: String
+    var moduleID: String
+    var sortOrder: Int
+    var question: String
+    var choicesRaw: String
+    var correctChoice: String
+    var explanation: String
+    var sourcePagesRaw: String
+    var isFromPacketSample: Bool
+
+    init(
+        id: String,
+        moduleID: String,
+        sortOrder: Int,
+        question: String,
+        choices: [String],
+        correctChoice: String,
+        explanation: String,
+        sourcePages: String,
+        isFromPacketSample: Bool
+    ) {
+        self.id = id
+        self.moduleID = moduleID
+        self.sortOrder = sortOrder
+        self.question = question
+        self.choicesRaw = Self.encode(choices)
+        self.correctChoice = correctChoice
+        self.explanation = explanation
+        self.sourcePagesRaw = sourcePages
+        self.isFromPacketSample = isFromPacketSample
+    }
+
+    var choices: [String] {
+        get { Self.decode(choicesRaw) }
+        set { choicesRaw = Self.encode(newValue) }
+    }
+
+    var sourcePages: String {
+        get { sourcePagesRaw }
+        set { sourcePagesRaw = newValue }
+    }
+
+    private static func encode(_ values: [String]) -> String {
+        let data = try? JSONEncoder().encode(values)
+        return data.flatMap { String(data: $0, encoding: .utf8) } ?? "[]"
+    }
+
+    private static func decode(_ raw: String) -> [String] {
+        guard let data = raw.data(using: .utf8), let values = try? JSONDecoder().decode([String].self, from: data) else {
+            return []
+        }
+        return values
+    }
+}
+
+@Model
+final class QuizAttempt {
+    @Attribute(.unique) var id: String
+    var startedAt: Date
+    var finishedAt: Date
+    var scorePercent: Double
+    var totalQuestions: Int
+    var moduleScopeRaw: String
+    var incorrectQuestionIDsRaw: String
+    var quizModeRaw: QuizMode.RawValue
+
+    init(
+        id: String = UUID().uuidString,
+        startedAt: Date,
+        finishedAt: Date,
+        scorePercent: Double,
+        totalQuestions: Int,
+        moduleScope: [String],
+        incorrectQuestionIDs: [String],
+        quizMode: QuizMode
+    ) {
+        self.id = id
+        self.startedAt = startedAt
+        self.finishedAt = finishedAt
+        self.scorePercent = scorePercent
+        self.totalQuestions = totalQuestions
+        self.moduleScopeRaw = Self.encode(moduleScope)
+        self.incorrectQuestionIDsRaw = Self.encode(incorrectQuestionIDs)
+        self.quizModeRaw = quizMode.rawValue
+    }
+
+    var moduleScope: [String] {
+        get { Self.decode(moduleScopeRaw) }
+        set { moduleScopeRaw = Self.encode(newValue) }
+    }
+
+    var incorrectQuestionIDs: [String] {
+        get { Self.decode(incorrectQuestionIDsRaw) }
+        set { incorrectQuestionIDsRaw = Self.encode(newValue) }
+    }
+
+    var quizMode: QuizMode {
+        get { QuizMode(rawValue: quizModeRaw) ?? .module }
+        set { quizModeRaw = newValue.rawValue }
+    }
+
+    private static func encode(_ values: [String]) -> String {
+        let data = try? JSONEncoder().encode(values)
+        return data.flatMap { String(data: $0, encoding: .utf8) } ?? "[]"
+    }
+
+    private static func decode(_ raw: String) -> [String] {
+        guard let data = raw.data(using: .utf8), let values = try? JSONDecoder().decode([String].self, from: data) else {
+            return []
+        }
+        return values
+    }
+}
+
+@Model
+final class TopicMastery {
+    @Attribute(.unique) var id: String
+    var moduleID: String
+    var confidenceScore: Double
+    var lastReviewedAt: Date?
+    var lastQuizScore: Double
+
+    init(moduleID: String, confidenceScore: Double = 0.4, lastReviewedAt: Date? = nil, lastQuizScore: Double = 0) {
+        self.id = moduleID
+        self.moduleID = moduleID
+        self.confidenceScore = confidenceScore
+        self.lastReviewedAt = lastReviewedAt
+        self.lastQuizScore = lastQuizScore
+    }
+}
+
+@Model
+final class CramSheet {
+    @Attribute(.unique) var id: String
+    var documentID: String
+    var title: String
+    var contentMarkdown: String
+    var generatedAt: Date
+
+    init(id: String, documentID: String, title: String, contentMarkdown: String, generatedAt: Date = .now) {
+        self.id = id
+        self.documentID = documentID
+        self.title = title
+        self.contentMarkdown = contentMarkdown
+        self.generatedAt = generatedAt
     }
 }
 

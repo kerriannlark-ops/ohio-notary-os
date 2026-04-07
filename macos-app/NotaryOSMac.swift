@@ -9,6 +9,13 @@ struct NotaryOSMacApp: App {
             StudyProgress.self,
             StudyNote.self,
             DocumentBookmark.self,
+            StudyModule.self,
+            StudyRule.self,
+            Flashcard.self,
+            PracticeQuestion.self,
+            QuizAttempt.self,
+            TopicMastery.self,
+            CramSheet.self,
             LaunchMilestone.self,
             LaunchTask.self,
             NotaryAppConfig.self
@@ -24,7 +31,7 @@ struct NotaryOSMacApp: App {
     var body: some Scene {
         WindowGroup {
             RootShellView()
-                .frame(minWidth: 1220, minHeight: 820)
+                .frame(minWidth: 1240, minHeight: 840)
         }
         .modelContainer(container)
         .windowToolbarStyle(.unified(showsTitle: true))

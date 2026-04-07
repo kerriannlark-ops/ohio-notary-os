@@ -1,0 +1,1665 @@
+{
+  "metadata": {
+    "sourceFileName": "Study Guide with PowerPoint Handouts-2.pdf",
+    "packetDate": "2025-04-02",
+    "pageCount": 149,
+    "documentID": "ohio-notary-course-packet",
+    "documentTitle": "Ohio Notary Course Packet",
+    "contentVersion": "2026-04-07-private-course-build",
+    "exam": {
+      "questionCount": 30,
+      "durationMinutes": 60,
+      "passingScorePercent": 80,
+      "retakeWindowDays": 30
+    },
+    "courseProvider": "Ohio Notary Services, LLC",
+    "privateUseOnly": true,
+    "notes": [
+      "This private study asset is derived from the paid course packet supplied by the user.",
+      "Use the packet and any newer course updates as the source of truth if future materials change."
+    ]
+  },
+  "modules": [
+    {
+      "id": "overview_test_specifics",
+      "title": "Course Overview + Test Specifics",
+      "summary": "The Ohio course packet frames the notary public as an impartial witness and makes the testing targets explicit: 30 questions, one hour, 80% to pass, and a 30-day retake window if you fail.",
+      "sortOrder": 10,
+      "sourcePageStart": 53,
+      "sourcePageEnd": 57,
+      "examWeight": 4,
+      "keyTerms": [
+        "Impartial witness",
+        "80% passing score",
+        "30-question exam",
+        "1-hour exam",
+        "30-day retake"
+      ],
+      "checklistBullets": [
+        "Know the exact test format cold before you spend energy memorizing details.",
+        "Treat the packet as an exam-prep document, not just a reference manual.",
+        "Expect random questions drawn from the full packet, not just the sample questions."
+      ],
+      "commonMistakes": [
+        "Forgetting the pass threshold.",
+        "Confusing packet sample questions with the full bank.",
+        "Thinking the exam is open-ended instead of multiple-choice and random."
+      ],
+      "rules": [
+        {
+          "id": "overview_1",
+          "ruleText": "The exam is 30 questions, one hour, and requires 80% to pass.",
+          "sourcePages": "86, 115",
+          "isHighPriority": true
+        },
+        {
+          "id": "overview_2",
+          "ruleText": "If you fail, the packet says you have a 30-day retake window.",
+          "sourcePages": "115",
+          "isHighPriority": true
+        },
+        {
+          "id": "overview_3",
+          "ruleText": "A notary public is an impartial witness to transactions.",
+          "sourcePages": "58",
+          "isHighPriority": true
+        },
+        {
+          "id": "overview_4",
+          "ruleText": "The packet warns that Ohio notary law changes, so check the Revised Code for updates.",
+          "sourcePages": "86",
+          "isHighPriority": false
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "overview_fc_1",
+          "prompt": "How many questions are on the course test?",
+          "answer": "30 questions.",
+          "sourcePages": "115",
+          "difficulty": "core"
+        },
+        {
+          "id": "overview_fc_2",
+          "prompt": "What score do you need to pass?",
+          "answer": "80 percent.",
+          "sourcePages": "86, 115",
+          "difficulty": "core"
+        },
+        {
+          "id": "overview_fc_3",
+          "prompt": "How long do you get for the test?",
+          "answer": "One hour.",
+          "sourcePages": "115",
+          "difficulty": "core"
+        }
+      ],
+      "questions": [
+        {
+          "id": "overview_q_1",
+          "question": "What passing score does the Ohio course packet list for the exam?",
+          "choices": [
+            "70%",
+            "75%",
+            "80%",
+            "90%"
+          ],
+          "correctChoice": "C",
+          "explanation": "The packet states a passing score of 80 percent.",
+          "sourcePages": "86, 115",
+          "isFromPacketSample": true
+        },
+        {
+          "id": "overview_q_2",
+          "question": "Which description best matches the packet’s definition of a notary public?",
+          "choices": [
+            "A legal advocate for both sides",
+            "An impartial witness to transactions",
+            "A records clerk for the Secretary of State",
+            "A title examiner"
+          ],
+          "correctChoice": "B",
+          "explanation": "Page 58 defines a notary public as a person commissioned to serve as an impartial witness to transactions.",
+          "sourcePages": "58",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "qualifications_application",
+      "title": "Qualifications + Application Flow",
+      "summary": "The packet covers who qualifies, the BCI timing window, education/testing, commission term, and statewide jurisdiction. This is core exam content and also your real-life filing checklist.",
+      "sortOrder": 20,
+      "sourcePageStart": 61,
+      "sourcePageEnd": 65,
+      "examWeight": 5,
+      "keyTerms": [
+        "Age 18",
+        "Ohio resident",
+        "BCI within six months",
+        "Five-year term",
+        "Statewide jurisdiction"
+      ],
+      "checklistBullets": [
+        "Memorize the qualification stack: age, residency, BCI, education, testing.",
+        "Remember that non-attorneys have a five-year term.",
+        "Remember that jurisdiction is statewide, not county-limited."
+      ],
+      "commonMistakes": [
+        "Mixing up the BCI six-month window.",
+        "Confusing residency rules for attorneys versus non-attorneys.",
+        "Forgetting that a standard commission lasts five years unless revoked."
+      ],
+      "rules": [
+        {
+          "id": "qual_1",
+          "ruleText": "A non-attorney applicant must be at least 18 and a legal resident of Ohio.",
+          "sourcePages": "61",
+          "isHighPriority": true
+        },
+        {
+          "id": "qual_2",
+          "ruleText": "The criminal records check must be completed within the preceding six months.",
+          "sourcePages": "61, 63",
+          "isHighPriority": true
+        },
+        {
+          "id": "qual_3",
+          "ruleText": "A non-attorney must successfully complete education and pass a test.",
+          "sourcePages": "61",
+          "isHighPriority": true
+        },
+        {
+          "id": "qual_4",
+          "ruleText": "A notary public has statewide jurisdiction.",
+          "sourcePages": "65",
+          "isHighPriority": true
+        },
+        {
+          "id": "qual_5",
+          "ruleText": "A standard notary commission term is five years unless revoked.",
+          "sourcePages": "64",
+          "isHighPriority": true
+        },
+        {
+          "id": "qual_6",
+          "ruleText": "Attorneys and some peace-officer applicants have specific exceptions under the packet rules.",
+          "sourcePages": "62, 64, 65",
+          "isHighPriority": false
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "qual_fc_1",
+          "prompt": "How old must a non-attorney Ohio notary applicant be?",
+          "answer": "At least 18 years old.",
+          "sourcePages": "61",
+          "difficulty": "core"
+        },
+        {
+          "id": "qual_fc_2",
+          "prompt": "How old can the BCI report be when used?",
+          "answer": "No more than six months old.",
+          "sourcePages": "61, 63",
+          "difficulty": "core"
+        },
+        {
+          "id": "qual_fc_3",
+          "prompt": "How long is a non-attorney commission term?",
+          "answer": "Five years, unless revoked.",
+          "sourcePages": "64",
+          "difficulty": "core"
+        }
+      ],
+      "questions": [
+        {
+          "id": "qual_q_1",
+          "question": "A non-attorney Ohio notary commission generally lasts:",
+          "choices": [
+            "2 years",
+            "3 years",
+            "5 years",
+            "For life"
+          ],
+          "correctChoice": "C",
+          "explanation": "The packet states each notary public shall hold office for five years unless the commission is revoked.",
+          "sourcePages": "64, 116",
+          "isFromPacketSample": true
+        },
+        {
+          "id": "qual_q_2",
+          "question": "Which item must be completed within the preceding six months?",
+          "choices": [
+            "Education certificate",
+            "BCI report",
+            "Oath",
+            "Seal order"
+          ],
+          "correctChoice": "B",
+          "explanation": "The criminal records check report must be completed within the preceding six months.",
+          "sourcePages": "61, 63",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "qual_q_3",
+          "question": "What is the packet’s rule on jurisdiction?",
+          "choices": [
+            "County only",
+            "Statewide",
+            "Only the county of commission issuance",
+            "Only where the signer resides"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet says an Ohio notary public has statewide jurisdiction.",
+          "sourcePages": "65",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "recordkeeping_updates",
+      "title": "Recordkeeping + Secretary of State Updates",
+      "summary": "The packet expects you to know what changes must be reported and what administrative records the Secretary of State can issue.",
+      "sortOrder": 30,
+      "sourcePageStart": 60,
+      "sourcePageEnd": 63,
+      "examWeight": 3,
+      "keyTerms": [
+        "Name change",
+        "Address change",
+        "Resignation",
+        "Disqualifying offense",
+        "Duplicate commission"
+      ],
+      "checklistBullets": [
+        "Know what changes trigger a reporting duty.",
+        "Keep the duplicate/certified-copy fee details separated in your head."
+      ],
+      "commonMistakes": [
+        "Confusing duplicate commission with certified copy fee.",
+        "Forgetting to report disqualifying offenses."
+      ],
+      "rules": [
+        {
+          "id": "records_1",
+          "ruleText": "The packet lists change of name, change of address, resignation, and conviction of a disqualifying offense as record-keeping items.",
+          "sourcePages": "60",
+          "isHighPriority": true
+        },
+        {
+          "id": "records_2",
+          "ruleText": "A duplicate commission may be issued upon the required form submission and fee.",
+          "sourcePages": "60",
+          "isHighPriority": false
+        },
+        {
+          "id": "records_3",
+          "ruleText": "A certified copy of a commission costs five dollars.",
+          "sourcePages": "60-61",
+          "isHighPriority": true
+        },
+        {
+          "id": "records_4",
+          "ruleText": "A criminal records check is not a public record.",
+          "sourcePages": "63",
+          "isHighPriority": false
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "records_fc_1",
+          "prompt": "What four changes does the packet list under record-keeping?",
+          "answer": "Name change, address change, resignation, and conviction of a disqualifying offense.",
+          "sourcePages": "60",
+          "difficulty": "core"
+        },
+        {
+          "id": "records_fc_2",
+          "prompt": "Is a criminal records check report a public record?",
+          "answer": "No.",
+          "sourcePages": "63",
+          "difficulty": "core"
+        }
+      ],
+      "questions": [
+        {
+          "id": "records_q_1",
+          "question": "According to the packet, a certified copy of a notary commission costs:",
+          "choices": [
+            "$2",
+            "$5",
+            "$10",
+            "$15"
+          ],
+          "correctChoice": "B",
+          "explanation": "Page 61 lists a five-dollar fee for each certified copy.",
+          "sourcePages": "61",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "records_q_2",
+          "question": "Which item is listed as a record-keeping/reporting issue in the packet?",
+          "choices": [
+            "Favorite office supply brand",
+            "Change of address",
+            "Vehicle mileage",
+            "Number of witnesses at the last act"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet specifically lists change of address among the updates to track.",
+          "sourcePages": "60",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "fees_seal_journal",
+      "title": "Fees + Seal + Journal",
+      "summary": "Exam questions can easily test your fee caps, travel fee rule, reasonable technology fee, and the packet’s journaling guidance.",
+      "sortOrder": 40,
+      "sourcePageStart": 65,
+      "sourcePageEnd": 69,
+      "examWeight": 5,
+      "keyTerms": [
+        "Seal",
+        "$5 act fee",
+        "$30 online fee",
+        "$10 tech fee",
+        "Travel fee",
+        "Journal best practice"
+      ],
+      "checklistBullets": [
+        "Separate statutory act fees from travel and tech fees.",
+        "Remember that a traditional journal is best practice even if not mandatory.",
+        "Remember the seal is part of the completed certificate package."
+      ],
+      "commonMistakes": [
+        "Charging both traditional and online fees for the same act.",
+        "Treating travel as included instead of separately agreed.",
+        "Forgetting the journal step in the packet’s five-step notarial flow."
+      ],
+      "rules": [
+        {
+          "id": "fees_1",
+          "ruleText": "The fee for a notarial act that is not an online notarization is up to five dollars.",
+          "sourcePages": "67",
+          "isHighPriority": true
+        },
+        {
+          "id": "fees_2",
+          "ruleText": "The fee for an online notarization is up to thirty dollars.",
+          "sourcePages": "67, 149",
+          "isHighPriority": true
+        },
+        {
+          "id": "fees_3",
+          "ruleText": "A technology fee of up to ten dollars is listed for online notarization.",
+          "sourcePages": "67, 123, 149",
+          "isHighPriority": true
+        },
+        {
+          "id": "fees_4",
+          "ruleText": "A notary may charge a reasonable travel fee if agreed to by the principal before the act.",
+          "sourcePages": "67",
+          "isHighPriority": true
+        },
+        {
+          "id": "fees_5",
+          "ruleText": "While a traditional journal is not required, the packet calls it a best practice.",
+          "sourcePages": "66",
+          "isHighPriority": true
+        },
+        {
+          "id": "fees_6",
+          "ruleText": "The packet’s notarial steps are: verify identity, create journal entry, administer act, complete certificate, collect fee.",
+          "sourcePages": "69",
+          "isHighPriority": true
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "fees_fc_1",
+          "prompt": "Maximum non-online notarial act fee?",
+          "answer": "Up to $5.",
+          "sourcePages": "67",
+          "difficulty": "core"
+        },
+        {
+          "id": "fees_fc_2",
+          "prompt": "Maximum online notarial act fee?",
+          "answer": "Up to $30.",
+          "sourcePages": "67, 149",
+          "difficulty": "core"
+        },
+        {
+          "id": "fees_fc_3",
+          "prompt": "When can you charge travel?",
+          "answer": "When the travel fee is reasonable and agreed to before the act.",
+          "sourcePages": "67",
+          "difficulty": "core"
+        },
+        {
+          "id": "fees_fc_4",
+          "prompt": "What are the five packet notarial steps?",
+          "answer": "Verify identity, create journal entry, administer act, complete certificate, collect fee.",
+          "sourcePages": "69",
+          "difficulty": "challenge"
+        }
+      ],
+      "questions": [
+        {
+          "id": "fees_q_1",
+          "question": "What is the maximum fee listed in the packet for a non-online notarial act?",
+          "choices": [
+            "$2",
+            "$5",
+            "$10",
+            "$30"
+          ],
+          "correctChoice": "B",
+          "explanation": "Page 67 states up to five dollars for a notarial act that is not an online notarization.",
+          "sourcePages": "67",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "fees_q_2",
+          "question": "Which fee can be added if agreed to in advance?",
+          "choices": [
+            "A second statutory act fee",
+            "A travel fee",
+            "A county surcharge",
+            "A witness penalty fee"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet says a reasonable travel fee may be charged if agreed to prior to the act.",
+          "sourcePages": "67",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "fees_q_3",
+          "question": "Which sequence matches the packet’s listed notarial steps?",
+          "choices": [
+            "Collect fee, verify identity, complete certificate, journal, administer act",
+            "Verify identity, create journal entry, administer act, complete certificate, collect fee",
+            "Verify identity, collect fee, administer oath, mail certificate, create journal entry",
+            "Journal, collect fee, verify identity, complete certificate, administer act"
+          ],
+          "correctChoice": "B",
+          "explanation": "Page 69 gives the five-step sequence in that order.",
+          "sourcePages": "69",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "notarial_acts_101",
+      "title": "Notarial Acts 101",
+      "summary": "This module anchors the core act types and the packet’s insistence that every act gets a completed certificate.",
+      "sortOrder": 50,
+      "sourcePageStart": 68,
+      "sourcePageEnd": 72,
+      "examWeight": 4,
+      "keyTerms": [
+        "Notarial act",
+        "Notarial certificate",
+        "Acknowledgment",
+        "Jurat"
+      ],
+      "checklistBullets": [
+        "Know the packet’s definitions, not just your intuition.",
+        "Remember every notarial act requires a completed notarial certificate."
+      ],
+      "commonMistakes": [
+        "Thinking the certificate is optional.",
+        "Confusing the act itself with the certificate that memorializes it."
+      ],
+      "rules": [
+        {
+          "id": "acts_1",
+          "ruleText": "Notarial acts are acts the laws and regulations of Ohio authorize a notary public to perform.",
+          "sourcePages": "68",
+          "isHighPriority": true
+        },
+        {
+          "id": "acts_2",
+          "ruleText": "A notarial certificate is the part of or attachment to a document completed by the notary and bearing the notary signature and seal.",
+          "sourcePages": "71",
+          "isHighPriority": true
+        },
+        {
+          "id": "acts_3",
+          "ruleText": "A notary public shall provide a completed notarial certificate for every notarial act performed.",
+          "sourcePages": "71",
+          "isHighPriority": true
+        },
+        {
+          "id": "acts_4",
+          "ruleText": "If the certificate indicates the wrong act type, the notary must provide a correct certificate at no charge.",
+          "sourcePages": "72",
+          "isHighPriority": true
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "acts_fc_1",
+          "prompt": "Does every notarial act require a completed certificate?",
+          "answer": "Yes.",
+          "sourcePages": "71",
+          "difficulty": "core"
+        },
+        {
+          "id": "acts_fc_2",
+          "prompt": "What must a notary do if the certificate states the wrong act type?",
+          "answer": "Provide a correct certificate at no charge.",
+          "sourcePages": "72",
+          "difficulty": "core"
+        }
+      ],
+      "questions": [
+        {
+          "id": "acts_q_1",
+          "question": "If a certificate incorrectly indicates the type of notarization performed, the notary should:",
+          "choices": [
+            "Leave it alone",
+            "Charge a correction fee",
+            "Provide a correct certificate at no charge",
+            "Void the entire document automatically"
+          ],
+          "correctChoice": "C",
+          "explanation": "Page 72 says the notary shall provide a correct certificate at no charge.",
+          "sourcePages": "72",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "acts_q_2",
+          "question": "Which statement is true according to the packet?",
+          "choices": [
+            "A certificate is optional if the signer already knows the notary",
+            "A completed notarial certificate is required for every notarial act",
+            "A certificate is required only for jurats",
+            "A certificate is required only in court filings"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet says a notary public shall provide a completed notarial certificate for every act.",
+          "sourcePages": "71",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "identity_appearance_rules",
+      "title": "Identity + Appearance Rules",
+      "summary": "The exam is likely to test personal appearance, acceptable identification, signature by mark, and designated alternative signer rules.",
+      "sortOrder": 60,
+      "sourcePageStart": 69,
+      "sourcePageEnd": 71,
+      "examWeight": 5,
+      "keyTerms": [
+        "Personal appearance",
+        "Satisfactory evidence",
+        "Current or expired less than 3 years",
+        "Signature by mark",
+        "Designated alternative signer"
+      ],
+      "checklistBullets": [
+        "Memorize the current-or-expired-less-than-three-years rule.",
+        "Keep personal appearance front and center for non-online acts.",
+        "Know the difference between signature by mark and designated alternative signer."
+      ],
+      "commonMistakes": [
+        "Using phone identification or someone else’s word without following Ohio rules.",
+        "Letting a document be notarized without personal appearance.",
+        "Forgetting that the signer must make the mark personally for a signature by mark."
+      ],
+      "rules": [
+        {
+          "id": "identity_1",
+          "ruleText": "Excluding online notarizations, the principal must personally appear before the notary.",
+          "sourcePages": "69",
+          "isHighPriority": true
+        },
+        {
+          "id": "identity_2",
+          "ruleText": "Identification must contain a photo or signature, be current or expired less than three years, and be satisfactory to the notary.",
+          "sourcePages": "70, 88",
+          "isHighPriority": true
+        },
+        {
+          "id": "identity_3",
+          "ruleText": "A designated alternative signer may sign on behalf of an individual whose physical characteristics limit signing ability.",
+          "sourcePages": "70",
+          "isHighPriority": true
+        },
+        {
+          "id": "identity_4",
+          "ruleText": "For signature by mark, the signer must make the mark on their own and with intent to sign.",
+          "sourcePages": "71",
+          "isHighPriority": true
+        },
+        {
+          "id": "identity_5",
+          "ruleText": "A credible witness is not a shortcut; the packet points to the specific Ohio rules for when it can be used.",
+          "sourcePages": "89",
+          "isHighPriority": false
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "identity_fc_1",
+          "prompt": "How old can acceptable ID be if expired?",
+          "answer": "Expired less than three years.",
+          "sourcePages": "70, 88",
+          "difficulty": "core"
+        },
+        {
+          "id": "identity_fc_2",
+          "prompt": "Must a principal personally appear for a non-online notarization?",
+          "answer": "Yes.",
+          "sourcePages": "69",
+          "difficulty": "core"
+        },
+        {
+          "id": "identity_fc_3",
+          "prompt": "For a signature by mark, who must make the mark?",
+          "answer": "The signer must make the mark personally and with intent to sign.",
+          "sourcePages": "71",
+          "difficulty": "core"
+        }
+      ],
+      "questions": [
+        {
+          "id": "identity_q_1",
+          "question": "For a non-online notarization, the packet says the principal must:",
+          "choices": [
+            "Email a copy of the signed document",
+            "Personally appear before the notary",
+            "Call the notary on speakerphone",
+            "Appear only if the document is a title"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet says the principal is required to personally appear before the notary public.",
+          "sourcePages": "69",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "identity_q_2",
+          "question": "Which ID description matches the packet rule?",
+          "choices": [
+            "Must be issued within the last year only",
+            "Must contain photo or signature and be current or expired less than three years",
+            "Must always be a driver license",
+            "May be expired any length of time if familiar"
+          ],
+          "correctChoice": "B",
+          "explanation": "Page 70 gives the photo/signature and current-or-expired-less-than-three-years standard.",
+          "sourcePages": "70, 88",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "identity_q_3",
+          "question": "A signer who can only sign with an “X” may do so if:",
+          "choices": [
+            "A family member draws it for them",
+            "The notary draws it",
+            "The signer personally makes the mark with intent to sign",
+            "The signer texts consent later"
+          ],
+          "correctChoice": "C",
+          "explanation": "The packet says the signer must make the mark on their own and with intent to sign.",
+          "sourcePages": "71",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "acknowledgments",
+      "title": "Acknowledgments",
+      "summary": "This is one of the most testable topics: appearance, identity, acknowledgment of execution, “free act and deed,” and certificate wording.",
+      "sortOrder": 70,
+      "sourcePageStart": 73,
+      "sourcePageEnd": 79,
+      "examWeight": 5,
+      "keyTerms": [
+        "Acknowledgment",
+        "Free act and deed",
+        "Acknowledged before me",
+        "Representative capacity"
+      ],
+      "checklistBullets": [
+        "Memorize the packet definition of acknowledgment.",
+        "Look for “acknowledged before me” language.",
+        "Remember the signer can acknowledge execution rather than sign in front of you, but appearance is still required."
+      ],
+      "commonMistakes": [
+        "Confusing an acknowledgment with a jurat.",
+        "Skipping the free-act-and-deed question.",
+        "Forgetting that representative-capacity acknowledgments exist."
+      ],
+      "rules": [
+        {
+          "id": "ack_1",
+          "ruleText": "An acknowledgment is a declaration before the notary that the individual signed the record for the purpose stated in the record.",
+          "sourcePages": "73",
+          "isHighPriority": true
+        },
+        {
+          "id": "ack_2",
+          "ruleText": "The person acknowledging must appear before the notary and be known or proven by satisfactory evidence.",
+          "sourcePages": "74",
+          "isHighPriority": true
+        },
+        {
+          "id": "ack_3",
+          "ruleText": "The packet tells notaries to ask whether the acknowledgment is the principal’s free act and deed.",
+          "sourcePages": "74, 77",
+          "isHighPriority": true
+        },
+        {
+          "id": "ack_4",
+          "ruleText": "Recognized certificate language includes “acknowledged before me” or substantial equivalent.",
+          "sourcePages": "75-76",
+          "isHighPriority": true
+        },
+        {
+          "id": "ack_5",
+          "ruleText": "Use the appropriate certificate and do not confuse acknowledgment wording with jurat wording.",
+          "sourcePages": "76",
+          "isHighPriority": true
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "ack_fc_1",
+          "prompt": "Key phrase for acknowledgment certificate recognition?",
+          "answer": "Acknowledged before me.",
+          "sourcePages": "75-76",
+          "difficulty": "core"
+        },
+        {
+          "id": "ack_fc_2",
+          "prompt": "What question does the packet say to ask in an acknowledgment?",
+          "answer": "Ask whether it is the signer’s free act and deed.",
+          "sourcePages": "74, 77",
+          "difficulty": "core"
+        },
+        {
+          "id": "ack_fc_3",
+          "prompt": "Does an acknowledgment still require personal appearance?",
+          "answer": "Yes.",
+          "sourcePages": "73-77",
+          "difficulty": "core"
+        }
+      ],
+      "questions": [
+        {
+          "id": "ack_q_1",
+          "question": "Which phrase points most strongly to an acknowledgment?",
+          "choices": [
+            "Sworn to and subscribed before me",
+            "Acknowledged before me",
+            "Under penalty of perjury",
+            "Personally appeared and deposes"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet identifies “acknowledged before me” as core acknowledgment wording.",
+          "sourcePages": "75-76",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "ack_q_2",
+          "question": "In administering an acknowledgment, the notary should ask whether the document is the principal’s:",
+          "choices": [
+            "Daily record and ledger",
+            "True copy and duplicate",
+            "Free act and deed",
+            "Final court filing"
+          ],
+          "correctChoice": "C",
+          "explanation": "The packet specifically references asking whether it is the signer’s free act and deed.",
+          "sourcePages": "74, 77",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "ack_q_3",
+          "question": "Which is true about acknowledgments under the packet?",
+          "choices": [
+            "They do not require identity verification",
+            "They can replace a required jurat anytime",
+            "The signer must appear and acknowledge executing the instrument",
+            "They are used only for corporations"
+          ],
+          "correctChoice": "C",
+          "explanation": "Acknowledgments require appearance and acknowledgment of execution.",
+          "sourcePages": "73-77",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "jurats_affidavits_oaths",
+      "title": "Jurats, Affidavits, Oaths, and Affirmations",
+      "summary": "Jurats are heavily tested because they require an oath or affirmation and the signer must sign in the notary’s presence.",
+      "sortOrder": 80,
+      "sourcePageStart": 72,
+      "sourcePageEnd": 81,
+      "examWeight": 5,
+      "keyTerms": [
+        "Jurat",
+        "Subscribed and sworn",
+        "Oath",
+        "Affirmation",
+        "Affidavit"
+      ],
+      "checklistBullets": [
+        "Anchor on the key jurat words: subscribed and sworn, sworn to, affirmed, being duly sworn.",
+        "Remember the oath/affirmation is mandatory for a jurat.",
+        "Remember the signer signs in your presence for a jurat."
+      ],
+      "commonMistakes": [
+        "Using an acknowledgment when an oath is required.",
+        "Forgetting to actually administer the oath or affirmation.",
+        "Confusing affidavit content with certificate wording."
+      ],
+      "rules": [
+        {
+          "id": "jurat_1",
+          "ruleText": "A jurat certificate must state that an oath or affirmation was administered.",
+          "sourcePages": "72",
+          "isHighPriority": true
+        },
+        {
+          "id": "jurat_2",
+          "ruleText": "Key words for a jurat include subscribed and sworn, sworn to, being duly sworn, jurat, or affirmed.",
+          "sourcePages": "73",
+          "isHighPriority": true
+        },
+        {
+          "id": "jurat_3",
+          "ruleText": "Jurat steps: verify identity, create journal entry, administer oath or affirmation, have the principal sign, complete certificate, collect fee.",
+          "sourcePages": "80",
+          "isHighPriority": true
+        },
+        {
+          "id": "jurat_4",
+          "ruleText": "A sample oath is “Do you solemnly swear that the statements in this document are true, so help you God?”",
+          "sourcePages": "80",
+          "isHighPriority": false
+        },
+        {
+          "id": "jurat_5",
+          "ruleText": "A sample affirmation is “Do you affirm, under penalty of perjury, that the statements in this document are true?”",
+          "sourcePages": "81",
+          "isHighPriority": false
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "jurat_fc_1",
+          "prompt": "What makes a jurat different from an acknowledgment?",
+          "answer": "A jurat requires an oath or affirmation and signature in the notary’s presence.",
+          "sourcePages": "72, 80-81",
+          "difficulty": "core"
+        },
+        {
+          "id": "jurat_fc_2",
+          "prompt": "Key words that signal a jurat?",
+          "answer": "Subscribed and sworn; sworn to; affirmed; being duly sworn.",
+          "sourcePages": "73",
+          "difficulty": "core"
+        },
+        {
+          "id": "jurat_fc_3",
+          "prompt": "Can a non-attorney notary choose a jurat for the signer?",
+          "answer": "No. The notary may explain the difference but cannot advise which act best suits the situation.",
+          "sourcePages": "72, 88",
+          "difficulty": "challenge"
+        }
+      ],
+      "questions": [
+        {
+          "id": "jurat_q_1",
+          "question": "Which wording most clearly signals a jurat?",
+          "choices": [
+            "Acknowledged before me",
+            "Signed as free act and deed",
+            "Sworn to and subscribed before me",
+            "True copy certified"
+          ],
+          "correctChoice": "C",
+          "explanation": "The packet lists “sworn to and subscribed before me” as jurat wording.",
+          "sourcePages": "73, 75",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "jurat_q_2",
+          "question": "Before completing a jurat certificate, the notary must:",
+          "choices": [
+            "Determine the legal sufficiency of the document",
+            "Administer an oath or affirmation",
+            "Call the preparer for approval",
+            "Confirm the signer’s county of residence only"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet says a jurat certificate shall state an oath or affirmation was administered.",
+          "sourcePages": "72, 80",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "jurat_q_3",
+          "question": "If an oath or affirmation is required, the notary should not substitute:",
+          "choices": [
+            "An acknowledgment",
+            "A journal entry",
+            "A second seal",
+            "A travel fee"
+          ],
+          "correctChoice": "A",
+          "explanation": "The packet’s Do Not list says do not take an acknowledgment instead of an oath or affirmation if one is required.",
+          "sourcePages": "97",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "electronic_vs_ron",
+      "title": "Electronic Notarizations vs. RON",
+      "summary": "The packet draws a bright line between electronic notarizations and remote online notarizations. Do not blur them on the exam.",
+      "sortOrder": 90,
+      "sourcePageStart": 81,
+      "sourcePageEnd": 84,
+      "examWeight": 4,
+      "keyTerms": [
+        "Electronic notarization",
+        "In-person act",
+        "Electronic seal",
+        "RON"
+      ],
+      "checklistBullets": [
+        "Keep “electronic” and “remote online” separate in your head.",
+        "Electronic notarization is still in-person.",
+        "RON requires an online notarization system and separate authorization/coursework."
+      ],
+      "commonMistakes": [
+        "Assuming all electronic acts are remote.",
+        "Forgetting the authenticator certificate concept for electronic documents."
+      ],
+      "rules": [
+        {
+          "id": "electronic_1",
+          "ruleText": "Electronic notarizations are not the same as remote online notarizations.",
+          "sourcePages": "81-82",
+          "isHighPriority": true
+        },
+        {
+          "id": "electronic_2",
+          "ruleText": "An Ohio notary with an active commission may perform electronic notarizations without additional Secretary of State authorization.",
+          "sourcePages": "82",
+          "isHighPriority": true
+        },
+        {
+          "id": "electronic_3",
+          "ruleText": "An electronic notarization is an in-person act using an electronic signature and electronic seal on a digital document.",
+          "sourcePages": "82",
+          "isHighPriority": true
+        },
+        {
+          "id": "electronic_4",
+          "ruleText": "Remote online notaries are required to use an online notarization system to perform remote online notarizations.",
+          "sourcePages": "84",
+          "isHighPriority": true
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "electronic_fc_1",
+          "prompt": "Is an electronic notarization remote by default?",
+          "answer": "No. It is an in-person act.",
+          "sourcePages": "81-82",
+          "difficulty": "core"
+        },
+        {
+          "id": "electronic_fc_2",
+          "prompt": "Do commissioned Ohio notaries need extra authorization for basic in-person electronic notarizations?",
+          "answer": "No, not according to the packet.",
+          "sourcePages": "82",
+          "difficulty": "core"
+        }
+      ],
+      "questions": [
+        {
+          "id": "electronic_q_1",
+          "question": "Which statement is true?",
+          "choices": [
+            "Electronic notarizations and RON are the same thing",
+            "An electronic notarization is an in-person act on a digital document",
+            "RON requires no technology platform",
+            "Electronic notarizations require the signer to be outside Ohio"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet says an electronic notarization is an in-person act using the notary’s electronic signature and seal.",
+          "sourcePages": "81-82",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "electronic_q_2",
+          "question": "According to the packet, a remote online notary must use:",
+          "choices": [
+            "A paper-only journal",
+            "An online notarization system",
+            "Only the Secretary of State website",
+            "No platform if the signer is known personally"
+          ],
+          "correctChoice": "B",
+          "explanation": "Page 84 says remote online notaries are required to use an online notarization system.",
+          "sourcePages": "84",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "ron_core_rules",
+      "title": "RON Core Rules",
+      "summary": "The packet’s RON segment focuses on authorization, technology/vendor disclosure, Ohio-location rule for the notary, identity proofing concepts, refusal obligations, journal requirements, and discipline.",
+      "sortOrder": 100,
+      "sourcePageStart": 144,
+      "sourcePageEnd": 149,
+      "examWeight": 5,
+      "keyTerms": [
+        "Credential analysis",
+        "Identity proofing",
+        "Dynamic knowledge-based authentication",
+        "Electronic journal",
+        "Notary located in Ohio"
+      ],
+      "checklistBullets": [
+        "Know that the notary must be in Ohio for the act.",
+        "Know the application items: platform/vendor, email, decryption instructions, education/testing, fees.",
+        "Know the journal/recording requirements and refusal triggers."
+      ],
+      "commonMistakes": [
+        "Forgetting that the signer may be outside Ohio, but the notary may not.",
+        "Leaving out recording and journal details.",
+        "Assuming security concerns are optional instead of refusal triggers."
+      ],
+      "rules": [
+        {
+          "id": "ron_1",
+          "ruleText": "A person must complete an approved course and pass a test before being authorized as an online notary public.",
+          "sourcePages": "84, 146",
+          "isHighPriority": true
+        },
+        {
+          "id": "ron_2",
+          "ruleText": "When applying, the notary must identify the online notarization system and vendor they will use.",
+          "sourcePages": "84, 146",
+          "isHighPriority": true
+        },
+        {
+          "id": "ron_3",
+          "ruleText": "The online notary must be located in Ohio when performing the remote online notarial act, even if the signer is elsewhere.",
+          "sourcePages": "84, 147",
+          "isHighPriority": true
+        },
+        {
+          "id": "ron_4",
+          "ruleText": "The packet’s RON definitions include credential analysis, identity proofing, and dynamic knowledge-based authentication.",
+          "sourcePages": "145",
+          "isHighPriority": true
+        },
+        {
+          "id": "ron_5",
+          "ruleText": "The electronic journal must capture date/time, act type, document type, electronic signatures, full principal name and address, identification method, location, system description, fee, recording, and more — but not a Social Security number.",
+          "sourcePages": "148",
+          "isHighPriority": true
+        },
+        {
+          "id": "ron_6",
+          "ruleText": "Security, identity, signature issues, or tamper-evident concerns can trigger an obligation to refuse the online act.",
+          "sourcePages": "148",
+          "isHighPriority": true
+        },
+        {
+          "id": "ron_7",
+          "ruleText": "The packet lists $20 to the Secretary of State and $250 for education/testing in the application requirements segment.",
+          "sourcePages": "146",
+          "isHighPriority": false
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "ron_fc_1",
+          "prompt": "Where must the RON notary be physically located during the act?",
+          "answer": "In Ohio.",
+          "sourcePages": "84, 147",
+          "difficulty": "core"
+        },
+        {
+          "id": "ron_fc_2",
+          "prompt": "Name three RON identity concepts from the packet.",
+          "answer": "Credential analysis, identity proofing, and dynamic knowledge-based authentication.",
+          "sourcePages": "145",
+          "difficulty": "core"
+        },
+        {
+          "id": "ron_fc_3",
+          "prompt": "What must never be recorded in the electronic journal?",
+          "answer": "A Social Security number.",
+          "sourcePages": "148",
+          "difficulty": "core"
+        }
+      ],
+      "questions": [
+        {
+          "id": "ron_q_1",
+          "question": "A remote online notarization may be performed only when the notary is physically located:",
+          "choices": [
+            "Anywhere in the United States",
+            "In Ohio",
+            "In the signer’s state",
+            "In the county where commissioned"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet states the RON notary must be located in Ohio for the act.",
+          "sourcePages": "84, 147",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "ron_q_2",
+          "question": "Which item does the packet specifically include in the electronic journal requirements?",
+          "choices": [
+            "The principal’s Social Security number",
+            "The notary’s favorite vendor",
+            "How the principal was identified",
+            "The signer’s credit score"
+          ],
+          "correctChoice": "C",
+          "explanation": "Page 148 lists how the principal was identified and specifically says not to record an SSN.",
+          "sourcePages": "148",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "ron_q_3",
+          "question": "Which pair reflects the packet’s listed RON fees/education costs?",
+          "choices": [
+            "$5 filing and $30 course",
+            "$20 state fee and $250 education/testing",
+            "$30 filing and $20 course",
+            "$10 state fee and $30 technology fee only"
+          ],
+          "correctChoice": "B",
+          "explanation": "Page 146 states $20 to the Secretary of State and $250 for education and testing.",
+          "sourcePages": "146",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "vehicle_title_notarization",
+      "title": "Vehicle Title Notarization",
+      "summary": "Vehicle-title questions are high risk in practice and extremely testable because the packet repeatedly stresses jurats and zero tolerance for incomplete title fields.",
+      "sortOrder": 110,
+      "sourcePageStart": 108,
+      "sourcePageEnd": 114,
+      "examWeight": 5,
+      "keyTerms": [
+        "Assignment of ownership",
+        "Application for certificate of title",
+        "Jurat",
+        "Incomplete title prohibited",
+        "Dealer exception"
+      ],
+      "checklistBullets": [
+        "Know the two title sections where notarization may appear.",
+        "Remember both seller and buyer title sections are jurats when notarized.",
+        "Never notarize an incomplete title section."
+      ],
+      "commonMistakes": [
+        "Treating a title act like an acknowledgment instead of a jurat.",
+        "Notarizing blanks on the top or bottom half.",
+        "Missing the licensed-dealer exception."
+      ],
+      "rules": [
+        {
+          "id": "title_1",
+          "ruleText": "The two common title sections are the Assignment of Ownership and the Application for Certificate of Title.",
+          "sourcePages": "108",
+          "isHighPriority": true
+        },
+        {
+          "id": "title_2",
+          "ruleText": "The Assignment of Ownership requires an affidavit, so the notary must perform a jurat.",
+          "sourcePages": "109-110",
+          "isHighPriority": true
+        },
+        {
+          "id": "title_3",
+          "ruleText": "The Application for Certificate of Title also requires an affidavit, so the notary must perform a jurat.",
+          "sourcePages": "112",
+          "isHighPriority": true
+        },
+        {
+          "id": "title_4",
+          "ruleText": "The packet says do not notarize if the title document is incomplete or blank; commission revocation is possible if you do.",
+          "sourcePages": "111, 113",
+          "isHighPriority": true
+        },
+        {
+          "id": "title_5",
+          "ruleText": "If both parties’ signatures are being notarized, both must sign in your presence and both must receive an oath or affirmation.",
+          "sourcePages": "92, 110, 112",
+          "isHighPriority": true
+        },
+        {
+          "id": "title_6",
+          "ruleText": "If a licensed Ohio motor vehicle dealer is a party to the transfer, certain title-related documents do not require notarization.",
+          "sourcePages": "113-114",
+          "isHighPriority": false
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "title_fc_1",
+          "prompt": "What kind of act is used on Ohio vehicle title affidavit sections?",
+          "answer": "A jurat.",
+          "sourcePages": "109, 112",
+          "difficulty": "core"
+        },
+        {
+          "id": "title_fc_2",
+          "prompt": "Can you notarize a title section with blanks left incomplete?",
+          "answer": "No.",
+          "sourcePages": "111, 113",
+          "difficulty": "core"
+        },
+        {
+          "id": "title_fc_3",
+          "prompt": "If both buyer and seller signatures are being notarized on title-related jurats, what must you do?",
+          "answer": "Have both sign in your presence and administer an oath or affirmation to both.",
+          "sourcePages": "92, 110, 112",
+          "difficulty": "challenge"
+        }
+      ],
+      "questions": [
+        {
+          "id": "title_q_1",
+          "question": "The Assignment of Ownership section of an Ohio vehicle title requires which act?",
+          "choices": [
+            "Acknowledgment",
+            "Jurat",
+            "Copy certification",
+            "No act is ever required"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet states the section is an affidavit and therefore requires a jurat.",
+          "sourcePages": "109-110",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "title_q_2",
+          "question": "What should a notary do if a vehicle title section is incomplete or blank?",
+          "choices": [
+            "Notarize anyway if the signer promises to finish later",
+            "Refuse to notarize it",
+            "Notarize but make a note in the journal",
+            "Call the BMV and proceed"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet explicitly says do not notarize incomplete or blank title sections.",
+          "sourcePages": "111, 113",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "dos_donts_penalties",
+      "title": "Dos, Don’ts, Prohibited Acts, and Penalties",
+      "summary": "This module is essential for passing because the packet’s “Do Not” list is dense and many questions are built straight from it.",
+      "sortOrder": 120,
+      "sourcePageStart": 87,
+      "sourcePageEnd": 107,
+      "examWeight": 5,
+      "keyTerms": [
+        "Do Not",
+        "Conflict of interest",
+        "Incomplete document",
+        "Notario publico",
+        "Penalties"
+      ],
+      "checklistBullets": [
+        "Read this section like a red-flag list, not like background reading.",
+        "Memorize the prohibited acts that trigger commission discipline.",
+        "Separate allowed explanation of acknowledgment vs jurat from forbidden legal advice."
+      ],
+      "commonMistakes": [
+        "Notarizing incomplete documents.",
+        "Notarizing your own signature or a document in which you have an interest.",
+        "Giving legal advice or choosing the notarial act for the signer."
+      ],
+      "rules": [
+        {
+          "id": "donts_1",
+          "ruleText": "Do not notarize a document you signed, notarize your own signature, or notarize a transaction in which you have an interest.",
+          "sourcePages": "93-94",
+          "isHighPriority": true
+        },
+        {
+          "id": "donts_2",
+          "ruleText": "Do not use a name or initial different from the one under which you were commissioned.",
+          "sourcePages": "95",
+          "isHighPriority": true
+        },
+        {
+          "id": "donts_3",
+          "ruleText": "Do not notarize if the signer is mentally incompetent or appears mentally incapable of understanding the document.",
+          "sourcePages": "96",
+          "isHighPriority": true
+        },
+        {
+          "id": "donts_4",
+          "ruleText": "Do not alter a written instrument after it has been signed or alter the notarial certificate after the notarization is complete.",
+          "sourcePages": "96",
+          "isHighPriority": true
+        },
+        {
+          "id": "donts_5",
+          "ruleText": "Do not notarize a signature on an incomplete or blank document.",
+          "sourcePages": "87, 97",
+          "isHighPriority": true
+        },
+        {
+          "id": "donts_6",
+          "ruleText": "Do not use “notario” or “notario publico” to advertise notary services.",
+          "sourcePages": "97",
+          "isHighPriority": true
+        },
+        {
+          "id": "donts_7",
+          "ruleText": "Unless you are an Ohio-licensed attorney, do not determine the validity of a power of attorney or prepare/represent another in a legal or administrative proceeding.",
+          "sourcePages": "98-99",
+          "isHighPriority": true
+        },
+        {
+          "id": "donts_8",
+          "ruleText": "Penalties can include revocation, suspension, admonition, and in some cases permanent ineligibility for reappointment.",
+          "sourcePages": "100-101",
+          "isHighPriority": true
+        },
+        {
+          "id": "donts_9",
+          "ruleText": "A disqualifying offense must be self-reported to the Secretary of State.",
+          "sourcePages": "100",
+          "isHighPriority": true
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "donts_fc_1",
+          "prompt": "Can you notarize your own signature?",
+          "answer": "No.",
+          "sourcePages": "93",
+          "difficulty": "core"
+        },
+        {
+          "id": "donts_fc_2",
+          "prompt": "Can a non-attorney determine the validity of a POA?",
+          "answer": "No.",
+          "sourcePages": "98",
+          "difficulty": "core"
+        },
+        {
+          "id": "donts_fc_3",
+          "prompt": "Can you advertise as “notario publico” in Ohio?",
+          "answer": "No.",
+          "sourcePages": "97",
+          "difficulty": "core"
+        },
+        {
+          "id": "donts_fc_4",
+          "prompt": "Name three possible discipline outcomes.",
+          "answer": "Revocation, suspension, and admonition.",
+          "sourcePages": "100-101",
+          "difficulty": "challenge"
+        }
+      ],
+      "questions": [
+        {
+          "id": "donts_q_1",
+          "question": "A notary should refuse to notarize when the signer appears mentally incapable of understanding the document. True or false?",
+          "choices": [
+            "True",
+            "False",
+            "Only for title documents",
+            "Only if the signer is elderly"
+          ],
+          "correctChoice": "A",
+          "explanation": "The packet says do not notarize if the signer appears mentally incapable of understanding the nature and effect of the document.",
+          "sourcePages": "96",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "donts_q_2",
+          "question": "Which advertising phrase is specifically prohibited in the packet?",
+          "choices": [
+            "Ohio commissioned witness",
+            "Mobile notary available",
+            "Notario publico",
+            "Statewide notary"
+          ],
+          "correctChoice": "C",
+          "explanation": "The packet says not to use “notario” or “notario publico” in advertising.",
+          "sourcePages": "97",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "donts_q_3",
+          "question": "Unless licensed as an Ohio attorney, a notary should not:",
+          "choices": [
+            "Explain the difference between an acknowledgment and a jurat",
+            "Determine the validity of a power of attorney",
+            "Ask for identification",
+            "Keep a journal"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet says non-attorneys must not determine the validity of a POA or other representative-capacity instrument.",
+          "sourcePages": "72, 98",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "donts_q_4",
+          "question": "A possible penalty for violating Chapter 147 is:",
+          "choices": [
+            "Automatic conversion to attorney-notary status",
+            "Revocation or suspension of the commission",
+            "Mandatory title licensing",
+            "Loss of statewide jurisdiction only"
+          ],
+          "correctChoice": "B",
+          "explanation": "The packet lists revocation, suspension, or admonition as possible outcomes.",
+          "sourcePages": "100-101",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "law_updates_2025",
+      "title": "2025 Updates / HB 315",
+      "summary": "The packet explicitly isolates the 2025 law updates. Expect questions on the oath change, fee references, prohibited acts, ID/personal-knowledge changes, and notarial certificate updates.",
+      "sortOrder": 130,
+      "sourcePageStart": 121,
+      "sourcePageEnd": 125,
+      "examWeight": 4,
+      "keyTerms": [
+        "HB 315",
+        "Effective April 4, 2025",
+        "Oath in person",
+        "147.50",
+        "147.542"
+      ],
+      "checklistBullets": [
+        "Memorize the effective date and the oath change.",
+        "Use this module to confirm which sections were updated in 2025."
+      ],
+      "commonMistakes": [
+        "Assuming old pre-2025 habits still control fees or oath procedure.",
+        "Skipping the certificate and ID update sections."
+      ],
+      "rules": [
+        {
+          "id": "updates_1",
+          "ruleText": "HB 315 was effective April 4, 2025.",
+          "sourcePages": "121",
+          "isHighPriority": true
+        },
+        {
+          "id": "updates_2",
+          "ruleText": "The packet says a new notary must personally appear before another notary to take the oath prior to completing a notarial act.",
+          "sourcePages": "121",
+          "isHighPriority": true
+        },
+        {
+          "id": "updates_3",
+          "ruleText": "The 2025 updates call out RON fees/technology fee, prohibited acts, personal knowledge, satisfactory evidence, acceptable ID, conflict of interest, notarial certificates, and electronically notarized documents.",
+          "sourcePages": "123-125",
+          "isHighPriority": true
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "updates_fc_1",
+          "prompt": "What bill number does the packet identify for the 2025 notary changes?",
+          "answer": "HB 315.",
+          "sourcePages": "121",
+          "difficulty": "core"
+        },
+        {
+          "id": "updates_fc_2",
+          "prompt": "What key oath change does the packet highlight?",
+          "answer": "A new notary must personally appear before another notary to take the oath before performing a notarial act.",
+          "sourcePages": "121",
+          "difficulty": "core"
+        }
+      ],
+      "questions": [
+        {
+          "id": "updates_q_1",
+          "question": "The packet says HB 315 became effective on:",
+          "choices": [
+            "January 1, 2025",
+            "April 4, 2025",
+            "July 1, 2025",
+            "December 31, 2025"
+          ],
+          "correctChoice": "B",
+          "explanation": "The 2025 updates section says HB 315 was effective April 4, 2025.",
+          "sourcePages": "121",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "updates_q_2",
+          "question": "Which change is specifically highlighted in the packet’s 2025 updates?",
+          "choices": [
+            "All acknowledgments must be remote",
+            "A new notary must personally appear before another notary for the oath",
+            "All journals are abolished",
+            "The commission term is now three years"
+          ],
+          "correctChoice": "B",
+          "explanation": "Page 121 calls out the in-person oath requirement for a new notary.",
+          "sourcePages": "121",
+          "isFromPacketSample": false
+        }
+      ]
+    },
+    {
+      "id": "sample_questions_final_review",
+      "title": "Sample Questions + Final Review",
+      "summary": "Use the packet’s sample questions as a confidence check, then close with a cram sheet and weak-topic review before your live exam.",
+      "sortOrder": 140,
+      "sourcePageStart": 115,
+      "sourcePageEnd": 120,
+      "examWeight": 3,
+      "keyTerms": [
+        "Sample question",
+        "Random generator",
+        "Weak topics",
+        "Final review"
+      ],
+      "checklistBullets": [
+        "Retake packet sample questions until the right answer feels obvious.",
+        "Use missed answers to build your weak-topic list for the cram sheet."
+      ],
+      "commonMistakes": [
+        "Stopping at passive reading without testing yourself.",
+        "Ignoring why an answer is correct."
+      ],
+      "rules": [
+        {
+          "id": "review_1",
+          "ruleText": "The packet says test questions are not shared, so study the rules rather than memorizing only sample items.",
+          "sourcePages": "115",
+          "isHighPriority": true
+        },
+        {
+          "id": "review_2",
+          "ruleText": "A strong final review should hit term length, fees, identity, acknowledgments versus jurats, title rules, and prohibited acts.",
+          "sourcePages": "115-120",
+          "isHighPriority": true
+        }
+      ],
+      "flashcards": [
+        {
+          "id": "review_fc_1",
+          "prompt": "What kind of question generator does the packet say the test uses?",
+          "answer": "A random question generator.",
+          "sourcePages": "115",
+          "difficulty": "core"
+        },
+        {
+          "id": "review_fc_2",
+          "prompt": "What should you do after missing a question in practice?",
+          "answer": "Review the explanation, revisit the source pages, and add the topic to your weak-topic list.",
+          "sourcePages": "115-120",
+          "difficulty": "core"
+        }
+      ],
+      "questions": [
+        {
+          "id": "review_q_1",
+          "question": "The packet says the exam questions are:",
+          "choices": [
+            "Shared in full after you register",
+            "Generated randomly",
+            "Written only from the vehicle-title section",
+            "Always the same in order"
+          ],
+          "correctChoice": "B",
+          "explanation": "Page 115 says the test uses a random question generator.",
+          "sourcePages": "115",
+          "isFromPacketSample": false
+        },
+        {
+          "id": "review_q_2",
+          "question": "Which study move best matches the packet and this app’s system?",
+          "choices": [
+            "Memorize only the sample answers",
+            "Ignore missed questions once you score above 50%",
+            "Use missed questions to identify weak topics and revisit the packet pages",
+            "Skip practice because the test is random"
+          ],
+          "correctChoice": "C",
+          "explanation": "The packet provides sample questions and this study system uses them to drive weak-topic review and the cram sheet.",
+          "sourcePages": "115-120",
+          "isFromPacketSample": false
+        }
+      ]
+    }
+  ],
+  "cramSheets": [
+    {
+      "id": "cram_ohio_notary_final",
+      "documentID": "ohio-notary-course-packet",
+      "title": "Ohio Notary Final Cram Sheet",
+      "contentMarkdown": "# Ohio Notary Final Cram Sheet\n\n## Test specifics\n- 30 questions\n- 1 hour\n- 80% passing score\n- 30-day retake if fail\n- Questions are randomly generated\n\n## Core identity of the office\n- A notary public is an impartial witness to transactions.\n- Do not give legal advice unless you are an Ohio-licensed attorney.\n- Check Ohio law for updates; the packet warns the law can change.\n\n## Qualifications / commission basics\n- Age 18+\n- Legal resident of Ohio (subject to packet exceptions for attorneys)\n- BCI report within the preceding 6 months\n- Education + test required for non-attorneys\n- Commission term: 5 years unless revoked\n- Statewide jurisdiction\n\n## Administrative updates to remember\n- Track name changes\n- Track address changes\n- Notice of resignation\n- Report disqualifying offenses\n- Duplicate commission fee referenced in packet\n- Certified copy of commission fee: $5\n\n## Fees\n- Up to $5 for a non-online notarial act\n- Up to $30 for an online notarial act\n- Up to $10 technology fee for online notarization\n- Travel fee must be reasonable and agreed to in advance\n- Do not charge both traditional and online fees for the same act\n\n## Core notarial steps\n1. Verify identity\n2. Create journal entry\n3. Administer the act\n4. Complete the certificate\n5. Collect fee\n\n## Appearance + ID\n- For non-online acts, the principal must personally appear\n- ID must contain photo or signature\n- ID must be current or expired less than 3 years\n- Personal knowledge / satisfactory evidence rules matter\n- Signature by mark: signer must make the mark personally with intent to sign\n- Designated alternative signer rules exist for limited physical ability situations\n\n## Certificates\n- Every notarial act needs a completed notarial certificate\n- If the wrong act type is listed, correct it at no charge\n- Non-attorney notary may explain acknowledgment vs jurat but may not advise which one the signer should choose\n\n## Acknowledgment\n- Appearance required\n- Signer acknowledges executing the instrument\n- Ask if it is the signer’s free act and deed\n- Key phrase: \"acknowledged before me\"\n\n## Jurat / affidavit / oath / affirmation\n- A jurat requires an oath or affirmation\n- Signer signs in your presence\n- Key phrases: subscribed and sworn / sworn to / affirmed / being duly sworn\n- Do not swap in an acknowledgment when an oath is required\n\n## Electronic notarization vs RON\n- Electronic notarization is still in person\n- RON is separate\n- Electronic notarization uses electronic signature + electronic seal on a digital document\n\n## RON essentials\n- Separate course + test + application\n- Must use online notarization system / vendor\n- Notary must be physically located in Ohio\n- Signer may be outside Ohio or the United States\n- Identity methods include credential analysis / identity proofing / dynamic knowledge-based authentication\n- Maintain electronic journal and recording\n- Do not record Social Security numbers in the journal\n- Refuse if identity, security, signature, or tamper-evident concerns exist\n\n## Vehicle titles\n- Two common sections: Assignment of Ownership and Application for Certificate of Title\n- Both affidavit-based sections require a jurat when notarized\n- Never notarize incomplete or blank title fields\n- If notarizing both parties, both sign in your presence and both receive oath/affirmation\n- Dealer exception exists for certain dealer-involved transfers\n\n## Biggest prohibited acts / traps\n- Do not notarize your own signature\n- Do not notarize a document you signed\n- Do not notarize where you have an interest in the transaction\n- Do not notarize incomplete or blank documents\n- Do not alter the document after it is signed\n- Do not alter the certificate after completion\n- Do not notarize if signer is mentally incompetent or incapable\n- Do not use “notario” or “notario publico”\n- Non-attorneys cannot determine validity of a POA or provide legal representation\n\n## Penalties\n- Revocation\n- Suspension\n- Admonition\n- Some violations create permanent reappointment problems\n- Self-report disqualifying offenses\n\n## 2025 updates / HB 315\n- Effective April 4, 2025\n- Packet highlights in-person oath before first act for a new notary\n- Updated topics include fees, prohibited acts, ID/personal knowledge, certificates, electronic documents\n\n## Final exam strategy\n- Know fees exactly\n- Know acknowledgment vs jurat difference exactly\n- Know appearance + ID rules exactly\n- Know title blanks are never okay\n- Know the top prohibited acts exactly\n- If torn between two answers, choose the one that protects impartiality, personal appearance, proper ID, complete documents, and correct certificate wording"
+    }
+  ]
+}

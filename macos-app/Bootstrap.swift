@@ -4,6 +4,7 @@ import SwiftData
 
 private let seededCourseID = "ohio-notary-course-packet"
 private let seededCourseFileName = "OhioNotaryCoursePacket.pdf"
+private let seededCourseContentFileName = "notary-course-content.json"
 
 struct SeedMilestoneTemplate {
     let id: String
@@ -24,6 +25,7 @@ enum AppBootstrapper {
     static func bootstrap(context: ModelContext) throws {
         try ensureConfig(context: context)
         try ensureSeededCourse(context: context)
+        try ensureStudyContent(context: context)
         try ensureMilestones(context: context)
         try applyDerivedDefaults(context: context)
         try context.save()
@@ -47,6 +49,12 @@ enum AppBootstrapper {
             .appendingPathComponent(seededCourseFileName)
     }
 
+    private static func seededCourseContentLocalURL() throws -> URL {
+        try applicationSupportDirectory()
+            .appendingPathComponent("SeededCourse", isDirectory: true)
+            .appendingPathComponent(seededCourseContentFileName)
+    }
+
     private static func ensureConfig(context: ModelContext) throws {
         let descriptor = FetchDescriptor<NotaryAppConfig>()
         if try context.fetch(descriptor).isEmpty {
@@ -60,25 +68,32 @@ enum AppBootstrapper {
 
         let destinationDirectory = try applicationSupportDirectory().appendingPathComponent("SeededCourse", isDirectory: true)
         try FileManager.default.createDirectory(at: destinationDirectory, withIntermediateDirectories: true)
-        let destination = destinationDirectory.appendingPathComponent(seededCourseFileName)
+        let destinationPDF = destinationDirectory.appendingPathComponent(seededCourseFileName)
+        let destinationJSON = destinationDirectory.appendingPathComponent(seededCourseContentFileName)
 
         if let sourceURL = Bundle.main.url(forResource: "OhioNotaryCoursePacket", withExtension: "pdf", subdirectory: "SeededCourse"),
-           !FileManager.default.fileExists(atPath: destination.path) {
-            try? FileManager.default.removeItem(at: destination)
-            try FileManager.default.copyItem(at: sourceURL, to: destination)
+           !FileManager.default.fileExists(atPath: destinationPDF.path) {
+            try? FileManager.default.removeItem(at: destinationPDF)
+            try FileManager.default.copyItem(at: sourceURL, to: destinationPDF)
         }
 
-        let pageCount = PDFDocument(url: destination)?.pageCount ?? 149
+        if let sourceJSON = Bundle.main.url(forResource: "notary-course-content", withExtension: "json", subdirectory: "SeededCourse"),
+           !FileManager.default.fileExists(atPath: destinationJSON.path) {
+            try? FileManager.default.removeItem(at: destinationJSON)
+            try FileManager.default.copyItem(at: sourceJSON, to: destinationJSON)
+        }
+
+        let pageCount = PDFDocument(url: destinationPDF)?.pageCount ?? 149
 
         if let existing {
-            existing.localPath = destination.path
+            existing.localPath = destinationPDF.path
             existing.pageCount = pageCount
         } else {
             let document = CourseDocument(
                 id: seededCourseID,
                 title: "Ohio Notary Course Packet",
                 fileName: seededCourseFileName,
-                localPath: destination.path,
+                localPath: destinationPDF.path,
                 sourceType: .seeded,
                 status: .notStarted,
                 pageCount: pageCount,
@@ -87,6 +102,181 @@ enum AppBootstrapper {
             context.insert(document)
             context.insert(StudyProgress(documentID: seededCourseID))
         }
+    }
+
+    private static func ensureStudyContent(context: ModelContext) throws {
+        let payload = try loadSeededCourseContent()
+
+        let modules = try context.fetch(FetchDescriptor<StudyModule>())
+        let modulesByID = Dictionary(uniqueKeysWithValues: modules.map { ($0.id, $0) })
+        let rules = try context.fetch(FetchDescriptor<StudyRule>())
+        let rulesByID = Dictionary(uniqueKeysWithValues: rules.map { ($0.id, $0) })
+        let flashcards = try context.fetch(FetchDescriptor<Flashcard>())
+        let flashcardsByID = Dictionary(uniqueKeysWithValues: flashcards.map { ($0.id, $0) })
+        let questions = try context.fetch(FetchDescriptor<PracticeQuestion>())
+        let questionsByID = Dictionary(uniqueKeysWithValues: questions.map { ($0.id, $0) })
+        let cramSheets = try context.fetch(FetchDescriptor<CramSheet>())
+        let cramSheetsByID = Dictionary(uniqueKeysWithValues: cramSheets.map { ($0.id, $0) })
+        let masteryRecords = try context.fetch(FetchDescriptor<TopicMastery>())
+        let masteryByID = Dictionary(uniqueKeysWithValues: masteryRecords.map { ($0.id, $0) })
+
+        var seededModuleIDs = Set<String>()
+        var seededRuleIDs = Set<String>()
+        var seededFlashcardIDs = Set<String>()
+        var seededQuestionIDs = Set<String>()
+        var seededCramIDs = Set<String>()
+
+        for modulePayload in payload.modules {
+            seededModuleIDs.insert(modulePayload.id)
+            let module = modulesByID[modulePayload.id] ?? {
+                let created = StudyModule(
+                    id: modulePayload.id,
+                    documentID: payload.metadata.documentID,
+                    title: modulePayload.title,
+                    summary: modulePayload.summary,
+                    sortOrder: modulePayload.sortOrder,
+                    sourcePageStart: modulePayload.sourcePageStart,
+                    sourcePageEnd: modulePayload.sourcePageEnd,
+                    examWeight: modulePayload.examWeight,
+                    keyTerms: modulePayload.keyTerms,
+                    checklistBullets: modulePayload.checklistBullets,
+                    commonMistakes: modulePayload.commonMistakes
+                )
+                context.insert(created)
+                return created
+            }()
+
+            module.documentID = payload.metadata.documentID
+            module.title = modulePayload.title
+            module.summary = modulePayload.summary
+            module.sortOrder = modulePayload.sortOrder
+            module.sourcePageStart = modulePayload.sourcePageStart
+            module.sourcePageEnd = modulePayload.sourcePageEnd
+            module.examWeight = modulePayload.examWeight
+            module.keyTerms = modulePayload.keyTerms
+            module.checklistBullets = modulePayload.checklistBullets
+            module.commonMistakes = modulePayload.commonMistakes
+
+            if masteryByID[modulePayload.id] == nil {
+                context.insert(TopicMastery(moduleID: modulePayload.id))
+            }
+
+            for (index, rulePayload) in modulePayload.rules.enumerated() {
+                seededRuleIDs.insert(rulePayload.id)
+                let rule = rulesByID[rulePayload.id] ?? {
+                    let created = StudyRule(
+                        id: rulePayload.id,
+                        moduleID: modulePayload.id,
+                        sortOrder: index,
+                        ruleText: rulePayload.ruleText,
+                        isHighPriority: rulePayload.isHighPriority,
+                        sourcePages: rulePayload.sourcePages
+                    )
+                    context.insert(created)
+                    return created
+                }()
+                rule.moduleID = modulePayload.id
+                rule.sortOrder = index
+                rule.ruleText = rulePayload.ruleText
+                rule.isHighPriority = rulePayload.isHighPriority
+                rule.sourcePages = rulePayload.sourcePages
+            }
+
+            for (index, flashcardPayload) in modulePayload.flashcards.enumerated() {
+                seededFlashcardIDs.insert(flashcardPayload.id)
+                let difficulty = FlashcardDifficulty(rawValue: flashcardPayload.difficulty) ?? .core
+                let card = flashcardsByID[flashcardPayload.id] ?? {
+                    let created = Flashcard(
+                        id: flashcardPayload.id,
+                        moduleID: modulePayload.id,
+                        sortOrder: index,
+                        prompt: flashcardPayload.prompt,
+                        answer: flashcardPayload.answer,
+                        sourcePages: flashcardPayload.sourcePages,
+                        difficulty: difficulty
+                    )
+                    context.insert(created)
+                    return created
+                }()
+                card.moduleID = modulePayload.id
+                card.sortOrder = index
+                card.prompt = flashcardPayload.prompt
+                card.answer = flashcardPayload.answer
+                card.sourcePages = flashcardPayload.sourcePages
+                card.difficulty = difficulty
+            }
+
+            for (index, questionPayload) in modulePayload.questions.enumerated() {
+                seededQuestionIDs.insert(questionPayload.id)
+                let prompt = questionsByID[questionPayload.id] ?? {
+                    let created = PracticeQuestion(
+                        id: questionPayload.id,
+                        moduleID: modulePayload.id,
+                        sortOrder: index,
+                        question: questionPayload.question,
+                        choices: questionPayload.choices,
+                        correctChoice: questionPayload.correctChoice,
+                        explanation: questionPayload.explanation,
+                        sourcePages: questionPayload.sourcePages,
+                        isFromPacketSample: questionPayload.isFromPacketSample
+                    )
+                    context.insert(created)
+                    return created
+                }()
+                prompt.moduleID = modulePayload.id
+                prompt.sortOrder = index
+                prompt.question = questionPayload.question
+                prompt.choices = questionPayload.choices
+                prompt.correctChoice = questionPayload.correctChoice
+                prompt.explanation = questionPayload.explanation
+                prompt.sourcePages = questionPayload.sourcePages
+                prompt.isFromPacketSample = questionPayload.isFromPacketSample
+            }
+        }
+
+        for cramPayload in payload.cramSheets {
+            seededCramIDs.insert(cramPayload.id)
+            let cram = cramSheetsByID[cramPayload.id] ?? {
+                let created = CramSheet(
+                    id: cramPayload.id,
+                    documentID: cramPayload.documentID,
+                    title: cramPayload.title,
+                    contentMarkdown: cramPayload.contentMarkdown
+                )
+                context.insert(created)
+                return created
+            }()
+            cram.documentID = cramPayload.documentID
+            cram.title = cramPayload.title
+            cram.contentMarkdown = cramPayload.contentMarkdown
+        }
+
+        for module in modules where module.documentID == payload.metadata.documentID && !seededModuleIDs.contains(module.id) {
+            context.delete(module)
+        }
+        for item in rules where !seededRuleIDs.contains(item.id) {
+            context.delete(item)
+        }
+        for card in flashcards where !seededFlashcardIDs.contains(card.id) {
+            context.delete(card)
+        }
+        for prompt in questions where !seededQuestionIDs.contains(prompt.id) {
+            context.delete(prompt)
+        }
+        for cram in cramSheets where cram.documentID == payload.metadata.documentID && !seededCramIDs.contains(cram.id) {
+            context.delete(cram)
+        }
+    }
+
+    private static func loadSeededCourseContent() throws -> SeededCourseContent {
+        if let bundleURL = Bundle.main.url(forResource: "notary-course-content", withExtension: "json", subdirectory: "SeededCourse") {
+            let data = try Data(contentsOf: bundleURL)
+            return try JSONDecoder().decode(SeededCourseContent.self, from: data)
+        }
+
+        let localURL = try seededCourseContentLocalURL()
+        let data = try Data(contentsOf: localURL)
+        return try JSONDecoder().decode(SeededCourseContent.self, from: data)
     }
 
     private static func ensureMilestones(context: ModelContext) throws {

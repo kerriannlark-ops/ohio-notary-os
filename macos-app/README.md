@@ -6,6 +6,10 @@ Native macOS study + launch shell for Ohio Notary OS.
 - Start Here dashboard
 - Local course packet library
 - PDF reading with resume progress
+- Packet outline by exam topic
+- Flashcards
+- Practice quizzes
+- Final cram sheet
 - Notes + bookmarks
 - Licensing / launch checklist
 - Embedded Operations web view for the deployed Notary OS dashboard
@@ -13,9 +17,12 @@ Native macOS study + launch shell for Ohio Notary OS.
 ## Seeded private course asset
 This app packages the current paid course packet from:
 
-`/Users/kerriannlark/Desktop/Study Guide with PowerPoint Handouts-2.pdf`
+`/Users/kerriannlark/Desktop/NOTARY LICENSE COURSE/Study Guide with PowerPoint Handouts-2.pdf`
 
-At build time, the PDF is copied into the app bundle and then imported into Application Support on first launch.
+At build time:
+- the PDF is copied into the app bundle
+- a private structured study JSON asset is generated from the packet
+- both assets are imported into Application Support on first launch
 
 ## Build
 From repo root:
@@ -31,5 +38,7 @@ From repo root:
 
 ## Notes
 - Uses Times New Roman for the calmer legal-study style requested.
-- Uses local SwiftData persistence for study progress and launch checklist state.
+- Uses a red / oxblood icon and low-stimulation palette.
+- Uses local SwiftData persistence for study progress, quizzes, weak-topic tracking, and launch checklist state.
 - Uses the deployed web app as the business operations backend.
+- Paid course content stays in the macOS app only.
