@@ -1,18 +1,18 @@
 # Notary OS Study Hub (macOS)
 
-Native macOS study + launch shell for Ohio Notary OS.
+Regular macOS study + launch app for Ohio Notary OS.
 
 ## What it includes
 - Start Here dashboard
 - Local course packet library
-- PDF reading with resume progress
+- Resume packet page tracking
 - Packet outline by exam topic
 - Flashcards
 - Practice quizzes
 - Final cram sheet
-- Notes + bookmarks
 - Licensing / launch checklist
-- Embedded Operations web view for the deployed Notary OS dashboard
+- Link-out to the live Notary OS operations dashboard
+- No Xcode required to build the regular app bundle
 
 ## Seeded private course asset
 This app packages the current paid course packet from:
@@ -22,9 +22,9 @@ This app packages the current paid course packet from:
 At build time:
 - the PDF is copied into the app bundle
 - a private structured study JSON asset is generated from the packet
-- both assets are imported into Application Support on first launch
+- the app launches a local study workspace with your packet, modules, flashcards, quiz bank, and cram sheet
 
-## Build
+## Build the regular macOS app
 From repo root:
 
 ```bash
@@ -36,9 +36,16 @@ From repo root:
 - Zip: `build/Notary OS Study Hub.zip`
 - Drag-and-drop folder: `build/Applications Ready/`
 
+## Optional Xcode/native build
+The earlier SwiftUI native build script is preserved here if you ever want it later:
+
+```bash
+./macos-app/build_swift_macos_app.sh
+```
+
 ## Notes
 - Uses Times New Roman for the calmer legal-study style requested.
 - Uses a red / oxblood icon and low-stimulation palette.
-- Uses local SwiftData persistence for study progress, quizzes, weak-topic tracking, and launch checklist state.
+- Uses browser local storage for study progress in the no-Xcode build.
 - Uses the deployed web app as the business operations backend.
-- Paid course content stays in the macOS app only.
+- Paid course content stays in the macOS app bundle only.

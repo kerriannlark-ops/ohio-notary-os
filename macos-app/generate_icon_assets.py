@@ -7,13 +7,18 @@ ICONSET_DIR = MACOS_DIR / "AppIcon.iconset"
 MASTER_PATH = MACOS_DIR / "AppIcon-master.png"
 ICNS_PATH = MACOS_DIR / "AppIcon.icns"
 
-PARCHMENT = (247, 241, 234, 255)
-ROSE = (236, 221, 217, 255)
-INK = (40, 26, 28, 255)
-OXBLOOD = (126, 31, 43, 255)
-DEEP_RED = (155, 45, 58, 255)
-BRASS = (181, 141, 86, 255)
-SHADOW = (35, 12, 18, 55)
+PARCHMENT = (248, 241, 232, 255)
+PARCHMENT_DARK = (231, 214, 199, 255)
+PAPER = (255, 251, 246, 255)
+INK = (52, 31, 30, 255)
+OXBLOOD = (133, 24, 39, 255)
+DEEP_RED = (167, 40, 56, 255)
+BLUSH = (228, 202, 194, 255)
+BRASS = (187, 145, 84, 255)
+BRASS_DARK = (134, 97, 49, 255)
+LINE_RED = (194, 155, 150, 255)
+LINE_SOFT = (226, 213, 206, 255)
+SHADOW = (44, 18, 22, 68)
 WHITE = (255, 255, 255, 255)
 
 
@@ -28,17 +33,17 @@ def lerp(a, b, t: float):
 
 
 def build_gradient(size: int) -> Image.Image:
-    top = (253, 248, 243)
-    mid = (239, 225, 220)
-    bottom = (223, 198, 194)
+    top = (252, 246, 239)
+    mid = (237, 220, 211)
+    bottom = (215, 185, 182)
     gradient = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(gradient)
     for y in range(size):
         t = y / max(1, size - 1)
-        if t < 0.5:
-            color = lerp(top, mid, t / 0.5)
+        if t < 0.55:
+            color = lerp(top, mid, t / 0.55)
         else:
-            color = lerp(mid, bottom, (t - 0.5) / 0.5)
+            color = lerp(mid, bottom, (t - 0.55) / 0.45)
         draw.line((0, y, size, y), fill=color + (255,))
     return gradient
 
@@ -50,58 +55,84 @@ def build_master() -> Image.Image:
 
     glow = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     gdraw = ImageDraw.Draw(glow)
-    gdraw.ellipse((110, 120, 914, 924), fill=(255, 255, 255, 120))
-    glow = glow.filter(ImageFilter.GaussianBlur(28))
-    image.alpha_composite(glow)
+    gdraw.ellipse((140, 110, 930, 890), fill=(255, 255, 255, 105))
+    image.alpha_composite(glow.filter(ImageFilter.GaussianBlur(36)))
 
     shadow = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     sdraw = ImageDraw.Draw(shadow)
-    sdraw.rounded_rectangle((170, 170, 854, 854), radius=156, fill=SHADOW)
-    shadow = shadow.filter(ImageFilter.GaussianBlur(28))
-    image.alpha_composite(shadow)
+    sdraw.rounded_rectangle((150, 136, 866, 886), radius=148, fill=SHADOW)
+    image.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(32)))
 
     draw = ImageDraw.Draw(image)
-    draw.rounded_rectangle((176, 164, 848, 860), radius=160, fill=PARCHMENT, outline=(211, 191, 183, 255), width=6)
 
-    draw.rounded_rectangle((252, 236, 704, 306), radius=28, fill=OXBLOOD)
-    draw.rounded_rectangle((724, 220, 800, 420), radius=24, fill=BRASS)
-    draw.polygon(((724, 394), (800, 394), (762, 454)), fill=(193, 154, 98, 255))
+    # notepad body
+    left, top, right, bottom = 184, 154, 830, 876
+    draw.rounded_rectangle((left, top, right, bottom), radius=146, fill=PAPER, outline=PARCHMENT_DARK, width=6)
 
-    for box in (
-        (254, 362, 694, 390),
-        (254, 420, 774, 448),
-        (254, 478, 722, 506),
-        (254, 536, 654, 564),
-    ):
-        draw.rounded_rectangle(box, radius=14, fill=ROSE)
+    # notepad header
+    draw.rounded_rectangle((left + 34, top + 28, right - 34, top + 132), radius=34, fill=OXBLOOD)
 
-    center = (520, 608)
-    outer = 188
-    inner = 138
-    draw.ellipse((center[0] - outer, center[1] - outer, center[0] + outer, center[1] + outer), fill=(245, 233, 227, 255), outline=OXBLOOD, width=18)
-    draw.ellipse((center[0] - inner, center[1] - inner, center[0] + inner, center[1] + inner), fill=(251, 245, 240, 255), outline=(180, 126, 116, 255), width=8)
+    # rings
+    ring_y = top + 78
+    for x in (288, 392, 496, 600, 704):
+        draw.rounded_rectangle((x - 14, top + 8, x + 14, top + 82), radius=12, fill=BRASS, outline=BRASS_DARK, width=4)
+        draw.ellipse((x - 18, ring_y - 18, x + 18, ring_y + 18), outline=WHITE, width=6)
 
-    import math
-    for angle in range(0, 360, 30):
-        radians = math.radians(angle)
-        x1 = center[0] + int(150 * math.cos(radians))
-        y1 = center[1] + int(150 * math.sin(radians))
-        x2 = center[0] + int(174 * math.cos(radians))
-        y2 = center[1] + int(174 * math.sin(radians))
-        draw.line((x1, y1, x2, y2), fill=BRASS, width=10)
+    # paper lines
+    for y in range(top + 194, bottom - 120, 62):
+        draw.rounded_rectangle((left + 72, y, right - 72, y + 10), radius=5, fill=LINE_SOFT)
+    draw.rounded_rectangle((left + 72, top + 196, left + 108, bottom - 84), radius=12, fill=LINE_RED)
 
-    draw.ellipse((470, 554, 570, 654), outline=OXBLOOD, width=12)
-    draw.line((434, 646, 606, 646), fill=OXBLOOD, width=12)
-    draw.line((438, 646, 412, 724), fill=OXBLOOD, width=10)
-    draw.line((602, 646, 628, 724), fill=OXBLOOD, width=10)
-    draw.arc((372, 710, 500, 792), start=0, end=180, fill=OXBLOOD, width=9)
-    draw.arc((540, 710, 668, 792), start=0, end=180, fill=OXBLOOD, width=9)
+    # ribbon tab
+    draw.rounded_rectangle((right - 108, top + 182, right - 36, top + 332), radius=22, fill=DEEP_RED)
+    draw.polygon(((right - 108, top + 332), (right - 36, top + 332), (right - 72, top + 392)), fill=DEEP_RED)
 
-    draw.ellipse((640, 676, 846, 882), fill=DEEP_RED, outline=(94, 19, 30, 255), width=10)
-    draw.line((700, 780, 742, 820), fill=WHITE, width=24)
-    draw.line((742, 820, 810, 732), fill=WHITE, width=24)
+    # legal scales centerpiece
+    cx, cy = 507, 542
+    draw.ellipse((cx - 162, cy - 162, cx + 162, cy + 162), fill=(251, 245, 239, 255), outline=OXBLOOD, width=16)
+    draw.ellipse((cx - 130, cy - 130, cx + 130, cy + 130), fill=(248, 238, 230, 255), outline=BLUSH, width=8)
 
-    draw.ellipse((248, 182, 304, 238), fill=BRASS)
+    # pillar
+    draw.rounded_rectangle((cx - 16, cy - 92, cx + 16, cy + 82), radius=10, fill=BRASS, outline=BRASS_DARK, width=4)
+    draw.polygon(((cx - 34, cy - 92), (cx + 34, cy - 92), (cx, cy - 138)), fill=BRASS)
+    draw.rounded_rectangle((cx - 86, cy + 82, cx + 86, cy + 108), radius=12, fill=BRASS, outline=BRASS_DARK, width=4)
+
+    # beam
+    beam_y = cy - 48
+    draw.rounded_rectangle((cx - 136, beam_y - 10, cx + 136, beam_y + 10), radius=10, fill=BRASS, outline=BRASS_DARK, width=4)
+    draw.ellipse((cx - 18, beam_y - 18, cx + 18, beam_y + 18), fill=BRASS)
+
+    # chains + pans
+    for direction in (-1, 1):
+        x = cx + direction * 102
+        pan_top = beam_y + 44
+        pan_bottom = beam_y + 102
+        draw.line((x, beam_y + 8, x - 24, pan_top), fill=BRASS_DARK, width=5)
+        draw.line((x, beam_y + 8, x + 24, pan_top), fill=BRASS_DARK, width=5)
+        draw.arc((x - 42, pan_top - 6, x + 42, pan_bottom), start=0, end=180, fill=BRASS_DARK, width=6)
+        draw.line((x - 34, pan_bottom - 10, x + 34, pan_bottom - 10), fill=BRASS, width=8)
+
+    # legal checklist marks near bottom
+    checkbox_x = left + 132
+    start_y = 688
+    for idx in range(3):
+        y = start_y + idx * 58
+        draw.rounded_rectangle((checkbox_x, y, checkbox_x + 30, y + 30), radius=8, outline=DEEP_RED, width=4, fill=(255, 252, 248, 255))
+        if idx < 2:
+            draw.line((checkbox_x + 7, y + 16, checkbox_x + 14, y + 23), fill=OXBLOOD, width=5)
+            draw.line((checkbox_x + 14, y + 23, checkbox_x + 24, y + 9), fill=OXBLOOD, width=5)
+        draw.rounded_rectangle((checkbox_x + 48, y + 10, right - 126, y + 18), radius=4, fill=LINE_SOFT)
+
+    # seal accent
+    seal_center = (706, 746)
+    draw.ellipse((seal_center[0] - 92, seal_center[1] - 92, seal_center[0] + 92, seal_center[1] + 92), fill=DEEP_RED, outline=(95, 18, 29, 255), width=8)
+    draw.ellipse((seal_center[0] - 58, seal_center[1] - 58, seal_center[0] + 58, seal_center[1] + 58), fill=(250, 241, 235, 255), outline=BRASS, width=6)
+    draw.line((seal_center[0] - 24, seal_center[1] + 2, seal_center[0] - 2, seal_center[1] + 24), fill=OXBLOOD, width=14)
+    draw.line((seal_center[0] - 2, seal_center[1] + 24, seal_center[0] + 30, seal_center[1] - 16), fill=OXBLOOD, width=14)
+
+    # corner accent
+    draw.ellipse((228, 192, 286, 250), fill=BRASS)
+
     return image
 
 
