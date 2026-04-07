@@ -1,18 +1,38 @@
 # Notary OS Study Hub (macOS)
 
-Regular macOS study + launch app for Ohio Notary OS.
+Regular no-Xcode macOS study + launch app for Ohio Notary OS.
 
 ## What it includes
-- Start Here dashboard
-- Local course packet library
+- Start Here dashboard with a study-first `Today’s Study Session` widget
+- Private local course packet library
 - Resume packet page tracking
 - Packet outline by exam topic
-- Flashcards
-- Practice quizzes
-- Final cram sheet
+- Flashcards with keyboard support
+- Practice quizzes with weak-topic tracking
+- Final cram sheet with printable mode
 - Licensing / launch checklist
+- Ohio Notary Business Roadmap with per-phase status, notes, and next steps
+- Dark mode / light mode / system theme preference
+- Sidebar collapse and shortcut overlay
 - Link-out to the live Notary OS operations dashboard
 - No Xcode required to build the regular app bundle
+
+## Keyboard shortcuts
+- `⌘1` Start Here
+- `⌘2` Course Packet
+- `⌘3` Study Modules
+- `⌘4` Flashcards
+- `⌘5` Practice Quiz
+- `⌘6` Final Cram
+- `⌘7` Licensing Checklist
+- `⌘8` Roadmap
+- `⌘9` Operations
+- `⌘B` Toggle sidebar
+- `⌘D` Toggle dark mode quickly
+- `⌘P` Print cram sheet
+- `⌘/` Shortcut help
+- `Space` Flip flashcard
+- `← / →` Previous / next flashcard
 
 ## Seeded private course asset
 This app packages the current paid course packet from:
@@ -22,7 +42,8 @@ This app packages the current paid course packet from:
 At build time:
 - the PDF is copied into the app bundle
 - a private structured study JSON asset is generated from the packet
-- the app launches a local study workspace with your packet, modules, flashcards, quiz bank, and cram sheet
+- the Ohio Notary business roadmap JSON is bundled into the app
+- the app launches a local study workspace with your packet, modules, flashcards, quiz bank, cram sheet, checklist, and roadmap
 
 ## Build the regular macOS app
 From repo root:
@@ -36,6 +57,16 @@ From repo root:
 - Zip: `build/Notary OS Study Hub.zip`
 - Drag-and-drop folder: `build/Applications Ready/`
 
+## What the roadmap covers
+- Foundation
+- Local mobile launch
+- Specialty niche expansion
+- Digital scale / RON
+- Premium services
+- Recurring business accounts
+
+The roadmap stays local to the Mac app and is not exposed in the public web app.
+
 ## Optional Xcode/native build
 The earlier SwiftUI native build script is preserved here if you ever want it later:
 
@@ -45,7 +76,7 @@ The earlier SwiftUI native build script is preserved here if you ever want it la
 
 ## Notes
 - Uses Times New Roman for the calmer legal-study style requested.
-- Uses a red / oxblood icon and low-stimulation palette.
-- Uses browser local storage for study progress in the no-Xcode build.
+- Uses the red legal-scale + notepad icon system.
+- Uses browser local storage for study progress, roadmap status, theme preference, and daily session state in the no-Xcode build.
 - Uses the deployed web app as the business operations backend.
 - Paid course content stays in the macOS app bundle only.

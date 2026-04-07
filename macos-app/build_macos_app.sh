@@ -12,6 +12,7 @@ ZIP_PATH="$BUILD_DIR/Notary OS Study Hub.zip"
 APPLICATIONS_READY_DIR="$BUILD_DIR/Applications Ready"
 SOURCE_PDF="/Users/kerriannlark/Desktop/NOTARY LICENSE COURSE/Study Guide with PowerPoint Handouts-2.pdf"
 SOURCE_JSON="$ROOT_DIR/macos-app/SeededCourse/notary-course-content.json"
+ROADMAP_JSON="$ROOT_DIR/macos-app/SeededCourse/roadmap-content.json"
 WEB_SOURCE_DIR="$ROOT_DIR/macos-app/WebApp"
 LAUNCH_HELPER="$ROOT_DIR/macos-app/launch_regular_app.py"
 WEBAPP_RESOURCES_DIR="$RESOURCES_DIR/WebApp"
@@ -30,13 +31,20 @@ if [ ! -f "$SOURCE_PDF" ]; then
   exit 1
 fi
 
+if [ ! -f "$ROADMAP_JSON" ]; then
+  echo "Missing roadmap content JSON at: $ROADMAP_JSON" >&2
+  exit 1
+fi
+
 PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_course_content.py" --source "$SOURCE_PDF" --output "$SOURCE_JSON"
 python3 "$ROOT_DIR/macos-app/generate_icon_assets.py"
+
 if command -v xattr >/dev/null 2>&1; then
   xattr -cr "$ROOT_DIR/macos-app/AppIcon.iconset" || true
   xattr -cr "$ROOT_DIR/macos-app/AppIcon-master.png" || true
   xattr -cr "$ROOT_DIR/macos-app/AppIcon.icns" || true
 fi
+
 if command -v iconutil >/dev/null 2>&1; then
   iconutil -c icns "$ROOT_DIR/macos-app/AppIcon.iconset" -o "$ROOT_DIR/macos-app/AppIcon.icns" >/dev/null 2>&1 || true
 fi
@@ -51,6 +59,7 @@ cp "$LAUNCH_HELPER" "$RESOURCES_DIR/launch_regular_app.py"
 chmod +x "$RESOURCES_DIR/launch_regular_app.py"
 cp "$SOURCE_PDF" "$SEEDED_DIR/OhioNotaryCoursePacket.pdf"
 cp "$SOURCE_JSON" "$SEEDED_DIR/notary-course-content.json"
+cp "$ROADMAP_JSON" "$SEEDED_DIR/roadmap-content.json"
 cp "$ROOT_DIR/macos-app/AppIcon.icns" "$RESOURCES_DIR/AppIcon.icns"
 
 SOURCE_JSON_ENV="$SOURCE_JSON" WEBAPP_RESOURCES_DIR_ENV="$WEBAPP_RESOURCES_DIR" python3 - <<'PY'
@@ -61,6 +70,16 @@ source = Path(os.environ['SOURCE_JSON_ENV'])
 target = Path(os.environ['WEBAPP_RESOURCES_DIR_ENV']) / 'study-data.js'
 data = json.loads(source.read_text(encoding='utf-8'))
 target.write_text('window.NOTARY_COURSE_CONTENT = ' + json.dumps(data, ensure_ascii=False) + ';', encoding='utf-8')
+PY
+
+ROADMAP_JSON_ENV="$ROADMAP_JSON" WEBAPP_RESOURCES_DIR_ENV="$WEBAPP_RESOURCES_DIR" python3 - <<'PY'
+import json
+import os
+from pathlib import Path
+source = Path(os.environ['ROADMAP_JSON_ENV'])
+target = Path(os.environ['WEBAPP_RESOURCES_DIR_ENV']) / 'roadmap-data.js'
+data = json.loads(source.read_text(encoding='utf-8'))
+target.write_text('window.NOTARY_ROADMAP_CONTENT = ' + json.dumps(data, ensure_ascii=False) + ';', encoding='utf-8')
 PY
 
 cat > "$EXECUTABLE_PATH" <<'APP'
@@ -93,9 +112,9 @@ cat > "$PLIST_PATH" <<PLIST
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleShortVersionString</key>
-  <string>1.0.0</string>
+  <string>1.1.0</string>
   <key>CFBundleVersion</key>
-  <string>1</string>
+  <string>2</string>
   <key>CFBundleIconFile</key>
   <string>AppIcon.icns</string>
   <key>LSMinimumSystemVersion</key>
@@ -112,6 +131,7 @@ cat > "$APPLICATIONS_READY_DIR/README.txt" <<'TXT'
 Drag "Notary OS Study Hub.app" into the "Applications" shortcut in this folder.
 Double-click the app to launch the private study workspace.
 This build does not require Xcode.
+Includes roadmap tracking, dark mode, keyboard shortcuts, and a printable cram sheet.
 TXT
 
 ditto -c -k --sequesterRsrc --keepParent "$APP_DIR" "$ZIP_PATH"

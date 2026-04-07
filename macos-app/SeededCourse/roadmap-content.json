@@ -1,0 +1,297 @@
+{
+  "title": "Ohio Notary Business Roadmap",
+  "generatedAt": "2026-04-07",
+  "phases": [
+    {
+      "id": "foundation",
+      "label": "Phase 1 — Foundation",
+      "goal": "Get legal, equipped, and operational.",
+      "steps": [
+        "Complete Ohio commission process.",
+        "Obtain seal and journal.",
+        "Learn Ohio compliance rules.",
+        "Set up business basics: name, phone/email, scheduling, intake form, invoice template.",
+        "Define service area: Columbus, Franklin County, nearby suburbs.",
+        "Start with low-risk documents: acknowledgments, jurats, affidavits, school/employment forms."
+      ],
+      "primaryRevenue": [
+        "Employer / in-house notarizations",
+        "Simple general notary work"
+      ],
+      "bestClients": [
+        "Employer / internal users",
+        "Low-risk general public signers"
+      ],
+      "primaryObjective": [
+        "Gain reps",
+        "Avoid mistakes",
+        "Build confidence",
+        "Create process discipline"
+      ]
+    },
+    {
+      "id": "local_mobile_launch",
+      "label": "Phase 2 — Local Mobile Launch",
+      "goal": "Start making consistent money locally.",
+      "steps": [
+        "Launch mobile notary service.",
+        "Set travel zones and travel fees.",
+        "Offer same-day, evening, and weekend service.",
+        "Create public presence: Google Business Profile, simple website, booking form.",
+        "Build review pipeline.",
+        "Track appointments, mileage, revenue, and most common requests."
+      ],
+      "primaryRevenue": [
+        "Mobile notarizations",
+        "Travel fees",
+        "After-hours convenience fees"
+      ],
+      "bestClients": [
+        "General public",
+        "Working professionals",
+        "Families",
+        "Urgent document signers"
+      ],
+      "primaryObjective": [
+        "Establish local reputation",
+        "Build repeat/referral flow",
+        "Learn your most profitable appointment types"
+      ]
+    },
+    {
+      "id": "specialty_niche_expansion",
+      "label": "Phase 3 — Specialty Niche Expansion",
+      "goal": "Increase ticket size and become more in-demand.",
+      "steps": [
+        "Add hospital / hospice / nursing-home service.",
+        "Add vehicle-title / auto-document service.",
+        "Add estate-planning execution support.",
+        "Add urgent and difficult-location appointments.",
+        "Build referral channels with attorneys, care facilities, funeral/elder-service contacts, and title-related contacts."
+      ],
+      "primaryRevenue": [
+        "Urgent mobile work",
+        "Specialty location service",
+        "Niche referral appointments"
+      ],
+      "bestClients": [
+        "Families",
+        "Elder-care clients",
+        "Bedside signers",
+        "Vehicle sellers/buyers",
+        "Estate-planning clients"
+      ],
+      "primaryObjective": [
+        "Specialize in high-urgency, higher-value work",
+        "Become known for reliable problem-solving"
+      ]
+    },
+    {
+      "id": "digital_scale",
+      "label": "Phase 4 — Digital Scale",
+      "goal": "Reduce time lost to travel and expand capacity.",
+      "steps": [
+        "Get Ohio RON authorization.",
+        "Set up compliant RON platform.",
+        "Build online workflow: intake, ID prep, session scheduling, document upload, tech check.",
+        "Offer same-day RON, evening RON, and out-of-area Ohio-based service.",
+        "Automate reminders and follow-up."
+      ],
+      "primaryRevenue": [
+        "RON act fees",
+        "RON technology fee",
+        "Repeat online clients"
+      ],
+      "bestClients": [
+        "Busy professionals",
+        "Returning clients",
+        "Business clients",
+        "Signers outside your immediate local radius"
+      ],
+      "primaryObjective": [
+        "Improve margins",
+        "Reduce dead travel time",
+        "Increase appointment volume"
+      ]
+    },
+    {
+      "id": "premium_services",
+      "label": "Phase 5 — Premium Services",
+      "goal": "Move into higher-ticket notary work.",
+      "steps": [
+        "Train for loan signings.",
+        "Join signing platforms.",
+        "Build relationships with title companies, escrow professionals, and real estate attorneys.",
+        "Upgrade equipment: printer, scanner, secure document workflow.",
+        "Add professional profiles and direct outreach."
+      ],
+      "primaryRevenue": [
+        "Loan signings",
+        "Seller packages",
+        "Refinance packages",
+        "Title-related signing work"
+      ],
+      "bestClients": [
+        "Title / escrow companies",
+        "Lenders",
+        "Real estate professionals",
+        "Signing platforms"
+      ],
+      "primaryObjective": [
+        "Increase average appointment value",
+        "Create premium service lane"
+      ]
+    },
+    {
+      "id": "recurring_accounts",
+      "label": "Phase 6 — Recurring Business Accounts",
+      "goal": "Build stable, repeatable income.",
+      "steps": [
+        "Target B2B accounts: law firms, title companies, healthcare facilities, HR departments, property managers.",
+        "Create business packages: on-call support, scheduled office blocks, overflow support, repeat-client RON support.",
+        "Formalize branding and operations.",
+        "Track retention and referrals.",
+        "Build client account management process."
+      ],
+      "primaryRevenue": [
+        "Recurring service agreements",
+        "Repeat invoiced work",
+        "Contract-style notary support"
+      ],
+      "bestClients": [
+        "Organizations with repeated document needs"
+      ],
+      "primaryObjective": [
+        "Stabilize revenue",
+        "Reduce dependence on one-off bookings",
+        "Build a true business instead of just side appointments"
+      ]
+    }
+  ],
+  "bestOrder": [
+    "Use your current job as your training ground.",
+    "Launch mobile notary service in Columbus.",
+    "Add title + hospital + estate-related niches.",
+    "Get RON authorization.",
+    "Build the app / workflow automation.",
+    "Add loan signing work.",
+    "Build recurring B2B accounts."
+  ],
+  "revenueHierarchy": [
+    {
+      "label": "Employer notary",
+      "bestFor": "Practice, confidence, consistency."
+    },
+    {
+      "label": "General mobile notary",
+      "bestFor": "Fast local launch and cash flow."
+    },
+    {
+      "label": "Same-day / after-hours mobile",
+      "bestFor": "Convenience pricing and higher-margin local work."
+    },
+    {
+      "label": "Hospital / title / estate niches",
+      "bestFor": "Urgency-based premium service."
+    },
+    {
+      "label": "RON",
+      "bestFor": "Scalability and better margins."
+    },
+    {
+      "label": "Loan signings",
+      "bestFor": "Higher-ticket appointments."
+    },
+    {
+      "label": "Recurring B2B contracts",
+      "bestFor": "Long-term stable income."
+    }
+  ],
+  "avenueBreakdown": [
+    {
+      "title": "Avenue 1: Core notary work",
+      "summary": "Basic notarizations for ordinary documents."
+    },
+    {
+      "title": "Avenue 2: Mobile notary work",
+      "summary": "Money comes from convenience, travel, urgency, and scheduling."
+    },
+    {
+      "title": "Avenue 3: Remote online notary work",
+      "summary": "Digital convenience with better scalability and less dead time."
+    },
+    {
+      "title": "Avenue 4: Specialty niche notary work",
+      "summary": "Hospitals, nursing homes, jail visits, title work, estate-planning support."
+    },
+    {
+      "title": "Avenue 5: High-ticket notary-adjacent work",
+      "summary": "Loan signings and recurring B2B accounts."
+    }
+  ],
+  "appWorkflowMirror": [
+    "Commissioned",
+    "Intake setup",
+    "Mobile scheduling",
+    "Specialty service routing",
+    "RON readiness",
+    "Premium signing workflows",
+    "B2B account management",
+    "Analytics and automation"
+  ],
+  "avenuesMap": [
+    {
+      "title": "1. Legal Acts You Perform",
+      "items": [
+        "Acknowledgments",
+        "Jurats",
+        "Oaths / affirmations",
+        "Electronic notarizations",
+        "Remote online notarizations (RON)"
+      ]
+    },
+    {
+      "title": "2. How You Deliver the Service",
+      "items": [
+        "In-office / employer notary",
+        "Mobile notary",
+        "Electronic in-person notary",
+        "Remote online notary"
+      ]
+    },
+    {
+      "title": "3. Client / Market Avenues",
+      "items": [
+        "General public — affidavits, school forms, lease forms, employment forms, parental/travel forms",
+        "Legal / law office clients — affidavits, declarations, litigation support docs, execution support",
+        "Estate planning clients — powers of attorney, trust docs, healthcare directives, related affidavits",
+        "Real estate / loan clients — seller packages, refinance packages, HELOC docs, title-related docs",
+        "Auto / title clients — vehicle titles, transfer paperwork, sale-related notarizations",
+        "Medical / elder-care clients — hospital, hospice, nursing-home, urgent bedside notarizations",
+        "Jail / detention clients — family documents, POAs, sworn statements",
+        "Business / B2B clients — HR forms, corporate docs, vendor agreements, compliance docs, recurring support"
+      ]
+    },
+    {
+      "title": "4. Business Models",
+      "items": [
+        "Employee / in-house notary",
+        "Solo mobile notary",
+        "RON-only notary business",
+        "Hybrid mobile + RON business",
+        "Loan signing agent business",
+        "Specialty notary business",
+        "B2B contract notary service"
+      ]
+    },
+    {
+      "title": "5. Revenue Ladder",
+      "items": [
+        "Entry level — employer notarizations, general public walk-up work, simple mobile appointments",
+        "Growth level — same-day mobile, after-hours/weekend work, hospital/hospice visits, title/auto work, repeat referrals",
+        "Scalable level — RON appointments, business accounts, law office relationships, title company relationships",
+        "Premium level — loan signings, direct title/escrow relationships, estate-planning attorney partnerships, recurring institutional contracts"
+      ]
+    }
+  ]
+}
