@@ -72,6 +72,14 @@ body {
     linear-gradient(180deg, #261b1d, #130e10);
 }
 
+:root[data-reduced-motion="true"] *,
+:root[data-reduced-motion="true"] *::before,
+:root[data-reduced-motion="true"] *::after {
+  transition: none !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
+
 button,
 input,
 select,
@@ -461,13 +469,17 @@ body.sidebar-collapsed .nav-label {
 }
 
 .grid-3,
+.grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .metrics-grid,
 .module-grid,
 .flash-grid,
 .quiz-grid,
 .operations-grid,
 .avenue-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .roadmap-grid {
@@ -684,6 +696,19 @@ textarea {
   background: linear-gradient(180deg, var(--surface-strong), var(--surface-soft));
 }
 
+.focus-card {
+  border-color: var(--line-strong);
+  background: linear-gradient(180deg, var(--surface-strong), color-mix(in srgb, var(--surface-soft) 80%, var(--accent-soft)));
+}
+
+.roadmap-risk {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-left: 4px solid var(--warning);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent-soft) 55%, transparent);
+}
+
 .phase-meta {
   display: flex;
   justify-content: space-between;
@@ -701,6 +726,92 @@ textarea {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 10px;
+}
+
+.phase-stack,
+.lane-group-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.phase-stack-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--surface-wash);
+  color: var(--ink);
+  text-align: left;
+}
+
+.phase-stack-item-active {
+  border-color: var(--line-strong);
+  background: var(--primary-soft);
+}
+
+.stack-block {
+  margin-top: 18px;
+}
+
+.lane-group {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--card-shadow);
+}
+
+.lane-group-header,
+.lane-summary,
+.lane-summary-meta,
+.lane-action-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.lane-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.lane-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.lane-summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 18px;
+}
+
+.lane-summary::-webkit-details-marker {
+  display: none;
+}
+
+.lane-summary-meta {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.lane-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding: 0 18px 18px;
+}
+
+.readonly-block {
+  min-height: 240px;
+  font-family: "Times New Roman", Times, serif;
+  background: var(--surface-wash);
 }
 
 .shortcut-overlay {
@@ -812,8 +923,18 @@ textarea {
   .roadmap-grid,
   .avenue-grid,
   .today-grid,
-  .shortcut-list {
+  .shortcut-list,
+  .lane-detail-grid {
     grid-template-columns: 1fr;
+  }
+
+  .lane-group-header,
+  .lane-summary,
+  .lane-summary-meta,
+  .lane-action-row,
+  .phase-stack-item {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 

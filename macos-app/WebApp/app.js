@@ -6,6 +6,11 @@ const content = window.NOTARY_COURSE_CONTENT || {
 const roadmap = window.NOTARY_ROADMAP_CONTENT || {
   title: 'Ohio Notary Business Roadmap',
   phases: [],
+  serviceLanes: [],
+  coreLegalRules: [],
+  buildOrder: [],
+  codexPrompt: '',
+  sourceFiles: [],
   bestOrder: [],
   revenueHierarchy: [],
   avenueBreakdown: [],
@@ -13,7 +18,7 @@ const roadmap = window.NOTARY_ROADMAP_CONTENT || {
   avenuesMap: [],
 };
 
-const STORAGE_KEY = 'notary-os-study-hub-regular-v2';
+const STORAGE_KEY = 'notary-os-study-hub-regular-v4';
 const DEFAULT_PDF = '../SeededCourse/OhioNotaryCoursePacket.pdf';
 const OPERATIONS_URL = 'https://ohio-notary-os.netlify.app/dashboard';
 const LETTERS = ['A', 'B', 'C', 'D', 'E'];
@@ -37,6 +42,36 @@ const ROADMAP_STATUS_META = {
   active: { label: 'Active', chipClass: 'chip-active' },
   deferred: { label: 'Deferred', chipClass: 'chip-deferred' },
   completed: { label: 'Completed', chipClass: 'chip-completed' },
+};
+const LANE_RECOMMENDATION_ORDER = [
+  'employer_in_office',
+  'mobile_general',
+  'same_day_after_hours',
+  'hospital_hospice_nursing_home',
+  'vehicle_title_auto',
+  'ron',
+  'notary_signing_agent',
+  'apostille_support',
+  'i9_authorized_representative',
+];
+const LANE_LABELS = {
+  employer_in_office: 'Employer / in-office',
+  mobile_general: 'Mobile general',
+  same_day_after_hours: 'Same-day / after-hours',
+  hospital_hospice_nursing_home: 'Hospital / hospice / nursing-home',
+  vehicle_title_auto: 'Vehicle title / auto',
+  ron: 'RON',
+  notary_signing_agent: 'Signing-agent',
+  apostille_support: 'Apostille',
+  i9_authorized_representative: 'I-9',
+};
+const PHASE_CHECKLIST_GATE = {
+  foundation: ['courseCompleted', 'examPassed', 'bciFresh', 'applicationFiled', 'commissionApproved', 'oathCompleted', 'sealOrdered'],
+  local_mobile_launch: ['firstRevenueMade'],
+  specialty_niche_expansion: ['mobileLaunchReady'],
+  digital_scale: ['specialtyNicheReady'],
+  premium_services: ['ronReady'],
+  recurring_accounts: ['premiumServicesReady'],
 };
 
 const checklistItems = [
@@ -115,6 +150,18 @@ function buildDefaultRoadmapProgress() {
   }, {});
 }
 
+function buildDefaultServiceLaneProgress() {
+  return (roadmap.serviceLanes || []).reduce((acc, lane, index) => {
+    acc[lane.id] = {
+      status: index === 0 ? 'in_progress' : 'not_started',
+      notes: '',
+      nextStep: index === 0 ? 'Use this as the first clean revenue lane.' : '',
+      touchedAt: '',
+    };
+    return acc;
+  }, {});
+}
+
 const defaultState = {
   activeSection: 'dashboard',
   activeModuleId: content.modules[0]?.id || '',
@@ -135,7 +182,9 @@ const defaultState = {
   todaySessionNotes: '',
   todaySessionComplete: false,
   todaySessionDate: dayKey(),
+  reducedMotion: true,
   roadmapProgress: buildDefaultRoadmapProgress(),
+  serviceLaneProgress: buildDefaultServiceLaneProgress(),
 };
 
 let state = loadState();
@@ -143,10 +192,18 @@ let currentQuiz = null;
 
 function normalizeState(parsed) {
   const roadmapDefaults = buildDefaultRoadmapProgress();
+  const laneDefaults = buildDefaultServiceLaneProgress();
   const mergedRoadmap = Object.keys(roadmapDefaults).reduce((acc, phaseId) => {
     acc[phaseId] = {
       ...roadmapDefaults[phaseId],
       ...((parsed.roadmapProgress || {})[phaseId] || {}),
+    };
+    return acc;
+  }, {});
+  const mergedServiceLanes = Object.keys(laneDefaults).reduce((acc, laneId) => {
+    acc[laneId] = {
+      ...laneDefaults[laneId],
+      ...((parsed.serviceLaneProgress || {})[laneId] || {}),
     };
     return acc;
   }, {});
@@ -159,6 +216,7 @@ function normalizeState(parsed) {
     noteByModule: parsed.noteByModule || {},
     quizHistory: Array.isArray(parsed.quizHistory) ? parsed.quizHistory : [],
     roadmapProgress: mergedRoadmap,
+    serviceLaneProgress: mergedServiceLanes,
   };
 
   if (!SECTION_ORDER.includes(normalized.activeSection)) normalized.activeSection = 'dashboard';
@@ -237,10 +295,16 @@ function applyTheme() {
 
 function applyShellState() {
   document.body.classList.toggle('sidebar-collapsed', Boolean(state.sidebarCollapsed));
+  document.documentElement.setAttribute('data-reduced-motion', state.reducedMotion ? 'true' : 'false');
   const overlay = document.getElementById('shortcut-overlay');
   if (overlay) {
     overlay.classList.toggle('hidden', !state.shortcutOverlayOpen);
     overlay.setAttribute('aria-hidden', state.shortcutOverlayOpen ? 'false' : 'true');
+  }
+  const motionButton = document.getElementById('motion-toggle-btn');
+  if (motionButton) {
+    motionButton.textContent = state.reducedMotion ? 'Low Motion' : 'More Motion';
+    motionButton.setAttribute('aria-pressed', state.reducedMotion ? 'true' : 'false');
   }
 }
 
@@ -299,6 +363,64 @@ function roadmapPhaseState(phaseId) {
   return state.roadmapProgress[phaseId] || buildDefaultRoadmapProgress()[phaseId] || { status: 'not_started', notes: '', nextStep: '', touchedAt: '' };
 }
 
+function serviceLaneById(laneId) {
+  return (roadmap.serviceLanes || []).find((lane) => lane.id === laneId) || null;
+}
+
+function serviceLaneState(laneId) {
+  return state.serviceLaneProgress[laneId] || buildDefaultServiceLaneProgress()[laneId] || { status: 'not_started', notes: '', nextStep: '', touchedAt: '' };
+}
+
+function phaseIndex(phaseId) {
+  return Math.max(
+    0,
+    (roadmap.phases || []).findIndex((phase) => phase.id === phaseId)
+  );
+}
+
+function laneFocusLabel(lane) {
+  const phase = dominantRoadmapPhase();
+  const phaseRank = phaseIndex(phase?.id);
+  const laneRank = phaseIndex(lane.phaseId);
+  const laneState = serviceLaneState(lane.id);
+
+  if (laneState.status === 'completed') return { label: 'Completed', className: 'chip-completed' };
+  if (laneState.status === 'active' || laneState.status === 'in_progress') return { label: 'Do now', className: 'chip-active' };
+  if (laneRank <= phaseRank + 1) return { label: 'Later', className: 'chip-in-progress' };
+  return { label: 'Not yet unlocked', className: 'chip-deferred' };
+}
+
+function serviceLaneGroups() {
+  return (roadmap.phases || []).map((phase) => ({
+    phase,
+    lanes: (roadmap.serviceLanes || []).filter((lane) => lane.phaseId === phase.id),
+  }));
+}
+
+function updateServiceLane(laneId, field, value) {
+  state.serviceLaneProgress[laneId] = {
+    ...serviceLaneState(laneId),
+    [field]: value,
+    touchedAt: new Date().toISOString(),
+  };
+  saveState();
+}
+
+function phaseGateSatisfied(phaseId) {
+  const gates = PHASE_CHECKLIST_GATE[phaseId] || [];
+  return gates.every((key) => state.checklist[key]);
+}
+
+function nextLaneAfter(laneId) {
+  const index = LANE_RECOMMENDATION_ORDER.indexOf(laneId);
+  if (index === -1) return null;
+  return serviceLaneById(LANE_RECOMMENDATION_ORDER[index + 1]) || null;
+}
+
+function firstStudyModuleIdForLane(lane) {
+  return lane?.studyModuleLinks?.[0] || '';
+}
+
 function roadmapCounts() {
   return (roadmap.phases || []).reduce(
     (acc, phase) => {
@@ -355,42 +477,73 @@ function todayStudyAction() {
 function businessNextAction() {
   const roadmapState = state.roadmapProgress;
   if (!state.checklist.courseCompleted) {
-    return { label: 'Finish the course', detail: 'Get through the packet and mark the course complete before shifting energy into filing work.' };
+    return { label: 'Finish the course', why: 'You need the course complete before the filing sequence becomes real.', unlocks: 'Practice-exam focus and filing readiness', target: 'checklist' };
   }
   if (!state.checklist.examPassed && (state.bestQuizScore || 0) < PASS_THRESHOLD) {
-    return { label: 'Get exam-pass ready', detail: 'Push practice scores to at least 80% before treating the exam as handled.' };
+    return { label: 'Get exam-pass ready', why: 'Stable passing reps reduce friction and mistakes before filing.', unlocks: 'BCI + filing readiness', target: 'quiz' };
   }
   if (!state.checklist.bciFresh) {
-    return { label: 'Confirm BCI freshness', detail: 'Make sure the BCI report is still inside the filing window.' };
+    return { label: 'Confirm BCI freshness', why: 'The filing window can close if the BCI report ages out.', unlocks: 'Application filing', target: 'checklist' };
   }
   if (!state.checklist.applicationFiled) {
-    return { label: 'File the application', detail: 'Prepare the signature, BCI, and course proof for the Secretary of State portal.' };
+    return { label: 'File the application', why: 'This moves you from studying into official licensing progress.', unlocks: 'Commission approval', target: 'checklist' };
   }
   if (!state.checklist.oathCompleted) {
-    return { label: 'Complete the oath', detail: 'The in-person oath is the gate before lawful performance.' };
+    return { label: 'Complete the oath', why: 'The oath is a legal gate before lawful performance.', unlocks: 'Ready-to-work commissioning', target: 'checklist' };
   }
   if (!state.checklist.sealOrdered) {
-    return { label: 'Order the seal', detail: 'Get the seal in hand before you take live appointments.' };
+    return { label: 'Order the seal', why: 'You need the seal ready before you start taking live work.', unlocks: 'First low-risk appointment', target: 'checklist' };
   }
   if (!state.checklist.firstRevenueMade) {
-    return { label: 'Take first low-risk in-person revenue', detail: 'Start with clean acknowledgments, jurats, affidavits, and ordinary school or employment forms.' };
+    return { label: 'Take first low-risk in-person revenue', why: 'A clean first appointment builds confidence and process discipline.', unlocks: 'Mobile launch and specialty lanes', target: 'checklist' };
   }
+
+  for (const laneId of LANE_RECOMMENDATION_ORDER) {
+    const lane = serviceLaneById(laneId);
+    if (!lane) continue;
+    const laneState = serviceLaneState(laneId);
+    const phaseReady = phaseGateSatisfied(lane.phaseId);
+    if (laneState.status === 'completed') continue;
+
+    if (!phaseReady) {
+      const phase = (roadmap.phases || []).find((item) => item.id === lane.phaseId);
+      return {
+        label: `Complete ${phase?.label || 'the current phase'} first`,
+        why: `${LANE_LABELS[laneId] || lane.label} works best after the earlier phase gates are complete.`,
+        unlocks: lane.label,
+        target: 'roadmap',
+        laneId,
+      };
+    }
+
+    if (laneState.status === 'active' || laneState.status === 'in_progress' || laneState.status === 'not_started') {
+      const nextLane = nextLaneAfter(laneId);
+      return {
+        label: `Advance ${lane.label}`,
+        why: lane.useCase,
+        unlocks: nextLane ? nextLane.label : 'Recurring business strategy',
+        target: 'roadmap',
+        laneId,
+      };
+    }
+  }
+
   if (!state.checklist.mobileLaunchReady && !['active', 'completed'].includes(roadmapState.local_mobile_launch?.status)) {
-    return { label: 'Build the mobile launch', detail: 'Set travel zones, travel fees, booking flow, Google Business Profile, and website basics.' };
+    return { label: 'Build the mobile launch', why: 'Travel zones and booking systems make local work predictable.', unlocks: 'Specialty niche expansion', target: 'roadmap' };
   }
   if (!state.checklist.specialtyNicheReady && !['active', 'completed'].includes(roadmapState.specialty_niche_expansion?.status)) {
-    return { label: 'Prepare specialty niches', detail: 'Build safe workflows for hospital, title, and estate-related appointments.' };
+    return { label: 'Prepare specialty niches', why: 'Niche work raises ticket size without needing a bigger audience first.', unlocks: 'RON and premium lanes', target: 'roadmap' };
   }
   if (!state.checklist.ronReady && !['active', 'completed'].includes(roadmapState.digital_scale?.status)) {
-    return { label: 'Start the RON path', detail: 'Complete RON authorization and digital workflow setup to reduce travel and scale volume.' };
+    return { label: 'Start the RON path', why: 'RON improves margins and removes dead travel time.', unlocks: 'Scalable digital capacity', target: 'roadmap' };
   }
   if (!state.checklist.premiumServicesReady && !['active', 'completed'].includes(roadmapState.premium_services?.status)) {
-    return { label: 'Prepare premium services', detail: 'Train for loan signings and higher-ticket title-related work.' };
+    return { label: 'Prepare premium services', why: 'Premium work increases average appointment value.', unlocks: 'Recurring account credibility', target: 'roadmap' };
   }
   if (!state.checklist.b2bAccountsReady && !['active', 'completed'].includes(roadmapState.recurring_accounts?.status)) {
-    return { label: 'Build recurring B2B accounts', detail: 'Create packages and outreach for repeat law firm, healthcare, HR, and title clients.' };
+    return { label: 'Build recurring B2B accounts', why: 'Recurring business reduces dependence on one-off appointments.', unlocks: 'Stable income and retention', target: 'roadmap' };
   }
-  return { label: 'Refine and scale', detail: 'Use the roadmap to balance RON, premium services, and recurring accounts.' };
+  return { label: 'Refine and scale', why: 'The foundation is in place, so optimization becomes the next move.', unlocks: 'Higher-margin and recurring revenue', target: 'roadmap' };
 }
 
 function blockers() {
@@ -406,6 +559,7 @@ function blockers() {
 function roadmapSummaryHtml() {
   const phase = dominantRoadmapPhase();
   const counts = roadmapCounts();
+  const activeLane = LANE_RECOMMENDATION_ORDER.map(serviceLaneById).find((lane) => lane && ['active', 'in_progress'].includes(serviceLaneState(lane.id).status));
   return `
     <article class="card">
       <p class="eyebrow">Ohio Notary Business Roadmap</p>
@@ -416,6 +570,7 @@ function roadmapSummaryHtml() {
           .map(([status, count]) => `<span class="status-chip ${statusMeta(status).chipClass}">${statusMeta(status).label}: ${count}</span>`)
           .join('')}
       </div>
+      ${activeLane ? `<p class="muted" style="margin-top:12px;"><strong>Current lane:</strong> ${escapeHtml(activeLane.label)}</p>` : ''}
       <div class="action-row" style="margin-top:14px;">
         <button class="secondary-button" id="open-roadmap-from-dashboard">Open roadmap</button>
       </div>
@@ -479,19 +634,30 @@ function renderDashboard() {
       <div class="action-row">
         <button class="button" id="resume-study-btn">Resume packet</button>
         <button class="secondary-button" id="start-full-quiz-btn">Start 30-question quiz</button>
-        <button class="ghost-button" id="dashboard-print-cram-btn">Print cram sheet</button>
       </div>
     </div>
 
     ${dismissed ? `
-      <article class="card" style="margin-bottom:18px;">
-        <p class="eyebrow">Today’s study session</p>
-        <h3>Dismissed for today</h3>
-        <p class="muted">Reopen it if you want to reset the focus block and keep working inside the packet + quiz loop.</p>
-        <div class="action-row">
-          <button class="secondary-button" id="reopen-today-widget-btn">Reopen today widget</button>
-        </div>
-      </article>
+      <div class="today-grid" style="margin-bottom:18px;">
+        <article class="card">
+          <p class="eyebrow">Today’s study session</p>
+          <h3>Dismissed for today</h3>
+          <p class="muted">Reopen it if you want to reset the focus block and keep working inside the packet + quiz loop.</p>
+          <div class="action-row">
+            <button class="secondary-button" id="reopen-today-widget-btn">Reopen today widget</button>
+          </div>
+        </article>
+        <article class="business-next-card">
+          <p class="eyebrow">Business next action</p>
+          <h3>Do this now: ${escapeHtml(business.label)}</h3>
+          <p><strong>Why it matters:</strong> ${escapeHtml(business.why)}</p>
+          <p><strong>What it unlocks next:</strong> ${escapeHtml(business.unlocks)}</p>
+          <div class="action-row" style="margin-top:14px;">
+            <button class="button" id="dashboard-primary-business-btn">${business.laneId && firstStudyModuleIdForLane(serviceLaneById(business.laneId)) ? 'Open linked study topic' : business.target === 'quiz' ? 'Open quiz' : 'Open checklist'}</button>
+            <button class="secondary-button" id="open-roadmap-btn">Open roadmap</button>
+          </div>
+        </article>
+      </div>
     ` : `
       <div class="today-grid" style="margin-bottom:18px;">
         <article class="today-study-card">
@@ -518,15 +684,16 @@ function renderDashboard() {
 
         <article class="business-next-card">
           <p class="eyebrow">Business next action</p>
-          <h3>${escapeHtml(business.label)}</h3>
-          <p class="muted">${escapeHtml(business.detail)}</p>
+          <h3>Do this now: ${escapeHtml(business.label)}</h3>
+          <p><strong>Why it matters:</strong> ${escapeHtml(business.why)}</p>
+          <p><strong>What it unlocks next:</strong> ${escapeHtml(business.unlocks)}</p>
           <div class="toolbar-pill-row" style="margin-top:10px;">
             <span class="toolbar-chip">Active phase: ${escapeHtml(dominantPhase?.label || 'Foundation')}</span>
             <span class="toolbar-chip">Checklist completion: ${checklistCompletion().completed}/${checklistCompletion().total}</span>
           </div>
           <div class="action-row" style="margin-top:14px;">
-            <button class="secondary-button" id="open-checklist-btn">Open checklist</button>
-            <button class="ghost-button" id="open-roadmap-btn">Open roadmap</button>
+            <button class="button" id="dashboard-primary-business-btn">${business.laneId && firstStudyModuleIdForLane(serviceLaneById(business.laneId)) ? 'Open linked study topic' : business.target === 'quiz' ? 'Open quiz' : 'Open checklist'}</button>
+            <button class="secondary-button" id="open-roadmap-btn">Open roadmap</button>
           </div>
         </article>
       </div>
@@ -580,6 +747,9 @@ function renderDashboard() {
           <li>Traditional acts: max $5</li>
           <li>RON: max $30 + max $10 tech fee</li>
         </ul>
+        <div class="action-row" style="margin-top:14px;">
+          <button class="secondary-button" id="dashboard-print-cram-btn">Print cram sheet</button>
+        </div>
       </article>
     </div>
   `;
@@ -587,9 +757,24 @@ function renderDashboard() {
   document.getElementById('resume-study-btn')?.addEventListener('click', () => setActiveSection('packet'));
   document.getElementById('start-full-quiz-btn')?.addEventListener('click', () => startQuiz('all', 30, '30-question timed quiz'));
   document.getElementById('dashboard-print-cram-btn')?.addEventListener('click', handlePrintCram);
-  document.getElementById('open-checklist-btn')?.addEventListener('click', () => setActiveSection('checklist'));
   document.getElementById('open-roadmap-btn')?.addEventListener('click', () => setActiveSection('roadmap'));
   document.getElementById('open-roadmap-from-dashboard')?.addEventListener('click', () => setActiveSection('roadmap'));
+  document.getElementById('dashboard-primary-business-btn')?.addEventListener('click', () => {
+    if (business.laneId) {
+      const linkedModule = firstStudyModuleIdForLane(serviceLaneById(business.laneId));
+      if (linkedModule) {
+        switchModule(linkedModule, 'modules');
+        return;
+      }
+      setActiveSection('roadmap');
+      return;
+    }
+    if (business.target === 'quiz') {
+      setActiveSection('quiz');
+      return;
+    }
+    setActiveSection('checklist');
+  });
   document.getElementById('reopen-today-widget-btn')?.addEventListener('click', () => {
     state.todaySessionDismissedDate = '';
     saveState();
@@ -997,7 +1182,6 @@ function renderQuiz() {
       <div class="action-row">
         <button class="button" id="quiz-start-full-btn">30-question timed quiz</button>
         <button class="secondary-button" id="quiz-start-module-btn">10-question module drill</button>
-        <button class="ghost-button" id="quiz-start-weak-btn">Weak-topic drill</button>
       </div>
     </div>
 
@@ -1033,6 +1217,9 @@ function renderQuiz() {
           <p class="eyebrow">Recommended next quiz</p>
           <h3>${escapeHtml(recommendationQuizLabel())}</h3>
           <p class="muted">Active module: ${escapeHtml(moduleById(state.activeModuleId)?.title || 'None')}</p>
+          <div class="action-row" style="margin-top:14px;">
+            <button class="ghost-button" id="quiz-start-weak-btn">Weak-topic drill</button>
+          </div>
         </article>
         <article class="card">
           <p class="eyebrow">Recent history</p>
@@ -1323,104 +1510,196 @@ function renderChecklist() {
 function renderRoadmap() {
   const section = document.getElementById('roadmap');
   const counts = roadmapCounts();
+  const activePhase = dominantRoadmapPhase();
+  const blocker = blockers()[0];
+  const nextAction = businessNextAction();
   section.innerHTML = `
     <div class="page-header">
       <div>
         <p class="eyebrow">Roadmap</p>
         <h2>${escapeHtml(roadmap.title || 'Ohio Notary Business Roadmap')}</h2>
-        <p class="muted">Foundation → mobile → niche → RON → premium services → recurring accounts. Track status, notes, and your next step phase by phase.</p>
+        <p class="muted">Use one phase at a time. Keep the current phase visible, keep future lanes tracked, and only expand details when you need them.</p>
       </div>
       <div class="roadmap-controls">
         ${Object.entries(counts).map(([status, count]) => `<span class="status-chip ${statusMeta(status).chipClass}">${statusMeta(status).label}: ${count}</span>`).join('')}
       </div>
     </div>
 
-    <div class="roadmap-grid">
-      ${(roadmap.phases || [])
-        .map((phase) => {
-          const saved = roadmapPhaseState(phase.id);
-          const meta = statusMeta(saved.status);
-          return `
-            <article class="phase-card">
-              <div class="phase-meta">
-                <div>
-                  <p class="eyebrow">Roadmap phase</p>
-                  <h3>${escapeHtml(phase.label)}</h3>
-                </div>
-                <span class="status-chip ${meta.chipClass}">${meta.label}</span>
+    <div class="grid-2" style="margin-bottom:18px;">
+      <article class="phase-card focus-card">
+        <div class="phase-meta">
+          <div>
+            <p class="eyebrow">Current phase</p>
+            <h3>${escapeHtml(activePhase?.label || 'Foundation')}</h3>
+          </div>
+          <span class="status-chip ${statusMeta(roadmapPhaseState(activePhase?.id).status).chipClass}">${statusMeta(roadmapPhaseState(activePhase?.id).status).label}</span>
+        </div>
+        <p><strong>Goal:</strong> ${escapeHtml(activePhase?.goal || 'Move the business forward one phase at a time.')}</p>
+        <p><strong>Do this now:</strong> ${escapeHtml(nextAction.label)}</p>
+        <p><strong>What it unlocks next:</strong> ${escapeHtml(nextAction.unlocks)}</p>
+        ${blocker ? `<p class="roadmap-risk"><strong>Blocker:</strong> ${escapeHtml(blocker)}</p>` : '<p class="muted">No major blocker right now. Keep the next action small and concrete.</p>'}
+        <label for="active-phase-status" style="margin-top:12px;">Phase status</label>
+        <select class="status-select" id="active-phase-status">
+          ${Object.entries(ROADMAP_STATUS_META).map(([key, item]) => `<option value="${key}" ${roadmapPhaseState(activePhase?.id).status === key ? 'selected' : ''}>${escapeHtml(item.label)}</option>`).join('')}
+        </select>
+        <label for="active-phase-next" style="margin-top:12px;">Phase next step</label>
+        <input id="active-phase-next" type="text" value="${escapeHtml(roadmapPhaseState(activePhase?.id).nextStep || '')}" placeholder="Exact next move for the current phase" />
+        <label for="active-phase-note" style="margin-top:12px;">Phase notes</label>
+        <textarea id="active-phase-note" placeholder="Capture what matters for the current phase.">${escapeHtml(roadmapPhaseState(activePhase?.id).notes || '')}</textarea>
+        <div class="action-row" style="margin-top:14px;">
+          <button class="button" id="roadmap-open-checklist-btn">Open checklist</button>
+          <button class="secondary-button" id="roadmap-open-packet-btn">Resume packet</button>
+        </div>
+      </article>
+      <article class="card">
+        <p class="eyebrow">Phase stack</p>
+        <div class="phase-stack">
+          ${(roadmap.phases || []).map((phase) => {
+            const saved = roadmapPhaseState(phase.id);
+            return `
+              <button class="phase-stack-item ${phase.id === activePhase?.id ? 'phase-stack-item-active' : ''}" data-scroll-phase="${escapeHtml(phase.id)}">
+                <span>${escapeHtml(phase.label)}</span>
+                <span class="status-chip ${statusMeta(saved.status).chipClass}">${statusMeta(saved.status).label}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      </article>
+    </div>
+
+    <div class="stack-block">
+      <div class="page-header" style="margin-bottom:14px;">
+        <div>
+          <p class="eyebrow">Revenue ladder</p>
+          <h2 style="font-size:2.1rem;">Track service lanes without overwhelming the screen.</h2>
+        </div>
+      </div>
+      <div class="lane-group-stack">
+        ${serviceLaneGroups().map(({ phase, lanes }) => `
+          <section class="lane-group" id="phase-${escapeHtml(phase.id)}">
+            <div class="lane-group-header">
+              <div>
+                <p class="eyebrow">${escapeHtml(phase.label)}</p>
+                <h3>${escapeHtml(phase.goal)}</h3>
               </div>
-              <p><strong>Goal:</strong> ${escapeHtml(phase.goal)}</p>
-              <p><strong>Primary revenue:</strong> ${escapeHtml((phase.primaryRevenue || []).join(' · '))}</p>
-              <p><strong>Best clients:</strong> ${escapeHtml((phase.bestClients || []).join(' · '))}</p>
-              <p><strong>Primary objective:</strong> ${escapeHtml(phase.primaryObjective)}</p>
-              <p class="eyebrow" style="margin-top:14px;">Step stack</p>
-              <ol class="ordered-list">
-                ${(phase.steps || []).map((step) => `<li>${escapeHtml(step)}</li>`).join('')}
-              </ol>
-              <label for="roadmap-status-${escapeHtml(phase.id)}">Status</label>
-              <select class="status-select" id="roadmap-status-${escapeHtml(phase.id)}" data-roadmap-status="${escapeHtml(phase.id)}">
-                ${Object.entries(ROADMAP_STATUS_META)
-                  .map(([key, item]) => `<option value="${key}" ${saved.status === key ? 'selected' : ''}>${escapeHtml(item.label)}</option>`)
-                  .join('')}
-              </select>
-              <label for="roadmap-next-${escapeHtml(phase.id)}" style="margin-top:12px;">Next step</label>
-              <input id="roadmap-next-${escapeHtml(phase.id)}" type="text" data-roadmap-next="${escapeHtml(phase.id)}" value="${escapeHtml(saved.nextStep || '')}" placeholder="Exact next move for this phase" />
-              <label for="roadmap-note-${escapeHtml(phase.id)}" style="margin-top:12px;">Owner notes</label>
-              <textarea id="roadmap-note-${escapeHtml(phase.id)}" data-roadmap-note="${escapeHtml(phase.id)}" placeholder="Capture constraints, pricing ideas, or client patterns.">${escapeHtml(saved.notes || '')}</textarea>
-              <p class="muted small">Last touched: ${escapeHtml(humanDate(saved.touchedAt))}</p>
-            </article>
-          `;
-        })
-        .join('')}
+              <span class="status-chip ${statusMeta(roadmapPhaseState(phase.id).status).chipClass}">${statusMeta(roadmapPhaseState(phase.id).status).label}</span>
+            </div>
+            <div class="lane-list">
+              ${lanes.map((lane) => {
+                const laneState = serviceLaneState(lane.id);
+                const laneStatus = statusMeta(laneState.status);
+                const focus = laneFocusLabel(lane);
+                return `
+                  <details class="card lane-card" ${laneState.status === 'active' || laneState.status === 'in_progress' ? 'open' : ''}>
+                    <summary class="lane-summary">
+                      <div>
+                        <p class="eyebrow">${escapeHtml(lane.label)}</p>
+                        <h3>${escapeHtml(lane.useCase)}</h3>
+                        <p class="muted">Startup cost: ${escapeHtml(lane.startupCost)}</p>
+                      </div>
+                      <div class="lane-summary-meta">
+                        <span class="status-chip ${focus.className}">${focus.label}</span>
+                        <span class="status-chip ${laneStatus.chipClass}">${laneStatus.label}</span>
+                      </div>
+                    </summary>
+                    <div class="lane-detail-grid">
+                      <div>
+                        <p><strong>Primary revenue:</strong> ${escapeHtml((lane.primaryRevenue || []).join(' · '))}</p>
+                        <p><strong>App modules:</strong> ${escapeHtml((lane.appModules || []).join(' · '))}</p>
+                        <p><strong>Linked study topics:</strong> ${lane.studyModuleLinks?.length ? escapeHtml(lane.studyModuleLinks.map((id) => moduleById(id)?.title || id).join(' · ')) : 'No direct study topic — admin/process lane'}</p>
+                        <p class="muted"><strong>Planning note:</strong> ${escapeHtml(lane.notes || 'No additional note yet.')}</p>
+                        ${lane.id === 'i9_authorized_representative' ? '<p class="roadmap-risk"><strong>Compliance note:</strong> I-9 is not a notarial act and must stay outside the seal / notarial billing path.</p>' : ''}
+                      </div>
+                      <div>
+                        <label for="lane-status-${escapeHtml(lane.id)}">Status</label>
+                        <select class="status-select" id="lane-status-${escapeHtml(lane.id)}" data-lane-status="${escapeHtml(lane.id)}">
+                          ${Object.entries(ROADMAP_STATUS_META).map(([key, item]) => `<option value="${key}" ${laneState.status === key ? 'selected' : ''}>${escapeHtml(item.label)}</option>`).join('')}
+                        </select>
+                        <label for="lane-next-${escapeHtml(lane.id)}" style="margin-top:12px;">Next step</label>
+                        <input id="lane-next-${escapeHtml(lane.id)}" type="text" data-lane-next="${escapeHtml(lane.id)}" value="${escapeHtml(laneState.nextStep || '')}" placeholder="Smallest useful next step for this lane" />
+                        <label for="lane-note-${escapeHtml(lane.id)}" style="margin-top:12px;">Notes</label>
+                        <textarea id="lane-note-${escapeHtml(lane.id)}" data-lane-note="${escapeHtml(lane.id)}" placeholder="Capture decisions, pricing ideas, or blockers.">${escapeHtml(laneState.notes || '')}</textarea>
+                        <p class="muted small">Last touched: ${escapeHtml(humanDate(laneState.touchedAt))}</p>
+                      </div>
+                    </div>
+                    <div class="action-row lane-action-row">
+                      ${firstStudyModuleIdForLane(lane) ? `<button class="button lane-open-study-btn" data-lane-study="${escapeHtml(firstStudyModuleIdForLane(lane))}">Open linked study topic</button>` : `<button class="button lane-open-roadmap-note-btn">Stay in planning mode</button>`}
+                      <button class="secondary-button lane-open-cram-btn">Open cram</button>
+                      <button class="ghost-button lane-open-checklist-btn">Open checklist</button>
+                    </div>
+                  </details>
+                `;
+              }).join('')}
+            </div>
+          </section>
+        `).join('')}
+      </div>
     </div>
 
     <div class="grid-2" style="margin-top:18px;">
       <article class="card">
-        <p class="eyebrow">Best order for you personally</p>
+        <p class="eyebrow">Core legal rules</p>
+        <ul class="cram-list">
+          ${(roadmap.coreLegalRules || []).map((rule) => `<li>${escapeHtml(rule)}</li>`).join('')}
+        </ul>
+        <p class="roadmap-risk"><strong>Keep visible:</strong> I-9 stays outside the notarial-act and seal workflow.</p>
+      </article>
+      <article class="card">
+        <p class="eyebrow">Build order</p>
         <ol class="ordered-list">
-          ${(roadmap.bestOrder || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
+          ${(roadmap.buildOrder || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
         </ol>
       </article>
-      <article class="card">
-        <p class="eyebrow">Revenue hierarchy</p>
-        <ul class="cram-list">
-          ${(roadmap.revenueHierarchy || []).map((item) => `<li><strong>${escapeHtml(item.label)}</strong> — ${escapeHtml(item.bestFor)}</li>`).join('')}
-        </ul>
-      </article>
     </div>
 
     <div class="grid-2" style="margin-top:18px;">
       <article class="card">
-        <p class="eyebrow">App workflow mirror</p>
-        <ul class="cram-list">
-          ${(roadmap.appWorkflowMirror || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
-        </ul>
+        <p class="eyebrow">Codex handoff</p>
+        <textarea class="readonly-block" readonly>${escapeHtml(roadmap.codexPrompt || '')}</textarea>
       </article>
       <article class="card">
-        <p class="eyebrow">Avenue breakdown</p>
-        <ul class="cram-list">
-          ${(roadmap.avenueBreakdown || []).map((item) => `<li><strong>${escapeHtml(item.title)}</strong> — ${escapeHtml(item.summary)}</li>`).join('')}
-        </ul>
-      </article>
-    </div>
-
-    <div class="avenue-grid" style="margin-top:18px;">
-      ${(roadmap.avenuesMap || [])
-        .map(
-          (lane) => `
-            <article class="avenue-card">
-              <p class="eyebrow">Ohio notary avenues map</p>
-              <h3>${escapeHtml(lane.title)}</h3>
+        <p class="eyebrow">Strategic context</p>
+        <details>
+          <summary>Best order + revenue hierarchy</summary>
+          <div class="lane-detail-grid" style="margin-top:14px;">
+            <div>
+              <p class="eyebrow">Best order</p>
+              <ol class="ordered-list">
+                ${(roadmap.bestOrder || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
+              </ol>
+            </div>
+            <div>
+              <p class="eyebrow">Revenue hierarchy</p>
               <ul class="cram-list">
-                ${(lane.items || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
+                ${(roadmap.revenueHierarchy || []).map((item) => `<li><strong>${escapeHtml(item.label)}</strong> — ${escapeHtml(item.bestFor)}</li>`).join('')}
               </ul>
-            </article>
-          `
-        )
-        .join('')}
+            </div>
+          </div>
+        </details>
+      </article>
     </div>
   `;
 
+  document.getElementById('roadmap-open-checklist-btn')?.addEventListener('click', () => setActiveSection('checklist'));
+  document.getElementById('roadmap-open-packet-btn')?.addEventListener('click', () => setActiveSection('packet'));
+  document.getElementById('active-phase-status')?.addEventListener('change', (event) => {
+    if (!activePhase?.id) return;
+    updateRoadmapPhase(activePhase.id, 'status', event.target.value);
+    renderApp();
+  });
+  document.getElementById('active-phase-next')?.addEventListener('input', (event) => {
+    if (!activePhase?.id) return;
+    updateRoadmapPhase(activePhase.id, 'nextStep', event.target.value);
+  });
+  document.getElementById('active-phase-note')?.addEventListener('input', (event) => {
+    if (!activePhase?.id) return;
+    updateRoadmapPhase(activePhase.id, 'notes', event.target.value);
+  });
+  document.querySelectorAll('[data-scroll-phase]').forEach((button) => {
+    button.addEventListener('click', () => {
+      document.getElementById(`phase-${button.dataset.scrollPhase}`)?.scrollIntoView({ behavior: state.reducedMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
   document.querySelectorAll('[data-roadmap-status]').forEach((input) => {
     input.addEventListener('change', () => {
       updateRoadmapPhase(input.dataset.roadmapStatus, 'status', input.value);
@@ -1432,6 +1711,30 @@ function renderRoadmap() {
   });
   document.querySelectorAll('[data-roadmap-note]').forEach((input) => {
     input.addEventListener('input', () => updateRoadmapPhase(input.dataset.roadmapNote, 'notes', input.value));
+  });
+  document.querySelectorAll('[data-lane-status]').forEach((input) => {
+    input.addEventListener('change', () => {
+      updateServiceLane(input.dataset.laneStatus, 'status', input.value);
+      renderApp();
+    });
+  });
+  document.querySelectorAll('[data-lane-next]').forEach((input) => {
+    input.addEventListener('input', () => updateServiceLane(input.dataset.laneNext, 'nextStep', input.value));
+  });
+  document.querySelectorAll('[data-lane-note]').forEach((input) => {
+    input.addEventListener('input', () => updateServiceLane(input.dataset.laneNote, 'notes', input.value));
+  });
+  document.querySelectorAll('.lane-open-study-btn').forEach((button) => {
+    button.addEventListener('click', () => switchModule(button.dataset.laneStudy, 'modules'));
+  });
+  document.querySelectorAll('.lane-open-cram-btn').forEach((button) => {
+    button.addEventListener('click', () => setActiveSection('cram'));
+  });
+  document.querySelectorAll('.lane-open-roadmap-note-btn').forEach((button) => {
+    button.addEventListener('click', () => setActiveSection('roadmap'));
+  });
+  document.querySelectorAll('.lane-open-checklist-btn').forEach((button) => {
+    button.addEventListener('click', () => setActiveSection('checklist'));
   });
 }
 
@@ -1522,6 +1825,12 @@ function toggleThemeQuick() {
   renderApp();
 }
 
+function toggleReducedMotion() {
+  state.reducedMotion = !state.reducedMotion;
+  saveState();
+  applyShellState();
+}
+
 function isEditableTarget(target) {
   if (!target) return false;
   const tag = target.tagName;
@@ -1604,6 +1913,9 @@ function bindStaticEvents() {
     state.themePreference = event.target.value;
     saveState();
     renderApp();
+  });
+  document.getElementById('motion-toggle-btn')?.addEventListener('click', () => {
+    toggleReducedMotion();
   });
   document.getElementById('print-cram-btn')?.addEventListener('click', handlePrintCram);
   document.getElementById('shortcut-overlay')?.addEventListener('click', (event) => {

@@ -4,7 +4,7 @@
   "phases": [
     {
       "id": "foundation",
-      "label": "Phase 1 — Foundation",
+      "label": "Phase 1 \u2014 Foundation",
       "goal": "Get legal, equipped, and operational.",
       "steps": [
         "Complete Ohio commission process.",
@@ -31,7 +31,7 @@
     },
     {
       "id": "local_mobile_launch",
-      "label": "Phase 2 — Local Mobile Launch",
+      "label": "Phase 2 \u2014 Local Mobile Launch",
       "goal": "Start making consistent money locally.",
       "steps": [
         "Launch mobile notary service.",
@@ -60,7 +60,7 @@
     },
     {
       "id": "specialty_niche_expansion",
-      "label": "Phase 3 — Specialty Niche Expansion",
+      "label": "Phase 3 \u2014 Specialty Niche Expansion",
       "goal": "Increase ticket size and become more in-demand.",
       "steps": [
         "Add hospital / hospice / nursing-home service.",
@@ -88,7 +88,7 @@
     },
     {
       "id": "digital_scale",
-      "label": "Phase 4 — Digital Scale",
+      "label": "Phase 4 \u2014 Digital Scale",
       "goal": "Reduce time lost to travel and expand capacity.",
       "steps": [
         "Get Ohio RON authorization.",
@@ -116,7 +116,7 @@
     },
     {
       "id": "premium_services",
-      "label": "Phase 5 — Premium Services",
+      "label": "Phase 5 \u2014 Premium Services",
       "goal": "Move into higher-ticket notary work.",
       "steps": [
         "Train for loan signings.",
@@ -144,7 +144,7 @@
     },
     {
       "id": "recurring_accounts",
-      "label": "Phase 6 — Recurring Business Accounts",
+      "label": "Phase 6 \u2014 Recurring Business Accounts",
       "goal": "Build stable, repeatable income.",
       "steps": [
         "Target B2B accounts: law firms, title companies, healthcare facilities, HR departments, property managers.",
@@ -262,14 +262,14 @@
     {
       "title": "3. Client / Market Avenues",
       "items": [
-        "General public — affidavits, school forms, lease forms, employment forms, parental/travel forms",
-        "Legal / law office clients — affidavits, declarations, litigation support docs, execution support",
-        "Estate planning clients — powers of attorney, trust docs, healthcare directives, related affidavits",
-        "Real estate / loan clients — seller packages, refinance packages, HELOC docs, title-related docs",
-        "Auto / title clients — vehicle titles, transfer paperwork, sale-related notarizations",
-        "Medical / elder-care clients — hospital, hospice, nursing-home, urgent bedside notarizations",
-        "Jail / detention clients — family documents, POAs, sworn statements",
-        "Business / B2B clients — HR forms, corporate docs, vendor agreements, compliance docs, recurring support"
+        "General public \u2014 affidavits, school forms, lease forms, employment forms, parental/travel forms",
+        "Legal / law office clients \u2014 affidavits, declarations, litigation support docs, execution support",
+        "Estate planning clients \u2014 powers of attorney, trust docs, healthcare directives, related affidavits",
+        "Real estate / loan clients \u2014 seller packages, refinance packages, HELOC docs, title-related docs",
+        "Auto / title clients \u2014 vehicle titles, transfer paperwork, sale-related notarizations",
+        "Medical / elder-care clients \u2014 hospital, hospice, nursing-home, urgent bedside notarizations",
+        "Jail / detention clients \u2014 family documents, POAs, sworn statements",
+        "Business / B2B clients \u2014 HR forms, corporate docs, vendor agreements, compliance docs, recurring support"
       ]
     },
     {
@@ -287,11 +287,248 @@
     {
       "title": "5. Revenue Ladder",
       "items": [
-        "Entry level — employer notarizations, general public walk-up work, simple mobile appointments",
-        "Growth level — same-day mobile, after-hours/weekend work, hospital/hospice visits, title/auto work, repeat referrals",
-        "Scalable level — RON appointments, business accounts, law office relationships, title company relationships",
-        "Premium level — loan signings, direct title/escrow relationships, estate-planning attorney partnerships, recurring institutional contracts"
+        "Entry level \u2014 employer notarizations, general public walk-up work, simple mobile appointments",
+        "Growth level \u2014 same-day mobile, after-hours/weekend work, hospital/hospice visits, title/auto work, repeat referrals",
+        "Scalable level \u2014 RON appointments, business accounts, law office relationships, title company relationships",
+        "Premium level \u2014 loan signings, direct title/escrow relationships, estate-planning attorney partnerships, recurring institutional contracts"
       ]
+    }
+  ],
+  "sourceFiles": [
+    {
+      "type": "markdown",
+      "label": "Ohio Notary Revenue Ladder \u2014 Codex Ready",
+      "repoPath": "macos-app/SeededCourse/ohio_notary_codex_revenue_ladder.md",
+      "originalPath": "/Users/kerriannlark/Downloads/ohio_notary_codex_revenue_ladder.md",
+      "authoritative": true
+    },
+    {
+      "type": "pdf",
+      "label": "Ohio Notary Revenue Ladder and Codex PDF",
+      "originalPath": "/Users/kerriannlark/Downloads/ohio_notary_revenue_ladder_and_codex.pdf",
+      "authoritative": false,
+      "notes": "Supporting reference only; not required for build or runtime."
+    }
+  ],
+  "coreLegalRules": [
+    "In Ohio, a non-online notarial act is capped at up to $5 per act.",
+    "An online notarization is capped at up to $30 per act.",
+    "Fees are not calculated per signature.",
+    "A reasonable travel fee is allowed only if agreed in advance.",
+    "A technology fee up to $10 per online notarization session is allowed.",
+    "RON requires separate authorization and a compliant session workflow.",
+    "I-9 work is a separate service lane and must not use a notary seal."
+  ],
+  "buildOrder": [
+    "Core notary and quote engine",
+    "Mobile booking and travel disclosures",
+    "Specialty-location workflows",
+    "RON module",
+    "Signing-agent workflows",
+    "Apostille and I-9 modules",
+    "B2B account management and analytics"
+  ],
+  "codexPrompt": "Build a multi-module Ohio Notary OS that separates standard notarial acts, mobile workflows, RON, signing-agent operations, apostille support, and I-9 authorized representative services. Requirements: Enforce Ohio fee caps and travel disclosure rules. Block copy-certification requests. Block incomplete title workflows. Keep I-9 outside the notarial-act billing path. Support distinct routes, data models, and analytics by service lane. Prioritize quote compliance, reminders, journals, and revenue tracking.",
+  "serviceLanes": [
+    {
+      "id": "employer_in_office",
+      "label": "Employer / in-office notary",
+      "startupCost": "Low",
+      "useCase": "Employer files, routine acknowledgments, affidavits, and execution support.",
+      "primaryRevenue": [
+        "Employer/in-house notarizations",
+        "Simple general notary work"
+      ],
+      "appModules": [
+        "internal queue",
+        "act log",
+        "signer checklist",
+        "employer/private tagging"
+      ],
+      "phaseId": "foundation",
+      "studyModuleLinks": [
+        "acknowledgments",
+        "jurats_affidavits_oaths",
+        "identity_appearance_rules"
+      ],
+      "notes": "Best first service lane for low-risk repetitions and process discipline."
+    },
+    {
+      "id": "mobile_general",
+      "label": "Mobile general notary",
+      "startupCost": "Low to Moderate",
+      "useCase": "Routine public appointments and local travel.",
+      "primaryRevenue": [
+        "Mobile notarizations",
+        "Travel fees"
+      ],
+      "appModules": [
+        "public booking",
+        "quote engine",
+        "travel zones",
+        "mileage",
+        "reminders"
+      ],
+      "phaseId": "local_mobile_launch",
+      "studyModuleLinks": [
+        "acknowledgments",
+        "jurats_affidavits_oaths",
+        "identity_appearance_rules"
+      ],
+      "notes": "Fastest public-facing local cash-flow lane after commission is active."
+    },
+    {
+      "id": "same_day_after_hours",
+      "label": "Same-day / after-hours",
+      "startupCost": "Low to Moderate",
+      "useCase": "Urgent appointments outside business hours.",
+      "primaryRevenue": [
+        "Urgency fees",
+        "After-hours convenience fees"
+      ],
+      "appModules": [
+        "urgency flags",
+        "calendar rules",
+        "disclosures",
+        "cancellation tracking"
+      ],
+      "phaseId": "local_mobile_launch",
+      "studyModuleLinks": [
+        "fees_seal_journal",
+        "identity_appearance_rules"
+      ],
+      "notes": "Good second-step lane after mobile basics are stable."
+    },
+    {
+      "id": "hospital_hospice_nursing_home",
+      "label": "Hospital / hospice / nursing-home",
+      "startupCost": "Low to Moderate",
+      "useCase": "Bedside POAs, healthcare directives, and urgent family paperwork.",
+      "primaryRevenue": [
+        "Urgent mobile work",
+        "Specialty location service"
+      ],
+      "appModules": [
+        "specialty intake",
+        "witness flow",
+        "refusal/compliance notes"
+      ],
+      "phaseId": "specialty_niche_expansion",
+      "studyModuleLinks": [
+        "jurats_affidavits_oaths",
+        "identity_appearance_rules",
+        "dos_donts_penalties"
+      ],
+      "notes": "High-trust lane; keep refusal logic and appearance rules visible."
+    },
+    {
+      "id": "vehicle_title_auto",
+      "label": "Vehicle title / auto docs",
+      "startupCost": "Low to Moderate",
+      "useCase": "Title transfers and sale-related visits.",
+      "primaryRevenue": [
+        "Title transfers",
+        "Auto-document visits"
+      ],
+      "appModules": [
+        "title intake",
+        "blank-field blocker",
+        "document upload",
+        "risk banner"
+      ],
+      "phaseId": "specialty_niche_expansion",
+      "studyModuleLinks": [
+        "vehicle_title_notarization"
+      ],
+      "notes": "High-risk compliance lane. Never notarize incomplete title sections."
+    },
+    {
+      "id": "ron",
+      "label": "Remote online notarization (RON)",
+      "startupCost": "Moderate",
+      "useCase": "Busy professionals, repeat clients, and remote sessions.",
+      "primaryRevenue": [
+        "RON act fees",
+        "RON technology fee",
+        "Repeat online clients"
+      ],
+      "appModules": [
+        "RON session",
+        "identity proofing",
+        "credential analysis",
+        "e-journal",
+        "recording refs"
+      ],
+      "phaseId": "digital_scale",
+      "studyModuleLinks": [
+        "electronic_vs_ron",
+        "ron_core_rules",
+        "fees_seal_journal"
+      ],
+      "notes": "Scale lane. Requires separate authorization and compliant session flow."
+    },
+    {
+      "id": "notary_signing_agent",
+      "label": "Notary Signing Agent",
+      "startupCost": "Moderate",
+      "useCase": "Refinance, HELOC, seller, and buyer packages.",
+      "primaryRevenue": [
+        "Loan signings",
+        "Seller packages",
+        "Refinance packages"
+      ],
+      "appModules": [
+        "package tracker",
+        "print/scan checklist",
+        "shipment tracking",
+        "payout reconciliation"
+      ],
+      "phaseId": "premium_services",
+      "studyModuleLinks": [
+        "acknowledgments",
+        "jurats_affidavits_oaths",
+        "identity_appearance_rules",
+        "fees_seal_journal"
+      ],
+      "notes": "Premium lane after mobile / specialty operations are stable."
+    },
+    {
+      "id": "apostille_support",
+      "label": "Apostille support",
+      "startupCost": "Low to Moderate",
+      "useCase": "International document coordination.",
+      "primaryRevenue": [
+        "Apostille coordination fees",
+        "Shipping/admin support"
+      ],
+      "appModules": [
+        "apostille intake",
+        "status tracker",
+        "shipping log",
+        "client timeline"
+      ],
+      "phaseId": "premium_services",
+      "studyModuleLinks": [],
+      "notes": "Admin/process lane, not core exam-heavy content. Treat as coordination support."
+    },
+    {
+      "id": "i9_authorized_representative",
+      "label": "I-9 authorized representative",
+      "startupCost": "Very Low",
+      "useCase": "Remote hires and employer onboarding support.",
+      "primaryRevenue": [
+        "Employer onboarding support",
+        "Recurring billing"
+      ],
+      "appModules": [
+        "employer intake",
+        "ID checklist",
+        "Section 2 workflow",
+        "recurring billing"
+      ],
+      "phaseId": "recurring_accounts",
+      "studyModuleLinks": [],
+      "notes": "Separate service lane. Do not use a notary seal and do not bill it as a notarial act."
     }
   ]
 }

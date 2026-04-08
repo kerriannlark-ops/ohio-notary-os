@@ -12,7 +12,9 @@ Regular no-Xcode macOS study + launch app for Ohio Notary OS.
 - Final cram sheet with printable mode
 - Licensing / launch checklist
 - Ohio Notary Business Roadmap with per-phase status, notes, and next steps
+- Revenue ladder tracking for employer, mobile, specialty, RON, signing-agent, apostille, and I-9 lanes
 - Dark mode / light mode / system theme preference
+- ADHD-friendly defaults: one primary next action, lighter planning density, low-motion mode, and progressive disclosure
 - Sidebar collapse and shortcut overlay
 - Link-out to the live Notary OS operations dashboard
 - No Xcode required to build the regular app bundle
@@ -43,6 +45,7 @@ At build time:
 - the PDF is copied into the app bundle
 - a private structured study JSON asset is generated from the packet
 - the Ohio Notary business roadmap JSON is bundled into the app
+- the Ohio Notary revenue-ladder source markdown is bundled into the app
 - the app launches a local study workspace with your packet, modules, flashcards, quiz bank, cram sheet, checklist, and roadmap
 
 ## Build the regular macOS app
@@ -65,6 +68,17 @@ From repo root:
 - Premium services
 - Recurring business accounts
 
+## Revenue ladder lanes
+- Employer / in-office notary
+- Mobile general notary
+- Same-day / after-hours
+- Hospital / hospice / nursing-home
+- Vehicle title / auto docs
+- Remote online notarization (RON)
+- Notary Signing Agent
+- Apostille support
+- I-9 authorized representative
+
 The roadmap stays local to the Mac app and is not exposed in the public web app.
 
 ## Optional Xcode/native build
@@ -77,6 +91,6 @@ The earlier SwiftUI native build script is preserved here if you ever want it la
 ## Notes
 - Uses Times New Roman for the calmer legal-study style requested.
 - Uses the red legal-scale + notepad icon system.
-- Uses browser local storage for study progress, roadmap status, theme preference, and daily session state in the no-Xcode build.
+- Uses browser local storage for study progress, roadmap status, service-lane tracking, theme preference, reduced-motion preference, and daily session state in the no-Xcode build.
 - Uses the deployed web app as the business operations backend.
 - Paid course content stays in the macOS app bundle only.

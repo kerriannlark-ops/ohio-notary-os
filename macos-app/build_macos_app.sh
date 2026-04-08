@@ -13,6 +13,7 @@ APPLICATIONS_READY_DIR="$BUILD_DIR/Applications Ready"
 SOURCE_PDF="/Users/kerriannlark/Desktop/NOTARY LICENSE COURSE/Study Guide with PowerPoint Handouts-2.pdf"
 SOURCE_JSON="$ROOT_DIR/macos-app/SeededCourse/notary-course-content.json"
 ROADMAP_JSON="$ROOT_DIR/macos-app/SeededCourse/roadmap-content.json"
+REVENUE_MD="$ROOT_DIR/macos-app/SeededCourse/ohio_notary_codex_revenue_ladder.md"
 WEB_SOURCE_DIR="$ROOT_DIR/macos-app/WebApp"
 LAUNCH_HELPER="$ROOT_DIR/macos-app/launch_regular_app.py"
 WEBAPP_RESOURCES_DIR="$RESOURCES_DIR/WebApp"
@@ -33,6 +34,11 @@ fi
 
 if [ ! -f "$ROADMAP_JSON" ]; then
   echo "Missing roadmap content JSON at: $ROADMAP_JSON" >&2
+  exit 1
+fi
+
+if [ ! -f "$REVENUE_MD" ]; then
+  echo "Missing revenue ladder source markdown at: $REVENUE_MD" >&2
   exit 1
 fi
 
@@ -60,6 +66,7 @@ chmod +x "$RESOURCES_DIR/launch_regular_app.py"
 cp "$SOURCE_PDF" "$SEEDED_DIR/OhioNotaryCoursePacket.pdf"
 cp "$SOURCE_JSON" "$SEEDED_DIR/notary-course-content.json"
 cp "$ROADMAP_JSON" "$SEEDED_DIR/roadmap-content.json"
+cp "$REVENUE_MD" "$SEEDED_DIR/ohio_notary_codex_revenue_ladder.md"
 cp "$ROOT_DIR/macos-app/AppIcon.icns" "$RESOURCES_DIR/AppIcon.icns"
 
 SOURCE_JSON_ENV="$SOURCE_JSON" WEBAPP_RESOURCES_DIR_ENV="$WEBAPP_RESOURCES_DIR" python3 - <<'PY'
