@@ -457,7 +457,8 @@ body.sidebar-collapsed .nav-label {
 .roadmap-grid,
 .avenue-grid,
 .today-grid,
-.shortcut-grid {
+.shortcut-grid,
+.library-layout {
   display: grid;
   gap: 18px;
 }
@@ -484,6 +485,63 @@ body.sidebar-collapsed .nav-label {
 
 .roadmap-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.library-layout {
+  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.library-card-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.library-doc-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--surface-wash);
+  color: var(--ink);
+  text-align: left;
+}
+
+.library-doc-button:hover,
+.library-doc-button-active {
+  background: var(--primary-soft);
+  border-color: rgba(143, 29, 44, 0.24);
+}
+
+.library-doc-button span {
+  display: grid;
+  gap: 4px;
+}
+
+.library-viewer {
+  min-width: 0;
+}
+
+.document-preview {
+  margin: 14px 0 0;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--surface-wash);
+  color: var(--ink);
+  white-space: pre-wrap;
+  line-height: 1.55;
+  max-height: 640px;
+  overflow: auto;
+}
+
+.audio-player {
+  width: 100%;
+  margin-top: 6px;
 }
 
 .card,
@@ -924,7 +982,8 @@ textarea {
   .avenue-grid,
   .today-grid,
   .shortcut-list,
-  .lane-detail-grid {
+  .lane-detail-grid,
+  .library-layout {
     grid-template-columns: 1fr;
   }
 

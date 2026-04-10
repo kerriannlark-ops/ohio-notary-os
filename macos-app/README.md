@@ -6,7 +6,7 @@ It now opens in a **self-contained native macOS window** using WebKit, without C
 
 ## What it includes
 - Start Here dashboard with a study-first `Today’s Study Session` widget
-- Private local course packet library
+- Private local course library for packet, notes, transcripts, audio, and business docs
 - Resume packet page tracking
 - Packet outline by exam topic
 - Flashcards with keyboard support
@@ -61,9 +61,10 @@ This app packages the current paid course packet from one of those private locat
 At build time:
 - the PDF is copied into the app bundle
 - a private structured study JSON asset is generated from the packet
+- the full local `NOTARY LICENSE COURSE` document set is copied into the app’s private course library
 - the Ohio Notary business roadmap JSON is bundled into the app
 - the Ohio Notary revenue-ladder source markdown is bundled into the app
-- the app launches a local study workspace with your packet, modules, flashcards, quiz bank, cram sheet, checklist, and roadmap
+- the app launches a local study workspace with your packet, modules, flashcards, quiz bank, cram sheet, checklist, roadmap, course notes, transcripts, audio recordings, and business-planning docs
 
 ## Build the regular macOS app
 From repo root:

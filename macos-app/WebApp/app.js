@@ -17,9 +17,15 @@ const roadmap = window.NOTARY_ROADMAP_CONTENT || {
   appWorkflowMirror: [],
   avenuesMap: [],
 };
+const library = window.NOTARY_COURSE_LIBRARY || {
+  metadata: { documentCount: 0, audioFileCount: 0, totalAudioSeconds: 0 },
+  businessSnapshot: {},
+  recommendedStudyStack: [],
+  documents: [],
+};
 
-const STORAGE_KEY = 'notary-os-study-hub-regular-v4';
-const DEFAULT_PDF = '../SeededCourse/OhioNotaryCoursePacket.pdf';
+const STORAGE_KEY = 'notary-os-study-hub-regular-v5';
+const DEFAULT_PDF = './CourseLibrary/OhioNotaryCoursePacket.pdf';
 const OPERATIONS_URL = 'https://ohio-notary-os.netlify.app/dashboard';
 const LETTERS = ['A', 'B', 'C', 'D', 'E'];
 const SECTION_ORDER = ['dashboard', 'packet', 'modules', 'flashcards', 'quiz', 'cram', 'checklist', 'roadmap', 'operations'];
@@ -96,7 +102,7 @@ const shortcutGroups = [
     title: 'Navigation',
     items: [
       ['⌘1', 'Open Start Here'],
-      ['⌘2', 'Open Course Packet'],
+      ['⌘2', 'Open Course Library'],
       ['⌘3', 'Open Study Modules'],
       ['⌘4', 'Open Flashcards'],
       ['⌘5', 'Open Practice Quiz'],
@@ -165,6 +171,7 @@ function buildDefaultServiceLaneProgress() {
 const defaultState = {
   activeSection: 'dashboard',
   activeModuleId: content.modules[0]?.id || '',
+  selectedLibraryDocId: library.documents.find((doc) => doc.isPrimaryPacket)?.id || library.documents[0]?.id || '',
   flashcardIndex: 0,
   flashcardShowAnswer: false,
   flashcardScope: 'module',
@@ -223,6 +230,9 @@ function normalizeState(parsed) {
   if (!content.modules.some((module) => module.id === normalized.activeModuleId)) {
     normalized.activeModuleId = content.modules[0]?.id || '';
   }
+  if (!library.documents.some((doc) => doc.id === normalized.selectedLibraryDocId)) {
+    normalized.selectedLibraryDocId = library.documents.find((doc) => doc.isPrimaryPacket)?.id || library.documents[0]?.id || '';
+  }
 
   if (normalized.todaySessionDate !== dayKey()) {
     normalized.todaySessionDate = dayKey();
@@ -274,6 +284,105 @@ function humanDate(value) {
   } catch {
     return value;
   }
+}
+
+function fileSizeLabel(bytes, fallback = '') {
+  if (!bytes && bytes !== 0) return fallback;
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let value = Number(bytes);
+  let index = 0;
+  while (value >= 1024 && index < units.length - 1) {
+    value /= 1024;
+    index += 1;
+  }
+  return `${value.toFixed(index === 0 ? 0 : 1)} ${units[index]}`;
+}
+
+function durationLabel(seconds, fallback = '—') {
+  if (!seconds && seconds !== 0) return fallback;
+  const total = Math.round(Number(seconds));
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const secs = total % 60;
+  if (hours) return `${hours}h ${minutes}m`;
+  if (minutes) return `${minutes}m ${secs}s`;
+  return `${secs}s`;
+}
+
+function libraryDocById(id) {
+  return library.documents.find((doc) => doc.id === id) || library.documents[0] || null;
+}
+
+function selectedLibraryDoc() {
+  return libraryDocById(state.selectedLibraryDocId);
+}
+
+function primaryLibraryDoc() {
+  return library.documents.find((doc) => doc.isPrimaryPacket) || libraryDocById(state.selectedLibraryDocId);
+}
+
+function libraryDocumentsByCategory(category) {
+  return library.documents.filter((doc) => doc.category === category);
+}
+
+function totalAudioHours() {
+  return ((Number(library.metadata?.totalAudioSeconds || 0) / 3600) || 0).toFixed(1);
+}
+
+function documentMetaChips(doc) {
+  const chips = [];
+  chips.push(doc.kind?.toUpperCase() || 'FILE');
+  if (doc.pageCount) chips.push(`${doc.pageCount} pages`);
+  if (doc.durationSeconds) chips.push(durationLabel(doc.durationSeconds));
+  if (doc.fileSizeBytes) chips.push(fileSizeLabel(doc.fileSizeBytes, doc.fileSizeLabel));
+  if (doc.priority) chips.push(doc.priority.replace(/_/g, ' '));
+  return chips;
+}
+
+function documentViewerHtml(doc) {
+  if (!doc) {
+    return '<article class="card"><p>Select a course file to preview it here.</p></article>';
+  }
+
+  if (doc.kind === 'pdf') {
+    const viewerUrl = doc.isPrimaryPacket ? `${doc.url}#page=${state.lastPacketPage}` : doc.url;
+    return `
+      <article class="card">
+        <p class="eyebrow">Document preview</p>
+        <h3>${escapeHtml(doc.title)}</h3>
+        <div class="toolbar-pill-row" style="margin-bottom:14px;">
+          ${documentMetaChips(doc).map((chip) => `<span class="toolbar-chip">${escapeHtml(chip)}</span>`).join('')}
+        </div>
+        <iframe class="packet-frame" title="${escapeHtml(doc.title)}" src="${escapeHtml(viewerUrl)}"></iframe>
+      </article>
+    `;
+  }
+
+  if (doc.kind === 'm4a') {
+    return `
+      <article class="card">
+        <p class="eyebrow">Audio preview</p>
+        <h3>${escapeHtml(doc.title)}</h3>
+        <div class="toolbar-pill-row" style="margin-bottom:14px;">
+          ${documentMetaChips(doc).map((chip) => `<span class="toolbar-chip">${escapeHtml(chip)}</span>`).join('')}
+        </div>
+        <audio class="audio-player" controls preload="metadata" src="${escapeHtml(doc.url)}"></audio>
+        <p class="muted" style="margin-top:12px;">${escapeHtml(doc.recommendedUse || doc.description || 'Use this recording as lecture reference.')}</p>
+      </article>
+    `;
+  }
+
+  return `
+    <article class="card">
+      <p class="eyebrow">Document preview</p>
+      <h3>${escapeHtml(doc.title)}</h3>
+      <div class="toolbar-pill-row" style="margin-bottom:14px;">
+        ${documentMetaChips(doc).map((chip) => `<span class="toolbar-chip">${escapeHtml(chip)}</span>`).join('')}
+      </div>
+      <p class="muted">${escapeHtml(doc.description || '')}</p>
+      <pre class="document-preview">${escapeHtml(doc.previewText || 'No inline preview is available for this file yet. Use the open/download action to view the original file.')}</pre>
+    </article>
+  `;
 }
 
 function statusMeta(status) {
@@ -811,23 +920,31 @@ function renderDashboard() {
 function renderPacket() {
   const pageModules = packetModulesForPage(state.lastPacketPage);
   const section = document.getElementById('packet');
+  const selectedDoc = selectedLibraryDoc();
+  const primaryDoc = primaryLibraryDoc();
+  const business = library.businessSnapshot || {};
+  const coreDocs = libraryDocumentsByCategory('core').concat(libraryDocumentsByCategory('support'));
+  const transcriptDocs = libraryDocumentsByCategory('transcript');
+  const audioDocs = libraryDocumentsByCategory('audio');
+  const businessDocs = libraryDocumentsByCategory('business');
+
   section.innerHTML = `
     <div class="page-header">
       <div>
-        <p class="eyebrow">Course packet</p>
-        <h2>Resume your paid packet where you left off.</h2>
-        <p class="muted">Keep the packet moving. Use the page box below to track your place and jump back into the PDF.</p>
+        <p class="eyebrow">Course library</p>
+        <h2>One private library for every course file, note set, transcript, audio replay, and business document.</h2>
+        <p class="muted">Use the main packet for page tracking, the cleaned study guide for faster review, transcripts for exact wording, audio only when needed, and the business docs when you switch into launch mode.</p>
       </div>
       <div class="action-row packet-actions">
-        <a class="button" href="${DEFAULT_PDF}#page=${state.lastPacketPage}" target="_blank" rel="noreferrer">Open PDF in new tab</a>
-        <a class="secondary-button" href="${DEFAULT_PDF}" download>Download local copy</a>
+        <a class="button" href="${escapeHtml(primaryDoc?.url || DEFAULT_PDF)}#page=${state.lastPacketPage}" target="_blank" rel="noreferrer">Open main packet</a>
+        <a class="secondary-button" href="${escapeHtml(selectedDoc?.url || primaryDoc?.url || DEFAULT_PDF)}" target="_blank" rel="noreferrer" download>Open selected file</a>
       </div>
     </div>
 
     <div class="grid-2">
       <article class="card">
-        <p class="eyebrow">Packet control</p>
-        <label for="packet-page-input">Current page</label>
+        <p class="eyebrow">Main packet control</p>
+        <label for="packet-page-input">Resume page</label>
         <input id="packet-page-input" type="number" min="1" max="${content.metadata?.pageCount || 149}" value="${state.lastPacketPage}" />
         <div class="action-row" style="margin-top:14px;">
           <button class="button" id="save-packet-page-btn">Save page</button>
@@ -836,26 +953,114 @@ function renderPacket() {
           <button class="ghost-button" id="packet-mark-course-btn">${state.checklist.courseCompleted ? 'Course marked complete' : 'Mark course complete'}</button>
         </div>
         <div class="toolbar-pill-row" style="margin-top:14px;">
-          <span class="toolbar-chip">Source pages: 1-${content.metadata?.pageCount || 149}</span>
+          <span class="toolbar-chip">Sources loaded: ${library.metadata?.documentCount || library.documents.length}</span>
+          <span class="toolbar-chip">Audio hours: ${totalAudioHours()}</span>
           <span class="toolbar-chip">Resume page ${state.lastPacketPage}</span>
         </div>
       </article>
 
       <article class="card">
-        <p class="eyebrow">Page-linked study modules</p>
-        ${pageModules.length ? `
-          <div class="tag-row">
-            ${pageModules
-              .map((module) => `<button class="ghost-button page-module-link" data-module-id="${escapeHtml(module.id)}">${escapeHtml(module.title)}</button>`)
-              .join('')}
-          </div>
-          <p class="muted" style="margin-top:14px;">Use these modules to jump into outline, flashcards, or quiz work tied to this page range.</p>
-        ` : '<p>No module boundary matched that page. Stay in the packet and keep moving.</p>'}
+        <p class="eyebrow">Best study stack</p>
+        <ol class="ordered-list">
+          ${(library.recommendedStudyStack || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
+        </ol>
+        <div class="tag-row" style="margin-top:14px;">
+          ${pageModules
+            .map((module) => `<button class="ghost-button page-module-link" data-module-id="${escapeHtml(module.id)}">${escapeHtml(module.title)}</button>`)
+            .join('')}
+        </div>
       </article>
     </div>
 
-    <div class="card" style="margin-top:18px; padding:0; overflow:hidden;">
-      <iframe class="packet-frame" title="Ohio Notary Course Packet" src="${DEFAULT_PDF}#page=${state.lastPacketPage}"></iframe>
+    <div class="metrics-grid" style="margin-top:18px;">
+      <article class="mini-card">
+        <p class="eyebrow">Business plan snapshot</p>
+        <div class="stat-value">${escapeHtml(business.year1Revenue || '—')}</div>
+        <p class="muted">Year 1 revenue target</p>
+      </article>
+      <article class="mini-card">
+        <p class="eyebrow">Startup cash</p>
+        <div class="stat-value">${escapeHtml(business.startupCashOutlay || '—')}</div>
+        <p class="muted">Startup outlay from the plan</p>
+      </article>
+      <article class="mini-card">
+        <p class="eyebrow">Break-even</p>
+        <div class="stat-value">${escapeHtml(business.breakEvenMonthlyAppointments || '—')}</div>
+        <p class="muted">Monthly appointment goal</p>
+      </article>
+      <article class="mini-card">
+        <p class="eyebrow">Loaded documents</p>
+        <div class="stat-value">${library.metadata?.documentCount || library.documents.length}</div>
+        <p class="muted">${library.metadata?.audioFileCount || audioDocs.length} audio recordings included</p>
+      </article>
+    </div>
+
+    <div class="library-layout" style="margin-top:18px;">
+      <div class="library-list">
+        <article class="card">
+          <p class="eyebrow">Core study documents</p>
+          <div class="library-card-stack">
+            ${coreDocs.map((doc) => `
+              <button class="library-doc-button ${doc.id === selectedDoc?.id ? 'library-doc-button-active' : ''}" data-library-doc="${escapeHtml(doc.id)}">
+                <span>
+                  <strong>${escapeHtml(doc.title)}</strong>
+                  <span class="muted small">${escapeHtml(doc.description)}</span>
+                </span>
+                <span class="status-chip ${doc.isPrimaryPacket ? 'chip-active' : 'chip-in-progress'}">${doc.isPrimaryPacket ? 'Primary' : 'Support'}</span>
+              </button>
+            `).join('')}
+          </div>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">Transcripts</p>
+          <div class="library-card-stack">
+            ${transcriptDocs.map((doc) => `
+              <button class="library-doc-button ${doc.id === selectedDoc?.id ? 'library-doc-button-active' : ''}" data-library-doc="${escapeHtml(doc.id)}">
+                <span>
+                  <strong>${escapeHtml(doc.title)}</strong>
+                  <span class="muted small">${escapeHtml(doc.recommendedUse)}</span>
+                </span>
+                <span class="status-chip chip-deferred">${doc.pageCount ? `${doc.pageCount} pages` : 'Reference'}</span>
+              </button>
+            `).join('')}
+          </div>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">Audio recordings</p>
+          <div class="library-card-stack">
+            ${audioDocs.map((doc) => `
+              <button class="library-doc-button ${doc.id === selectedDoc?.id ? 'library-doc-button-active' : ''}" data-library-doc="${escapeHtml(doc.id)}">
+                <span>
+                  <strong>${escapeHtml(doc.title)}</strong>
+                  <span class="muted small">${escapeHtml(doc.recommendedUse)}</span>
+                </span>
+                <span class="status-chip chip-not-started">${escapeHtml(doc.durationLabel || 'Audio')}</span>
+              </button>
+            `).join('')}
+          </div>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">Business build documents</p>
+          <div class="library-card-stack">
+            ${businessDocs.map((doc) => `
+              <button class="library-doc-button ${doc.id === selectedDoc?.id ? 'library-doc-button-active' : ''}" data-library-doc="${escapeHtml(doc.id)}">
+                <span>
+                  <strong>${escapeHtml(doc.title)}</strong>
+                  <span class="muted small">${escapeHtml(doc.recommendedUse)}</span>
+                </span>
+                <span class="status-chip chip-active">Business</span>
+              </button>
+            `).join('')}
+          </div>
+        </article>
+      </div>
+
+      <div class="library-viewer">
+        ${documentViewerHtml(selectedDoc)}
+      </div>
     </div>
   `;
 
@@ -879,6 +1084,13 @@ function renderPacket() {
   });
   document.querySelectorAll('.page-module-link').forEach((button) => {
     button.addEventListener('click', () => switchModule(button.dataset.moduleId, 'modules'));
+  });
+  document.querySelectorAll('[data-library-doc]').forEach((button) => {
+    button.addEventListener('click', () => {
+      state.selectedLibraryDocId = button.dataset.libraryDoc;
+      saveState();
+      renderApp();
+    });
   });
 }
 
@@ -1649,6 +1861,11 @@ function renderRoadmap() {
         <ol class="ordered-list">
           ${(roadmap.buildOrder || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
         </ol>
+        <div class="toolbar-pill-row" style="margin-top:14px;">
+          <span class="toolbar-chip">Startup cash: ${escapeHtml(library.businessSnapshot?.startupCashOutlay || '—')}</span>
+          <span class="toolbar-chip">Year 1 revenue: ${escapeHtml(library.businessSnapshot?.year1Revenue || '—')}</span>
+          <span class="toolbar-chip">Break-even: ${escapeHtml(library.businessSnapshot?.breakEvenMonthlyAppointments || '—')}</span>
+        </div>
       </article>
     </div>
 
