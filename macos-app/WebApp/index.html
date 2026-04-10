@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notary OS Study Hub</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="window-shell">
+      <div class="window-toolbar">
+        <div class="traffic-lights" aria-hidden="true">
+          <span class="traffic-light red"></span>
+          <span class="traffic-light yellow"></span>
+          <span class="traffic-light green"></span>
+        </div>
+
+        <div class="toolbar-title-group">
+          <p class="toolbar-label">Private study workspace</p>
+          <h1 class="toolbar-title">Notary OS Study Hub</h1>
+        </div>
+
+        <div class="toolbar-meta">
+          <button class="toolbar-button" id="toggle-sidebar-btn" title="Toggle sidebar (⌘B)">Sidebar</button>
+          <select class="theme-select" id="theme-select" title="Theme preference">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+          <button class="toolbar-button" id="motion-toggle-btn" title="Toggle low-motion mode">Low Motion</button>
+          <button class="toolbar-button" id="print-cram-btn" title="Print cram sheet (⌘P)">Print Cram</button>
+          <button class="toolbar-button" id="shortcut-help-btn" title="Keyboard shortcuts (⌘/)">Shortcuts</button>
+        </div>
+      </div>
+
+      <div class="app-shell">
+        <aside class="sidebar">
+          <div class="brand-card">
+            <div class="brand-mark">N</div>
+            <div class="brand-copy">
+              <p class="eyebrow">Ohio Notary OS</p>
+              <h2 class="brand-title">Study Hub</h2>
+              <p class="muted small">Course pass system + launch tracker</p>
+            </div>
+          </div>
+
+          <nav class="nav-list" aria-label="Primary">
+            <button class="nav-button active" data-section="dashboard" data-label="Start Here" title="Start Here (⌘1)"><span class="nav-icon">⌂</span><span class="nav-label">Start Here</span></button>
+            <button class="nav-button" data-section="packet" data-label="Course Packet" title="Course Packet (⌘2)"><span class="nav-icon">📄</span><span class="nav-label">Course Packet</span></button>
+            <button class="nav-button" data-section="modules" data-label="Study Modules" title="Study Modules (⌘3)"><span class="nav-icon">§</span><span class="nav-label">Study Modules</span></button>
+            <button class="nav-button" data-section="flashcards" data-label="Flashcards" title="Flashcards (⌘4)"><span class="nav-icon">◫</span><span class="nav-label">Flashcards</span></button>
+            <button class="nav-button" data-section="quiz" data-label="Practice Quiz" title="Practice Quiz (⌘5)"><span class="nav-icon">✓</span><span class="nav-label">Practice Quiz</span></button>
+            <button class="nav-button" data-section="cram" data-label="Final Cram" title="Final Cram (⌘6)"><span class="nav-icon">!</span><span class="nav-label">Final Cram</span></button>
+            <button class="nav-button" data-section="checklist" data-label="Licensing Checklist" title="Licensing Checklist (⌘7)"><span class="nav-icon">☑</span><span class="nav-label">Licensing Checklist</span></button>
+            <button class="nav-button" data-section="roadmap" data-label="Roadmap" title="Roadmap (⌘8)"><span class="nav-icon">↗</span><span class="nav-label">Roadmap</span></button>
+            <button class="nav-button" data-section="operations" data-label="Operations" title="Operations (⌘9)"><span class="nav-icon">⚙</span><span class="nav-label">Operations</span></button>
+          </nav>
+
+          <div class="sidebar-box">
+            <p class="eyebrow">Exam target</p>
+            <div class="metric-row"><span>Questions</span><strong>30</strong></div>
+            <div class="metric-row"><span>Time</span><strong>1 hour</strong></div>
+            <div class="metric-row"><span>Pass score</span><strong>80%</strong></div>
+            <div class="metric-row"><span>Retake</span><strong>30 days</strong></div>
+          </div>
+
+          <div class="sidebar-box quick-tips">
+            <p class="eyebrow">Mac rhythm</p>
+            <p class="muted small">Use one screen at a time, follow the primary next step, and let the today widget choose the focus so you do not have to decide from scratch.</p>
+          </div>
+        </aside>
+
+        <main class="main-panel">
+          <div class="content-toolbar">
+            <div>
+              <p class="eyebrow">Focused workspace</p>
+              <p class="muted toolbar-copy">Low-stimulation layout, Times New Roman typography, keyboard shortcuts, roadmap tracking, and packet-linked study tools built to help you pass fast and launch the business cleanly.</p>
+            </div>
+            <div class="content-toolbar-actions">
+              <a class="ghost-link" href="../SeededCourse/OhioNotaryCoursePacket.pdf" target="_blank" rel="noreferrer">Open packet</a>
+              <a class="ghost-link" href="https://ohio-notary-os.netlify.app/dashboard" target="_blank" rel="noreferrer">Open dashboard</a>
+            </div>
+          </div>
+
+          <section id="dashboard" class="page-section active"></section>
+          <section id="packet" class="page-section"></section>
+          <section id="modules" class="page-section"></section>
+          <section id="flashcards" class="page-section"></section>
+          <section id="quiz" class="page-section"></section>
+          <section id="cram" class="page-section"></section>
+          <section id="checklist" class="page-section"></section>
+          <section id="roadmap" class="page-section"></section>
+          <section id="operations" class="page-section"></section>
+        </main>
+      </div>
+    </div>
+
+    <div id="shortcut-overlay" class="shortcut-overlay hidden" aria-hidden="true">
+      <div class="shortcut-panel">
+        <div class="shortcut-panel-header">
+          <div>
+            <p class="eyebrow">Keyboard shortcuts</p>
+            <h2>Study faster on Mac</h2>
+          </div>
+          <button class="toolbar-button" id="shortcut-close-btn">Close</button>
+        </div>
+        <div id="shortcut-list" class="shortcut-list"></div>
+      </div>
+    </div>
+
+    <script src="./study-data.js"></script>
+    <script src="./roadmap-data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -1,4 +1,5 @@
 import { validateAppointmentCompliance } from "../lib/compliance";
+import { canBookServiceAsync } from "../lib/launch";
 import { createOhioQuote, QuoteInput } from "../lib/pricing";
 
 export interface CreateBookingRequest extends QuoteInput {
@@ -12,7 +13,8 @@ export interface CreateBookingRequest extends QuoteInput {
   titleFieldsComplete?: boolean;
 }
 
-export function createBooking(request: CreateBookingRequest) {
+export async function createBooking(request: CreateBookingRequest) {
+  const bookingPermission = await canBookServiceAsync(request.isRON ? "ron" : "in_person");
   const quote = createOhioQuote(request);
   const compliance = validateAppointmentCompliance({
     appointmentDate: request.appointmentDate,
@@ -33,11 +35,20 @@ export function createBooking(request: CreateBookingRequest) {
     electronicJournalCreated: request.isRON ? true : undefined,
   });
 
+  const readinessIssues = bookingPermission.blockers.map((message, index) => ({
+    code: `readiness_gate_${index + 1}`,
+    severity: "error" as const,
+    message,
+  }));
+
   return {
     appointmentId: request.appointmentId,
     clientName: request.clientName,
     quote,
     compliance,
-    status: quote.isValid && compliance.ok ? "booked" : "needs_review",
+    readiness: bookingPermission,
+    status:
+      quote.isValid && compliance.ok && bookingPermission.ok ? "booked" : "needs_review",
+    blockingIssues: [...readinessIssues, ...compliance.blockingIssues],
   };
 }

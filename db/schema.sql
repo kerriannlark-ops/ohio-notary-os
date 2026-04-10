@@ -15,6 +15,11 @@ create type payment_provider as enum ('STRIPE', 'MANUAL');
 create type payment_intent_status as enum ('PENDING', 'SUCCEEDED', 'FAILED', 'CANCELED');
 create type client_message_sender_type as enum ('NOTARY', 'CLIENT', 'SYSTEM');
 create type client_message_type as enum ('BOOKING_CONFIRMATION', 'REMINDER', 'MISSING_INFO_REQUEST', 'UPLOAD_REQUEST', 'QUOTE_ACCEPTED', 'INVOICE_SENT', 'APPOINTMENT_FOLLOW_UP', 'REVIEW_REQUEST', 'REPEAT_CLIENT_OUTREACH');
+create type launch_phase as enum ('COMMISSION', 'OPERATIONS', 'RON', 'BUSINESS', 'REVENUE_SCALE');
+create type launch_milestone_status as enum ('LOCKED', 'AVAILABLE', 'IN_PROGRESS', 'COMPLETED', 'BLOCKED');
+create type launch_milestone_source_type as enum ('MANUAL', 'DERIVED');
+create type launch_task_status as enum ('PENDING', 'IN_PROGRESS', 'COMPLETED', 'BLOCKED');
+create type goal_period_type as enum ('MONTH', 'QUARTER');
 
 create table users (
   id text primary key,
@@ -35,6 +40,7 @@ create table notary_profiles (
   ron_expiration_date date,
   oath_completed boolean not null default false,
   bci_date date,
+  commission_approved_date date,
   base_city text not null,
   base_county text not null,
   business_mode_enabled boolean not null default true,
@@ -43,6 +49,7 @@ create table notary_profiles (
   business_entity_name text,
   ein_status boolean not null default false,
   seal_ordered boolean not null default false,
+  seal_received_date date,
   journal_type_configured text,
   e_seal_configured boolean not null default false,
   e_signature_configured boolean not null default false,
@@ -55,6 +62,15 @@ create table notary_profiles (
   ron_provider_fee_reference integer not null default 250,
   initial_filing_fee_reference integer not null default 15,
   ron_filing_fee_reference integer not null default 20,
+  llc_formed boolean not null default false,
+  llc_formed_date date,
+  ein_obtained_date date,
+  business_banking_ready boolean not null default false,
+  eo_insurance_active boolean not null default false,
+  eo_insurance_renewal_date date,
+  google_business_profile_live boolean not null default false,
+  website_live boolean not null default false,
+  employer_private_separation_confirmed boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -332,4 +348,74 @@ create table landing_page_stats (
   visits integer not null default 0,
   conversions integer not null default 0,
   created_at timestamptz not null default now()
+);
+
+create table launch_milestones (
+  id text primary key,
+  phase launch_phase not null,
+  code text not null unique,
+  title text not null,
+  description text not null,
+  status launch_milestone_status not null,
+  due_date timestamptz,
+  completed_at timestamptz,
+  sort_order integer not null,
+  dependency_codes jsonb,
+  blocker_reason text,
+  owner_notes text,
+  source_type launch_milestone_source_type not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table launch_tasks (
+  id text primary key,
+  milestone_id text not null references launch_milestones(id) on delete cascade,
+  title text not null,
+  status launch_task_status not null default 'PENDING',
+  completed_at timestamptz,
+  requires_manual_confirmation boolean not null default false,
+  evidence_type text not null,
+  evidence_value text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table launch_alerts (
+  id text primary key,
+  code text not null unique,
+  severity compliance_severity not null,
+  title text not null,
+  body text not null,
+  related_milestone_id text references launch_milestones(id) on delete set null,
+  due_date timestamptz,
+  resolved_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create table goals (
+  id text primary key,
+  period_type goal_period_type not null,
+  start_date timestamptz not null,
+  end_date timestamptz not null,
+  revenue_target integer not null,
+  appointment_target integer not null,
+  ron_target integer not null,
+  mobile_target integer not null,
+  review_target integer not null,
+  b2b_outreach_target integer not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table goal_snapshots (
+  id text primary key,
+  goal_id text not null references goals(id) on delete cascade,
+  actual_revenue integer not null,
+  actual_appointments integer not null,
+  actual_ron integer not null,
+  actual_mobile integer not null,
+  actual_reviews integer not null,
+  actual_b2b_outreach integer not null,
+  updated_at timestamptz not null default now()
 );
