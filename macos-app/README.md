@@ -2,6 +2,8 @@
 
 Regular no-Xcode macOS study + launch app for Ohio Notary OS.
 
+It now opens in a **self-contained native macOS window** using WebKit, without Chrome.
+
 ## What it includes
 - Start Here dashboard with a study-first `Today’s Study Session` widget
 - Private local course packet library
@@ -18,6 +20,7 @@ Regular no-Xcode macOS study + launch app for Ohio Notary OS.
 - Sidebar collapse and shortcut overlay
 - Link-out to the live Notary OS operations dashboard
 - No Xcode required to build the regular app bundle
+- No Chrome required at runtime
 
 ## Keyboard shortcuts
 - `⌘1` Start Here
@@ -69,6 +72,9 @@ From repo root:
 ./macos-app/build_macos_app.sh
 ```
 
+Build requirement:
+- Apple Command Line Tools with `clang`
+
 ## GitHub / privacy workflow
 - GitHub is the source-control home for this app.
 - The Mac app still runs locally.
@@ -119,3 +125,4 @@ The earlier SwiftUI native build script is preserved here if you ever want it la
 - Uses browser local storage for study progress, roadmap status, service-lane tracking, theme preference, reduced-motion preference, and daily session state in the no-Xcode build.
 - Uses the deployed web app as the business operations backend.
 - Paid course content may stay local-only or be stored in the private repo, depending on your chosen workflow.
+- Uses a native WebKit window launcher instead of a Chrome app window.

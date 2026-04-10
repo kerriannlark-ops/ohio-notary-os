@@ -17,6 +17,7 @@ ROADMAP_JSON="$ROOT_DIR/macos-app/SeededCourse/roadmap-content.json"
 REVENUE_MD="$ROOT_DIR/macos-app/SeededCourse/ohio_notary_codex_revenue_ladder.md"
 WEB_SOURCE_DIR="$ROOT_DIR/macos-app/WebApp"
 LAUNCH_HELPER="$ROOT_DIR/macos-app/launch_regular_app.py"
+NATIVE_LAUNCHER_SOURCE="$ROOT_DIR/macos-app/NativeLauncher.m"
 WEBAPP_RESOURCES_DIR="$RESOURCES_DIR/WebApp"
 SEEDED_DIR="$RESOURCES_DIR/SeededCourse"
 EXECUTABLE_NAME="NotaryOSStudyHub"
@@ -50,6 +51,11 @@ fi
 
 if [ ! -f "$REVENUE_MD" ]; then
   echo "Missing revenue ladder source markdown at: $REVENUE_MD" >&2
+  exit 1
+fi
+
+if [ ! -f "$NATIVE_LAUNCHER_SOURCE" ]; then
+  echo "Missing native launcher source at: $NATIVE_LAUNCHER_SOURCE" >&2
   exit 1
 fi
 
@@ -100,14 +106,16 @@ data = json.loads(source.read_text(encoding='utf-8'))
 target.write_text('window.NOTARY_ROADMAP_CONTENT = ' + json.dumps(data, ensure_ascii=False) + ';', encoding='utf-8')
 PY
 
-cat > "$EXECUTABLE_PATH" <<'APP'
-#!/bin/zsh
-set -euo pipefail
-APP_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-RESOURCES_DIR="$APP_ROOT/Resources"
-/usr/bin/python3 "$RESOURCES_DIR/launch_regular_app.py" "$RESOURCES_DIR/WebApp" >/tmp/notary_os_study_hub.log 2>&1 &
-exit 0
-APP
+if ! command -v clang >/dev/null 2>&1; then
+  echo "clang is required to build the native Mac window launcher." >&2
+  exit 1
+fi
+
+clang -fobjc-arc \
+  -framework Cocoa \
+  -framework WebKit \
+  "$NATIVE_LAUNCHER_SOURCE" \
+  -o "$EXECUTABLE_PATH"
 chmod +x "$EXECUTABLE_PATH"
 
 cat > "$PLIST_PATH" <<PLIST
@@ -150,6 +158,7 @@ Drag "Notary OS Study Hub.app" into the "Applications" shortcut in this folder.
 Double-click the app to launch the private study workspace.
 This build does not require Xcode.
 Includes roadmap tracking, dark mode, keyboard shortcuts, and a printable cram sheet.
+This build opens in its own native Mac window and does not require Chrome.
 TXT
 
 ditto -c -k --sequesterRsrc --keepParent "$APP_DIR" "$ZIP_PATH"
@@ -164,3 +173,5 @@ echo
 echo "Privacy note:"
 echo "  This build bundles private course content."
 echo "  Keep GitHub Releases private if you upload this zip."
+echo "Runtime note:"
+echo "  This build uses a native macOS WebKit window instead of Chrome."

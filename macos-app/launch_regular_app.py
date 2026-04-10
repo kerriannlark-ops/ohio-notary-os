@@ -5,6 +5,7 @@ import json
 import os
 import socket
 import subprocess
+import argparse
 import sys
 import time
 import urllib.request
@@ -117,15 +118,21 @@ def launch_standalone_window(url: str) -> None:
 
 
 def main() -> int:
-    if len(sys.argv) < 2:
-        raise SystemExit('Usage: launch_regular_app.py <web-dir>')
+    parser = argparse.ArgumentParser(description='Launch or prepare the Notary OS Study Hub local workspace.')
+    parser.add_argument('web_dir', help='Path to the bundled web workspace')
+    parser.add_argument('--server-only', action='store_true', help='Start/ensure the local server and print the local URL')
+    args = parser.parse_args()
 
-    web_dir = Path(sys.argv[1]).resolve()
+    web_dir = Path(args.web_dir).resolve()
     if not web_dir.exists():
         raise SystemExit(f'Web app directory not found: {web_dir}')
 
     port = ensure_server(web_dir)
     url = f'http://127.0.0.1:{port}/index.html'
+    if args.server_only:
+        print(url)
+        return 0
+
     launch_standalone_window(url)
     return 0
 

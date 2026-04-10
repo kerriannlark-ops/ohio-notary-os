@@ -124,4 +124,4 @@ Current model:
 - Mac app = local packaged runtime
 - paid course content = local/private build input or private repo asset
 
-If you want to remove the current browser-based launch behavior, that requires a runtime change, not a GitHub change.
+The current app runtime now uses a native macOS WebKit window, so GitHub remains source control + optional releases, not the runtime itself.
