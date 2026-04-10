@@ -11,6 +11,7 @@ RESOURCES_DIR="$CONTENTS_DIR/Resources"
 ZIP_PATH="$BUILD_DIR/Notary OS Study Hub.zip"
 APPLICATIONS_READY_DIR="$BUILD_DIR/Applications Ready"
 SOURCE_PDF="/Users/kerriannlark/Desktop/NOTARY LICENSE COURSE/Study Guide with PowerPoint Handouts-2.pdf"
+REPO_SOURCE_PDF="$ROOT_DIR/macos-app/SeededCourse/OhioNotaryCoursePacket.pdf"
 SOURCE_JSON="$ROOT_DIR/macos-app/SeededCourse/notary-course-content.json"
 ROADMAP_JSON="$ROOT_DIR/macos-app/SeededCourse/roadmap-content.json"
 REVENUE_MD="$ROOT_DIR/macos-app/SeededCourse/ohio_notary_codex_revenue_ladder.md"
@@ -27,8 +28,18 @@ rm -f "$ZIP_PATH"
 rm -rf "$APPLICATIONS_READY_DIR"
 mkdir -p "$MACOS_DIR" "$RESOURCES_DIR" "$WEBAPP_RESOURCES_DIR" "$SEEDED_DIR" "$APPLICATIONS_READY_DIR"
 
-if [ ! -f "$SOURCE_PDF" ]; then
-  echo "Missing seeded course PDF at: $SOURCE_PDF" >&2
+if [ -f "$REPO_SOURCE_PDF" ]; then
+  SOURCE_PDF="$REPO_SOURCE_PDF"
+  echo "Using repo-stored private course PDF:"
+  echo "  $SOURCE_PDF"
+elif [ -f "$SOURCE_PDF" ]; then
+  echo "Using local private course PDF:"
+  echo "  $SOURCE_PDF"
+else
+  echo "Missing seeded course PDF." >&2
+  echo "Expected one of:" >&2
+  echo "  $REPO_SOURCE_PDF" >&2
+  echo "  /Users/kerriannlark/Desktop/NOTARY LICENSE COURSE/Study Guide with PowerPoint Handouts-2.pdf" >&2
   exit 1
 fi
 
@@ -149,3 +160,7 @@ echo "Applications-ready folder:"
 echo "  $APPLICATIONS_READY_DIR"
 echo "Packaged zip at:"
 echo "  $ZIP_PATH"
+echo
+echo "Privacy note:"
+echo "  This build bundles private course content."
+echo "  Keep GitHub Releases private if you upload this zip."
