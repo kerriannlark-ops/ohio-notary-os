@@ -27,6 +27,7 @@ const library = window.NOTARY_COURSE_LIBRARY || {
 const STORAGE_KEY = 'notary-os-study-hub-regular-v5';
 const DEFAULT_PDF = './CourseLibrary/OhioNotaryCoursePacket.pdf';
 const OPERATIONS_URL = 'https://ohio-notary-os.netlify.app/dashboard';
+const APPLICATION_PORTAL_URL = 'https://notary.ohiosos.gov/';
 const LETTERS = ['A', 'B', 'C', 'D', 'E'];
 const SECTION_ORDER = ['dashboard', 'packet', 'modules', 'flashcards', 'quiz', 'cram', 'checklist', 'roadmap', 'operations'];
 const SECTION_SHORTCUTS = {
@@ -41,6 +42,7 @@ const SECTION_SHORTCUTS = {
   '9': 'operations',
 };
 const PASS_THRESHOLD = Number(content.metadata?.exam?.passingScore || 80);
+const POST_COURSE_PRESET_VERSION = 1;
 const MEDIA_QUERY = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 const ROADMAP_STATUS_META = {
   not_started: { label: 'Not started', chipClass: 'chip-not-started' },
@@ -79,20 +81,49 @@ const PHASE_CHECKLIST_GATE = {
   premium_services: ['ronReady'],
   recurring_accounts: ['premiumServicesReady'],
 };
+const POST_COURSE_CHECKLIST_DEFAULTS = {
+  coursePaid: true,
+  courseCompleted: true,
+  examPassed: true,
+  bciFresh: true,
+};
+const FILING_UPLOAD_ITEMS = [
+  { key: 'signatureSampleReady', label: 'Signature sample ready', description: 'Keep a clean signature sample ready for the Ohio filing portal.' },
+  { key: 'bciFresh', label: 'BCI report ready', description: 'Use the current BCI report and confirm it is still within the filing window.' },
+  { key: 'educationProofReady', label: 'Education/testing proof ready', description: 'Download the provider-issued proof that shows the passed course/testing requirement.' },
+];
+const LAUNCH_KIT_ITEMS = [
+  { key: 'traditionalJournalReady', label: 'Traditional journal ready', description: 'Keep a journal as a mandatory internal SOP even though Ohio does not require one for traditional acts.' },
+  { key: 'looseCertificatesReady', label: 'Loose acknowledgment/jurat certificates ready', description: 'Have clean loose certificates ready for compliant in-person work.' },
+  { key: 'intakeFormReady', label: 'Intake form ready', description: 'Use a simple intake form before every appointment.' },
+  { key: 'feeSheetReady', label: 'Fee sheet ready', description: 'Keep traditional act fees, travel fees, and disclosures clear before booking.' },
+  { key: 'travelPolicyReady', label: 'Travel-zone policy ready', description: 'Set Columbus / Franklin County coverage and pre-agreed travel pricing.' },
+  { key: 'invoiceTemplateReady', label: 'Invoice template ready', description: 'Use one repeatable invoice format from the first paid appointment.' },
+  { key: 'reviewRequestReady', label: 'Review-request text ready', description: 'Prepare a simple post-appointment review ask.' },
+  { key: 'mileageTrackerReady', label: 'Mileage tracker ready', description: 'Track miles from day one so revenue per mile is visible.' },
+];
+const AUTHORIZATION_TRACKS = roadmap.authorizationTracks || [
+  { id: 'commission', label: 'Ohio notary commission', classification: 'Ohio authorization', summary: 'Primary legal authority to perform Ohio notarial acts.' },
+  { id: 'electronic_in_person', label: 'Electronic in-person notarization', classification: 'Tooling upgrade', summary: 'Uses an electronic signature and electronic seal in person, not a separate commission.' },
+  { id: 'ron', label: 'Remote online notarization (RON)', classification: 'Ohio authorization', summary: 'Separate Ohio authorization for remote online acts.' },
+  { id: 'notary_signing_agent', label: 'Notary Signing Agent', classification: 'Industry credential', summary: 'Market credential stack, not a separate Ohio SOS license.' },
+  { id: 'apostille_support', label: 'Apostille support', classification: 'Non-notarial service', summary: 'Administrative coordination service, not a notary license.' },
+  { id: 'i9_authorized_representative', label: 'I-9 authorized representative', classification: 'Non-notarial service', summary: 'Separate employer verification service; do not use a notary seal.' },
+];
 
 const checklistItems = [
   { key: 'coursePaid', label: 'Course paid', description: 'Keep the paid packet and course access organized in one place.', group: 'Study' },
-  { key: 'courseCompleted', label: 'Course completed', description: 'Finish the packet and mark the course complete before focusing on filing.', group: 'Study' },
-  { key: 'examPassed', label: 'Exam passed', description: 'Treat 80% as the minimum and aim for stable passing practice scores.', group: 'Study' },
-  { key: 'bciFresh', label: 'BCI freshness confirmed', description: 'Confirm the BCI report is still within the filing window.', group: 'Licensing' },
+  { key: 'courseCompleted', label: 'Course completed', description: 'Course is complete. Keep the packet and notes available for quick refreshers while the commission moves forward.', group: 'Study' },
+  { key: 'examPassed', label: 'Exam passed', description: 'Only keep this checked if the provider-issued proof covers the passed testing requirement.', group: 'Study' },
+  { key: 'bciFresh', label: 'BCI freshness confirmed', description: 'Confirm the BCI report is still within 6 months at the time of filing.', group: 'Licensing' },
   { key: 'applicationFiled', label: 'Application filed', description: 'Submit signature, BCI, and course proof through the Ohio portal.', group: 'Licensing' },
   { key: 'commissionApproved', label: 'Commission approved', description: 'Record the approval date as soon as it arrives.', group: 'Licensing' },
   { key: 'oathCompleted', label: 'Oath completed', description: 'Complete the required in-person oath before performing acts.', group: 'Licensing' },
   { key: 'sealOrdered', label: 'Seal ordered / received', description: 'Do not start work until the seal is ready.', group: 'Licensing' },
-  { key: 'firstRevenueMade', label: 'First low-risk appointment completed', description: 'Start with acknowledgments, jurats, affidavits, and employment or school forms.', group: 'Revenue' },
+  { key: 'firstRevenueMade', label: 'First low-risk appointment completed', description: 'Only start after approval + oath + seal + launch kit are complete. Begin with acknowledgments, jurats, affidavits, and employment or school forms.', group: 'Revenue' },
   { key: 'mobileLaunchReady', label: 'Mobile launch setup ready', description: 'Travel zones, booking flow, website, and Google Business Profile are in place.', group: 'Revenue' },
   { key: 'specialtyNicheReady', label: 'Specialty niches prepared', description: 'Hospital, title, and estate-support workflows are ready to activate.', group: 'Revenue' },
-  { key: 'ronReady', label: 'RON path active', description: 'RON authorization and workflow are ready when you choose to scale digitally.', group: 'Revenue' },
+  { key: 'ronReady', label: 'RON path active', description: 'RON requires separate Ohio authorization plus a compliant workflow before activation.', group: 'Revenue' },
   { key: 'premiumServicesReady', label: 'Premium services path active', description: 'Loan signing / premium title-related workflows are ready.', group: 'Revenue' },
   { key: 'b2bAccountsReady', label: 'Recurring account system active', description: 'Packages and outreach are ready for recurring business clients.', group: 'Revenue' },
 ];
@@ -132,9 +163,17 @@ const shortcutGroups = [
 ];
 
 const defaultChecklist = checklistItems.reduce((acc, item) => {
-  acc[item.key] = item.key === 'coursePaid';
+  acc[item.key] = false;
   return acc;
 }, {});
+Object.assign(defaultChecklist, POST_COURSE_CHECKLIST_DEFAULTS);
+
+function buildDefaultLaunchKit() {
+  return LAUNCH_KIT_ITEMS.reduce((acc, item) => {
+    acc[item.key] = false;
+    return acc;
+  }, {});
+}
 
 function deepClone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -147,9 +186,9 @@ function dayKey(date = new Date()) {
 function buildDefaultRoadmapProgress() {
   return (roadmap.phases || []).reduce((acc, phase, index) => {
     acc[phase.id] = {
-      status: index === 0 ? 'in_progress' : 'not_started',
+      status: index === 0 ? 'active' : 'not_started',
       notes: '',
-      nextStep: index === 0 ? 'Finish the course and get to a passing practice score.' : '',
+      nextStep: index === 0 ? 'File the Ohio commission application with signature sample, BCI, and provider proof.' : '',
       touchedAt: '',
     };
     return acc;
@@ -159,9 +198,9 @@ function buildDefaultRoadmapProgress() {
 function buildDefaultServiceLaneProgress() {
   return (roadmap.serviceLanes || []).reduce((acc, lane, index) => {
     acc[lane.id] = {
-      status: index === 0 ? 'in_progress' : 'not_started',
+      status: 'not_started',
       notes: '',
-      nextStep: index === 0 ? 'Use this as the first clean revenue lane.' : '',
+      nextStep: index === 0 ? 'Unlock this lane after commission approval, oath, and seal.' : '',
       touchedAt: '',
     };
     return acc;
@@ -190,6 +229,12 @@ const defaultState = {
   todaySessionComplete: false,
   todaySessionDate: dayKey(),
   reducedMotion: true,
+  signatureSampleReady: false,
+  educationProofReady: false,
+  bciIssuedDate: '',
+  educationProofDate: '',
+  launchKit: buildDefaultLaunchKit(),
+  postCoursePresetVersion: POST_COURSE_PRESET_VERSION,
   roadmapProgress: buildDefaultRoadmapProgress(),
   serviceLaneProgress: buildDefaultServiceLaneProgress(),
 };
@@ -219,12 +264,23 @@ function normalizeState(parsed) {
     ...deepClone(defaultState),
     ...parsed,
     checklist: { ...defaultChecklist, ...(parsed.checklist || {}) },
+    launchKit: { ...buildDefaultLaunchKit(), ...(parsed.launchKit || {}) },
     flashcardRatings: parsed.flashcardRatings || {},
     noteByModule: parsed.noteByModule || {},
     quizHistory: Array.isArray(parsed.quizHistory) ? parsed.quizHistory : [],
     roadmapProgress: mergedRoadmap,
     serviceLaneProgress: mergedServiceLanes,
   };
+
+  if ((parsed.postCoursePresetVersion || 0) < POST_COURSE_PRESET_VERSION) {
+    normalized.checklist = { ...normalized.checklist, ...POST_COURSE_CHECKLIST_DEFAULTS };
+    normalized.roadmapProgress.foundation = {
+      ...normalized.roadmapProgress.foundation,
+      status: normalized.roadmapProgress.foundation.status === 'completed' ? 'completed' : 'active',
+      nextStep: 'File the Ohio commission application with signature sample, BCI, and provider proof.',
+    };
+    normalized.postCoursePresetVersion = POST_COURSE_PRESET_VERSION;
+  }
 
   if (!SECTION_ORDER.includes(normalized.activeSection)) normalized.activeSection = 'dashboard';
   if (!content.modules.some((module) => module.id === normalized.activeModuleId)) {
@@ -284,6 +340,31 @@ function humanDate(value) {
   } catch {
     return value;
   }
+}
+
+function shortDate(value) {
+  if (!value) return 'Missing';
+  try {
+    return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(`${value}T12:00:00`));
+  } catch {
+    return value;
+  }
+}
+
+function parseDateValue(value) {
+  if (!value) return null;
+  const parsed = new Date(`${value}T12:00:00`);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed;
+}
+
+function isOlderThanMonths(value, months) {
+  const parsed = parseDateValue(value);
+  if (!parsed) return null;
+  const cutoff = new Date();
+  cutoff.setHours(0, 0, 0, 0);
+  cutoff.setMonth(cutoff.getMonth() - months);
+  return parsed < cutoff;
 }
 
 function fileSizeLabel(bytes, fallback = '') {
@@ -385,6 +466,76 @@ function documentViewerHtml(doc) {
   `;
 }
 
+function applyPostCoursePreset(force = false) {
+  state.checklist = {
+    ...state.checklist,
+    ...POST_COURSE_CHECKLIST_DEFAULTS,
+    applicationFiled: force ? false : state.checklist.applicationFiled,
+    commissionApproved: force ? false : state.checklist.commissionApproved,
+    oathCompleted: force ? false : state.checklist.oathCompleted,
+    sealOrdered: force ? false : state.checklist.sealOrdered,
+    firstRevenueMade: force ? false : state.checklist.firstRevenueMade,
+    mobileLaunchReady: force ? false : state.checklist.mobileLaunchReady,
+    specialtyNicheReady: force ? false : state.checklist.specialtyNicheReady,
+    ronReady: force ? false : state.checklist.ronReady,
+    premiumServicesReady: force ? false : state.checklist.premiumServicesReady,
+    b2bAccountsReady: force ? false : state.checklist.b2bAccountsReady,
+  };
+  state.signatureSampleReady = true;
+  state.educationProofReady = true;
+  state.postCoursePresetVersion = POST_COURSE_PRESET_VERSION;
+  state.todaySessionDismissedDate = '';
+  state.todaySessionComplete = false;
+  state.roadmapProgress.foundation = {
+    ...roadmapPhaseState('foundation'),
+    status: 'active',
+    nextStep: 'File the Ohio commission application with signature sample, BCI, and provider proof.',
+    touchedAt: new Date().toISOString(),
+  };
+  saveState();
+}
+
+function filingWarnings() {
+  const warnings = [];
+  const missing = [];
+  if (!state.signatureSampleReady) missing.push('Signature sample is not marked ready yet.');
+  if (!state.educationProofReady) missing.push('Provider education/testing proof is not marked ready yet.');
+
+  const bciAge = isOlderThanMonths(state.bciIssuedDate, 6);
+  if (bciAge === null) {
+    warnings.push('Add the BCI report date so the 6-month filing window is visible.');
+  } else if (bciAge) {
+    warnings.push('BCI report appears older than 6 months and may need to be refreshed before filing.');
+  }
+
+  const proofAge = isOlderThanMonths(state.educationProofDate, 12);
+  if (proofAge === null) {
+    warnings.push('Add the provider proof date so the 12-month education/testing window is visible.');
+  } else if (proofAge) {
+    warnings.push('Education/testing proof appears older than 12 months and may need to be refreshed before filing.');
+  }
+
+  if (!state.checklist.examPassed) {
+    warnings.push('Only file when your provider-issued proof confirms the passed education/testing requirement.');
+  }
+
+  return {
+    missing,
+    warnings,
+    ready: state.signatureSampleReady && state.educationProofReady && state.checklist.bciFresh && state.checklist.examPassed && !bciAge && !proofAge,
+  };
+}
+
+function commissionReady() {
+  return Boolean(state.checklist.commissionApproved && state.checklist.oathCompleted && state.checklist.sealOrdered);
+}
+
+function launchKitCompletion() {
+  const total = LAUNCH_KIT_ITEMS.length;
+  const completed = LAUNCH_KIT_ITEMS.filter((item) => state.launchKit[item.key]).length;
+  return { completed, total, percent: percent(completed, total) };
+}
+
 function statusMeta(status) {
   return ROADMAP_STATUS_META[status] || ROADMAP_STATUS_META.not_started;
 }
@@ -463,7 +614,7 @@ function packetModulesForPage(page) {
 
 function studyProgress() {
   const checklistPct = checklistCompletion().percent;
-  const quizScore = state.bestQuizScore || 0;
+  const quizScore = state.checklist.examPassed ? Math.max(state.bestQuizScore || 0, PASS_THRESHOLD) : (state.bestQuizScore || 0);
   const packetPct = percent(state.lastPacketPage, Number(content.metadata?.pageCount || 149));
   return Math.round(checklistPct * 0.35 + quizScore * 0.45 + packetPct * 0.2);
 }
@@ -488,15 +639,15 @@ function phaseIndex(phaseId) {
 }
 
 function laneFocusLabel(lane) {
-  const phase = dominantRoadmapPhase();
-  const phaseRank = phaseIndex(phase?.id);
-  const laneRank = phaseIndex(lane.phaseId);
   const laneState = serviceLaneState(lane.id);
+  const phaseReady = phaseGateSatisfied(lane.phaseId);
+  const nextAction = businessNextAction();
 
   if (laneState.status === 'completed') return { label: 'Completed', className: 'chip-completed' };
+  if (!phaseReady) return { label: 'Not yet unlocked', className: 'chip-deferred' };
+  if (nextAction.laneId === lane.id) return { label: 'Do now', className: 'chip-active' };
   if (laneState.status === 'active' || laneState.status === 'in_progress') return { label: 'Do now', className: 'chip-active' };
-  if (laneRank <= phaseRank + 1) return { label: 'Later', className: 'chip-in-progress' };
-  return { label: 'Not yet unlocked', className: 'chip-deferred' };
+  return { label: 'Later', className: 'chip-in-progress' };
 }
 
 function serviceLaneGroups() {
@@ -518,6 +669,11 @@ function updateServiceLane(laneId, field, value) {
 function phaseGateSatisfied(phaseId) {
   const gates = PHASE_CHECKLIST_GATE[phaseId] || [];
   return gates.every((key) => state.checklist[key]);
+}
+
+function unmetPhaseGates(phaseId) {
+  const gates = PHASE_CHECKLIST_GATE[phaseId] || [];
+  return gates.filter((key) => !state.checklist[key]).map((key) => checklistItems.find((item) => item.key === key)?.label || key);
 }
 
 function nextLaneAfter(laneId) {
@@ -553,6 +709,7 @@ function recommendationQuizLabel() {
   const weak = weakTopics();
   const best = state.bestQuizScore || 0;
   if (!state.checklist.courseCompleted) return 'Finish the packet pages tied to your active module, then do a 10-question module drill.';
+  if (state.checklist.examPassed) return weak[0]?.module ? `Run one weak-topic drill for ${weak[0].module.title}, then close the loop with filing prep.` : 'Use one short quiz or cram pass to keep the rules warm while the commission moves forward.';
   if (best < PASS_THRESHOLD - 10) return 'Do a 10-question module drill before another full timed quiz.';
   if (weak[0]?.module) return `Run a weak-topic drill for ${weak[0].module.title}.`;
   return 'Run a full 30-question timed quiz to hold your passing margin.';
@@ -577,31 +734,46 @@ function todayStudyAction() {
   }
 
   return {
-    title: 'Maintain exam readiness and move the business forward',
-    detail: 'Keep one quiz or flashcard pass active while progressing the licensing checklist.',
+    title: 'Keep the rules warm while the commission moves forward',
+    detail: 'Use one weak-topic drill, flashcard pass, or cram review while you file, wait for approval, and tighten the revenue workflow.',
     weakestTopic: weak[0]?.module?.title || 'No obvious weak topic right now',
   };
 }
 
 function businessNextAction() {
-  const roadmapState = state.roadmapProgress;
+  const filing = filingWarnings();
   if (!state.checklist.courseCompleted) {
     return { label: 'Finish the course', why: 'You need the course complete before the filing sequence becomes real.', unlocks: 'Practice-exam focus and filing readiness', target: 'checklist' };
   }
   if (!state.checklist.examPassed && (state.bestQuizScore || 0) < PASS_THRESHOLD) {
     return { label: 'Get exam-pass ready', why: 'Stable passing reps reduce friction and mistakes before filing.', unlocks: 'BCI + filing readiness', target: 'quiz' };
   }
+  if (isOlderThanMonths(state.bciIssuedDate, 6)) {
+    return { label: 'Refresh BCI before filing', why: 'Ohio filing can stall if the BCI report ages past the six-month window.', unlocks: 'Application filing', target: 'checklist' };
+  }
+  if (isOlderThanMonths(state.educationProofDate, 12)) {
+    return { label: 'Refresh education/testing proof', why: 'Ohio filing can stall if the provider proof ages past the twelve-month window.', unlocks: 'Application filing', target: 'checklist' };
+  }
   if (!state.checklist.bciFresh) {
     return { label: 'Confirm BCI freshness', why: 'The filing window can close if the BCI report ages out.', unlocks: 'Application filing', target: 'checklist' };
   }
+  if (!state.signatureSampleReady || !state.educationProofReady) {
+    return { label: 'Finish the filing packet', why: 'The commission application moves faster when the signature sample and provider proof are already organized.', unlocks: 'Application filing', target: 'checklist' };
+  }
   if (!state.checklist.applicationFiled) {
-    return { label: 'File the application', why: 'This moves you from studying into official licensing progress.', unlocks: 'Commission approval', target: 'checklist' };
+    return { label: 'File the Ohio commission application', why: 'This is the legal gate between passing the course and becoming commissionable.', unlocks: 'Approval → oath → seal → lawful paid work', target: 'checklist' };
+  }
+  if (!state.checklist.commissionApproved) {
+    return { label: 'Watch for commission approval', why: 'Approval is the next official gate after filing.', unlocks: 'Oath completion', target: 'checklist' };
   }
   if (!state.checklist.oathCompleted) {
     return { label: 'Complete the oath', why: 'The oath is a legal gate before lawful performance.', unlocks: 'Ready-to-work commissioning', target: 'checklist' };
   }
   if (!state.checklist.sealOrdered) {
     return { label: 'Order the seal', why: 'You need the seal ready before you start taking live work.', unlocks: 'First low-risk appointment', target: 'checklist' };
+  }
+  if (launchKitCompletion().completed < launchKitCompletion().total) {
+    return { label: 'Finish the first-appointment launch kit', why: 'A journal, certificates, intake, pricing, and mileage tracking keep the first paid appointment clean.', unlocks: 'Low-risk in-person revenue', target: 'checklist' };
   }
   if (!state.checklist.firstRevenueMade) {
     return { label: 'Take first low-risk in-person revenue', why: 'A clean first appointment builds confidence and process discipline.', unlocks: 'Mobile launch and specialty lanes', target: 'checklist' };
@@ -636,32 +808,22 @@ function businessNextAction() {
       };
     }
   }
-
-  if (!state.checklist.mobileLaunchReady && !['active', 'completed'].includes(roadmapState.local_mobile_launch?.status)) {
-    return { label: 'Build the mobile launch', why: 'Travel zones and booking systems make local work predictable.', unlocks: 'Specialty niche expansion', target: 'roadmap' };
-  }
-  if (!state.checklist.specialtyNicheReady && !['active', 'completed'].includes(roadmapState.specialty_niche_expansion?.status)) {
-    return { label: 'Prepare specialty niches', why: 'Niche work raises ticket size without needing a bigger audience first.', unlocks: 'RON and premium lanes', target: 'roadmap' };
-  }
-  if (!state.checklist.ronReady && !['active', 'completed'].includes(roadmapState.digital_scale?.status)) {
-    return { label: 'Start the RON path', why: 'RON improves margins and removes dead travel time.', unlocks: 'Scalable digital capacity', target: 'roadmap' };
-  }
-  if (!state.checklist.premiumServicesReady && !['active', 'completed'].includes(roadmapState.premium_services?.status)) {
-    return { label: 'Prepare premium services', why: 'Premium work increases average appointment value.', unlocks: 'Recurring account credibility', target: 'roadmap' };
-  }
-  if (!state.checklist.b2bAccountsReady && !['active', 'completed'].includes(roadmapState.recurring_accounts?.status)) {
-    return { label: 'Build recurring B2B accounts', why: 'Recurring business reduces dependence on one-off appointments.', unlocks: 'Stable income and retention', target: 'roadmap' };
-  }
   return { label: 'Refine and scale', why: 'The foundation is in place, so optimization becomes the next move.', unlocks: 'Higher-margin and recurring revenue', target: 'roadmap' };
 }
 
 function blockers() {
   const items = [];
   if (!state.checklist.courseCompleted) items.push('Course still in progress');
-  if ((state.bestQuizScore || 0) < PASS_THRESHOLD) items.push(`Best practice score is ${state.bestQuizScore ?? 0}%, still below the 80% pass target`);
+  if (!state.checklist.examPassed && (state.bestQuizScore || 0) < PASS_THRESHOLD) items.push(`Best practice score is ${state.bestQuizScore ?? 0}%, still below the 80% pass target`);
+  if (isOlderThanMonths(state.bciIssuedDate, 6)) items.push('BCI report looks older than 6 months.');
+  if (isOlderThanMonths(state.educationProofDate, 12)) items.push('Education/testing proof looks older than 12 months.');
   if (!state.checklist.bciFresh) items.push('BCI freshness not confirmed');
+  if (!state.signatureSampleReady && !state.checklist.applicationFiled) items.push('Signature sample is not marked ready for filing');
+  if (!state.educationProofReady && !state.checklist.applicationFiled) items.push('Provider education/testing proof is not marked ready for filing');
+  if (state.checklist.applicationFiled && !state.checklist.commissionApproved) items.push('Application filed; waiting on commission approval');
   if (state.checklist.commissionApproved && !state.checklist.oathCompleted) items.push('Commission approved, but oath is still pending');
   if (state.checklist.commissionApproved && !state.checklist.sealOrdered) items.push('Commission approved, but seal not ordered/received');
+  if (commissionReady() && launchKitCompletion().completed < launchKitCompletion().total) items.push(`First-appointment launch kit is still missing ${launchKitCompletion().total - launchKitCompletion().completed} item(s)`);
   return items;
 }
 
@@ -669,6 +831,7 @@ function roadmapSummaryHtml() {
   const phase = dominantRoadmapPhase();
   const counts = roadmapCounts();
   const activeLane = LANE_RECOMMENDATION_ORDER.map(serviceLaneById).find((lane) => lane && ['active', 'in_progress'].includes(serviceLaneState(lane.id).status));
+  const filing = filingWarnings();
   return `
     <article class="card">
       <p class="eyebrow">Ohio Notary Business Roadmap</p>
@@ -680,6 +843,7 @@ function roadmapSummaryHtml() {
           .join('')}
       </div>
       ${activeLane ? `<p class="muted" style="margin-top:12px;"><strong>Current lane:</strong> ${escapeHtml(activeLane.label)}</p>` : ''}
+      ${!state.checklist.applicationFiled ? `<p class="muted" style="margin-top:12px;"><strong>Filing status:</strong> ${filing.ready ? 'Ready to file now' : 'Prep still incomplete before filing'}</p>` : ''}
       <div class="action-row" style="margin-top:14px;">
         <button class="secondary-button" id="open-roadmap-from-dashboard">Open roadmap</button>
       </div>
@@ -732,21 +896,123 @@ function renderDashboard() {
   const business = businessNextAction();
   const dominantPhase = dominantRoadmapPhase();
   const dismissed = state.todaySessionDismissedDate === dayKey();
+  const commissionFirst = Boolean(state.checklist.courseCompleted && state.checklist.examPassed);
+  const filing = filingWarnings();
+  const launchKit = launchKitCompletion();
 
   section.innerHTML = `
     <div class="page-header">
       <div>
         <p class="eyebrow">Start Here</p>
-        <h2>Pass the course, clear the licensing gates, then launch the business by roadmap.</h2>
-        <p class="muted">This Mac workspace keeps the packet, quiz loop, checklist, roadmap, and operations links in one focused place.</p>
+        <h2>${commissionFirst ? 'File the commission, clear the legal gates, then launch low-risk revenue.' : 'Pass the course, clear the licensing gates, then launch the business by roadmap.'}</h2>
+        <p class="muted">${commissionFirst ? 'You already cleared the course step. Use this Mac workspace to move from passed course → filed application → approval → oath → seal → first lawful revenue.' : 'This Mac workspace keeps the packet, quiz loop, checklist, roadmap, and operations links in one focused place.'}</p>
       </div>
       <div class="action-row">
-        <button class="button" id="resume-study-btn">Resume packet</button>
-        <button class="secondary-button" id="start-full-quiz-btn">Start 30-question quiz</button>
+        ${commissionFirst ? `
+          <button class="button" id="open-filing-prep-btn">Open filing prep</button>
+          <a class="secondary-button" href="${APPLICATION_PORTAL_URL}" target="_blank" rel="noreferrer">Open application portal</a>
+          <button class="ghost-button" id="apply-post-course-preset-btn">Reset to post-course mode</button>
+        ` : `
+          <button class="button" id="resume-study-btn">Resume packet</button>
+          <button class="secondary-button" id="start-full-quiz-btn">Start 30-question quiz</button>
+        `}
       </div>
     </div>
 
-    ${dismissed ? `
+    ${commissionFirst ? `
+      <div class="today-grid" style="margin-bottom:18px;">
+        <article class="business-next-card">
+          <p class="eyebrow">Business next action</p>
+          <h3>Do this now: ${escapeHtml(business.label)}</h3>
+          <p><strong>Why it matters:</strong> ${escapeHtml(business.why)}</p>
+          <p><strong>What it unlocks next:</strong> ${escapeHtml(business.unlocks)}</p>
+          <div class="toolbar-pill-row" style="margin-top:10px;">
+            <span class="toolbar-chip">Active phase: ${escapeHtml(dominantPhase?.label || 'Foundation')}</span>
+            <span class="toolbar-chip">Checklist completion: ${checklistCompletion().completed}/${checklistCompletion().total}</span>
+            <span class="toolbar-chip">${commissionReady() ? 'Commission gate cleared' : 'Commission not active yet'}</span>
+          </div>
+          <div class="action-row" style="margin-top:14px;">
+            <button class="button" id="dashboard-primary-business-btn">Open filing prep</button>
+            <button class="secondary-button" id="open-roadmap-btn">Open roadmap</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">Commission filing prep</p>
+          <h3>${filing.ready ? 'Ready to file now' : 'Finish the filing packet before you submit'}</h3>
+          <ul class="cram-list">
+            ${FILING_UPLOAD_ITEMS.map((item) => `<li>${state[item.key] || state.checklist[item.key] ? '✓' : '•'} ${escapeHtml(item.label)}</li>`).join('')}
+          </ul>
+          <div class="toolbar-pill-row" style="margin-top:12px;">
+            <span class="toolbar-chip">BCI date: ${escapeHtml(shortDate(state.bciIssuedDate))}</span>
+            <span class="toolbar-chip">Proof date: ${escapeHtml(shortDate(state.educationProofDate))}</span>
+          </div>
+          ${filing.warnings.length ? `<p class="roadmap-risk" style="margin-top:12px;"><strong>Watch:</strong> ${escapeHtml(filing.warnings[0])}</p>` : '<p class="muted" style="margin-top:12px;">Signature sample, BCI, and provider proof are the exact filing set.</p>'}
+          <div class="action-row" style="margin-top:14px;">
+            <button class="secondary-button" id="dashboard-open-checklist-btn">Open checklist</button>
+            <a class="ghost-button" href="${APPLICATION_PORTAL_URL}" target="_blank" rel="noreferrer">File at notary.ohiosos.gov</a>
+          </div>
+        </article>
+      </div>
+
+      ${dismissed ? `
+      <div class="today-grid" style="margin-bottom:18px;">
+        <article class="card">
+          <p class="eyebrow">Today’s study session</p>
+          <h3>Dismissed for today</h3>
+          <p class="muted">Reopen it if you want to keep one short review loop active while the commission moves forward.</p>
+          <div class="action-row">
+            <button class="secondary-button" id="reopen-today-widget-btn">Reopen today widget</button>
+          </div>
+        </article>
+        <article class="card">
+          <p class="eyebrow">First appointment launch kit</p>
+          <h3>${launchKit.completed}/${launchKit.total} items ready</h3>
+          <div class="progress-track"><div class="progress-bar" style="width:${launchKit.percent}%"></div></div>
+          <p class="muted" style="margin-top:12px;">Finish the journal, certificates, intake, pricing, and mileage setup before you take the first paid appointment.</p>
+          <div class="action-row" style="margin-top:14px;">
+            <button class="secondary-button" id="dashboard-open-checklist-btn">Open checklist</button>
+          </div>
+        </article>
+      </div>
+    ` : `
+      <div class="today-grid" style="margin-bottom:18px;">
+        <article class="today-study-card">
+          <p class="eyebrow">Today’s study session</p>
+          <h3>${escapeHtml(today.title)}</h3>
+          <p class="muted">${escapeHtml(today.detail)}</p>
+          <div class="toolbar-pill-row">
+            <span class="toolbar-chip">Resume page ${state.lastPacketPage}</span>
+            <span class="toolbar-chip">Weakest topic: ${escapeHtml(today.weakestTopic)}</span>
+            <span class="toolbar-chip">Best score: ${state.bestQuizScore != null ? `${state.bestQuizScore}% / ${PASS_THRESHOLD}%` : `— / ${PASS_THRESHOLD}%`}</span>
+          </div>
+          <div class="card" style="margin-top:14px; background:var(--surface-wash); box-shadow:none;">
+            <p class="eyebrow">Recommended quiz mode</p>
+            <p>${escapeHtml(recommendationQuizLabel())}</p>
+          </div>
+          <label for="today-session-notes" style="margin-top:14px;">Today’s focus notes</label>
+          <textarea id="today-session-notes" class="today-note" placeholder="What do you want to lock in today?">${escapeHtml(state.todaySessionNotes)}</textarea>
+          <div class="today-session-actions" style="margin-top:14px;">
+            <button class="button" id="today-mark-complete-btn">${state.todaySessionComplete ? 'Marked complete' : 'Mark today complete'}</button>
+            <button class="secondary-button" id="today-open-quiz-btn">Run recommended quiz</button>
+            <button class="ghost-button" id="dismiss-today-widget-btn">Dismiss for today</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">First appointment launch kit</p>
+          <h3>${launchKit.completed}/${launchKit.total} items ready</h3>
+          <div class="progress-track"><div class="progress-bar" style="width:${launchKit.percent}%"></div></div>
+          <ul class="cram-list" style="margin-top:12px;">
+            ${LAUNCH_KIT_ITEMS.slice(0, 4).map((item) => `<li>${state.launchKit[item.key] ? '✓' : '•'} ${escapeHtml(item.label)}</li>`).join('')}
+          </ul>
+          <div class="action-row" style="margin-top:14px;">
+            <button class="secondary-button" id="dashboard-open-checklist-btn">Open checklist</button>
+          </div>
+        </article>
+      </div>
+    `}
+    ` : dismissed ? `
       <div class="today-grid" style="margin-bottom:18px;">
         <article class="card">
           <p class="eyebrow">Today’s study session</p>
@@ -831,6 +1097,11 @@ function renderDashboard() {
         <div class="stat-value">${state.lastPacketPage}/${content.metadata?.pageCount || 149}</div>
         <p class="muted">Resume page ${state.lastPacketPage}</p>
       </article>
+      <article class="mini-card">
+        <p class="eyebrow">Filing readiness</p>
+        <div class="stat-value">${filing.ready ? 'Ready' : 'Prep'}</div>
+        <p class="muted">${filing.ready ? 'Upload set looks ready' : `${filing.missing.length + filing.warnings.length} item(s) still need review`}</p>
+      </article>
     </div>
 
     <div class="grid-2" style="margin-top:18px;">
@@ -853,7 +1124,7 @@ function renderDashboard() {
           <li>1 hour</li>
           <li>80% to pass</li>
           <li>30-day retake window</li>
-          <li>Traditional acts: max $5</li>
+          <li>Traditional acts: up to $5 per act</li>
           <li>RON: max $30 + max $10 tech fee</li>
         </ul>
         <div class="action-row" style="margin-top:14px;">
@@ -865,10 +1136,20 @@ function renderDashboard() {
 
   document.getElementById('resume-study-btn')?.addEventListener('click', () => setActiveSection('packet'));
   document.getElementById('start-full-quiz-btn')?.addEventListener('click', () => startQuiz('all', 30, '30-question timed quiz'));
+  document.getElementById('open-filing-prep-btn')?.addEventListener('click', () => setActiveSection('checklist'));
+  document.getElementById('apply-post-course-preset-btn')?.addEventListener('click', () => {
+    applyPostCoursePreset(true);
+    renderApp();
+  });
+  document.getElementById('dashboard-open-checklist-btn')?.addEventListener('click', () => setActiveSection('checklist'));
   document.getElementById('dashboard-print-cram-btn')?.addEventListener('click', handlePrintCram);
   document.getElementById('open-roadmap-btn')?.addEventListener('click', () => setActiveSection('roadmap'));
   document.getElementById('open-roadmap-from-dashboard')?.addEventListener('click', () => setActiveSection('roadmap'));
   document.getElementById('dashboard-primary-business-btn')?.addEventListener('click', () => {
+    if (business.label === 'File the Ohio commission application' || business.label === 'Finish the filing packet') {
+      setActiveSection('checklist');
+      return;
+    }
     if (business.laneId) {
       const linkedModule = firstStudyModuleIdForLane(serviceLaneById(business.laneId));
       if (linkedModule) {
@@ -1660,6 +1941,8 @@ function renderChecklist() {
     acc[item.group].push(item);
     return acc;
   }, {});
+  const filing = filingWarnings();
+  const launchKit = launchKitCompletion();
 
   section.innerHTML = `
     <div class="page-header">
@@ -1669,6 +1952,7 @@ function renderChecklist() {
         <p class="muted">This checklist is the bridge between passing the course and building a clean Ohio notary business.</p>
       </div>
       <div class="action-row">
+        <button class="secondary-button" id="checklist-post-course-preset-btn">Reset to post-course mode</button>
         <button class="button" id="checklist-open-roadmap-btn">Open roadmap</button>
       </div>
     </div>
@@ -1678,6 +1962,66 @@ function renderChecklist() {
       <h3>${checklistCompletion().completed}/${checklistCompletion().total} complete</h3>
       <div class="progress-track"><div class="progress-bar" style="width:${checklistCompletion().percent}%"></div></div>
       <p class="muted">Use this checklist for gating. Use the roadmap for business sequencing.</p>
+    </div>
+
+    <div class="grid-2" style="margin-top:18px;">
+      <article class="phase-card focus-card">
+        <p class="eyebrow">Commission filing prep</p>
+        <h3>${filing.ready ? 'Ready to file now' : 'Finish the filing packet first'}</h3>
+        <p class="muted">Use this exact upload set at the Ohio portal: signature sample, BCI report, and provider proof of education/testing.</p>
+        <div class="checklist-grid compact-grid">
+          ${FILING_UPLOAD_ITEMS.map((item) => `
+            <label class="checklist-item compact-item">
+              <input type="checkbox" data-file-prep-key="${escapeHtml(item.key)}" ${state[item.key] || state.checklist[item.key] ? 'checked' : ''} />
+              <span>
+                <h3>${escapeHtml(item.label)}</h3>
+                <p class="muted">${escapeHtml(item.description)}</p>
+              </span>
+            </label>
+          `).join('')}
+        </div>
+        <div class="grid-2 compact-fields" style="margin-top:14px;">
+          <div>
+            <label for="bci-issued-date">BCI report date</label>
+            <input id="bci-issued-date" type="date" value="${escapeHtml(state.bciIssuedDate)}" />
+          </div>
+          <div>
+            <label for="education-proof-date">Education/testing proof date</label>
+            <input id="education-proof-date" type="date" value="${escapeHtml(state.educationProofDate)}" />
+          </div>
+        </div>
+        <p class="muted small" style="margin-top:12px;">Only keep “Exam passed” checked if the provider-issued proof actually covers the passed testing requirement.</p>
+        ${[...filing.missing, ...filing.warnings].length ? `
+          <div class="warning-block" style="margin-top:14px;">
+            <p class="eyebrow">Warnings to clear</p>
+            <ul class="cram-list">
+              ${[...filing.missing, ...filing.warnings].map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
+            </ul>
+          </div>
+        ` : '<p class="muted" style="margin-top:14px;">No filing warnings. Submit the application when you are ready.</p>'}
+        <div class="action-row" style="margin-top:14px;">
+          <a class="button" href="${APPLICATION_PORTAL_URL}" target="_blank" rel="noreferrer">Open filing portal</a>
+          <button class="secondary-button" id="checklist-open-packet-btn">Open course library</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">First appointment launch kit</p>
+        <h3>${launchKit.completed}/${launchKit.total} items ready</h3>
+        <div class="progress-track"><div class="progress-bar" style="width:${launchKit.percent}%"></div></div>
+        <div class="checklist-grid compact-grid" style="margin-top:14px;">
+          ${LAUNCH_KIT_ITEMS.map((item) => `
+            <label class="checklist-item compact-item">
+              <input type="checkbox" data-launch-kit-key="${escapeHtml(item.key)}" ${state.launchKit[item.key] ? 'checked' : ''} />
+              <span>
+                <h3>${escapeHtml(item.label)}</h3>
+                <p class="muted">${escapeHtml(item.description)}</p>
+              </span>
+            </label>
+          `).join('')}
+        </div>
+        <p class="muted small" style="margin-top:12px;">Traditional journal use stays mandatory inside this OS even though Ohio does not require a traditional journal by statute.</p>
+      </article>
     </div>
 
     ${Object.entries(grouped)
@@ -1709,10 +2053,43 @@ function renderChecklist() {
       .join('')}
   `;
 
+  document.getElementById('checklist-post-course-preset-btn')?.addEventListener('click', () => {
+    applyPostCoursePreset(true);
+    renderApp();
+  });
   document.getElementById('checklist-open-roadmap-btn')?.addEventListener('click', () => setActiveSection('roadmap'));
+  document.getElementById('checklist-open-packet-btn')?.addEventListener('click', () => setActiveSection('packet'));
   document.querySelectorAll('[data-checklist-key]').forEach((input) => {
     input.addEventListener('change', () => {
       state.checklist[input.dataset.checklistKey] = input.checked;
+      saveState();
+      renderApp();
+    });
+  });
+  document.querySelectorAll('[data-file-prep-key]').forEach((input) => {
+    input.addEventListener('change', () => {
+      if (input.dataset.filePrepKey === 'bciFresh') {
+        state.checklist.bciFresh = input.checked;
+      } else {
+        state[input.dataset.filePrepKey] = input.checked;
+      }
+      saveState();
+      renderApp();
+    });
+  });
+  document.getElementById('bci-issued-date')?.addEventListener('input', (event) => {
+    state.bciIssuedDate = event.target.value;
+    saveState();
+    renderApp();
+  });
+  document.getElementById('education-proof-date')?.addEventListener('input', (event) => {
+    state.educationProofDate = event.target.value;
+    saveState();
+    renderApp();
+  });
+  document.querySelectorAll('[data-launch-kit-key]').forEach((input) => {
+    input.addEventListener('change', () => {
+      state.launchKit[input.dataset.launchKitKey] = input.checked;
       saveState();
       renderApp();
     });
@@ -1801,6 +2178,7 @@ function renderRoadmap() {
                 const laneState = serviceLaneState(lane.id);
                 const laneStatus = statusMeta(laneState.status);
                 const focus = laneFocusLabel(lane);
+                const unmet = unmetPhaseGates(lane.phaseId);
                 return `
                   <details class="card lane-card" ${laneState.status === 'active' || laneState.status === 'in_progress' ? 'open' : ''}>
                     <summary class="lane-summary">
@@ -1816,10 +2194,12 @@ function renderRoadmap() {
                     </summary>
                     <div class="lane-detail-grid">
                       <div>
+                        <p><strong>Lane type:</strong> ${escapeHtml(lane.laneType || 'Core commissioned service')}</p>
                         <p><strong>Primary revenue:</strong> ${escapeHtml((lane.primaryRevenue || []).join(' · '))}</p>
                         <p><strong>App modules:</strong> ${escapeHtml((lane.appModules || []).join(' · '))}</p>
                         <p><strong>Linked study topics:</strong> ${lane.studyModuleLinks?.length ? escapeHtml(lane.studyModuleLinks.map((id) => moduleById(id)?.title || id).join(' · ')) : 'No direct study topic — admin/process lane'}</p>
                         <p class="muted"><strong>Planning note:</strong> ${escapeHtml(lane.notes || 'No additional note yet.')}</p>
+                        ${unmet.length ? `<p class="roadmap-risk"><strong>Unlock gate:</strong> ${escapeHtml(unmet[0])}</p>` : ''}
                         ${lane.id === 'i9_authorized_representative' ? '<p class="roadmap-risk"><strong>Compliance note:</strong> I-9 is not a notarial act and must stay outside the seal / notarial billing path.</p>' : ''}
                       </div>
                       <div>
@@ -1849,6 +2229,12 @@ function renderRoadmap() {
     </div>
 
     <div class="grid-2" style="margin-top:18px;">
+      <article class="card">
+        <p class="eyebrow">What counts as another license?</p>
+        <ul class="cram-list">
+          ${AUTHORIZATION_TRACKS.map((track) => `<li><strong>${escapeHtml(track.label)}</strong> — ${escapeHtml(track.classification)} · ${escapeHtml(track.summary)}</li>`).join('')}
+        </ul>
+      </article>
       <article class="card">
         <p class="eyebrow">Core legal rules</p>
         <ul class="cram-list">
@@ -1962,7 +2348,7 @@ function renderOperations() {
       <div>
         <p class="eyebrow">Operations</p>
         <h2>Open the live Ohio Notary OS operations app.</h2>
-        <p class="muted">Use this study hub to pass, prep, and sequence the business. Use the live web app for admin workflows, dashboard views, and future automation.</p>
+        <p class="muted">Use this native Mac window for commission prep, study review, and business sequencing. Use the live web app for admin workflows, dashboard views, and future automation.</p>
       </div>
       <div class="action-row">
         <a class="button" href="${OPERATIONS_URL}" target="_blank" rel="noreferrer">Open operations dashboard</a>

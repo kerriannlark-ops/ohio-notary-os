@@ -2,7 +2,7 @@
 
 Ohio Notary OS is a starter operating system for a Columbus, Ohio mobile and remote online notary business. The repo now includes a dashboard-first launch app, admin workflow pages, public booking pages, a client portal shell, Ohio-specific pricing and compliance logic, Prisma and SQL schemas, seeded mock data, test scaffolding, and prompt/SOP content for future automation.
 
-The repo also includes a no-Xcode macOS Study Hub under `macos-app/` for private course prep, roadmap tracking, Mac-side launch planning, and a full private course library opened through a native WebKit Mac window instead of Chrome.
+The repo also includes a no-Xcode macOS Study Hub under `macos-app/` for private course prep, commission filing prep, roadmap tracking, Mac-side launch planning, and a full private course library opened through a native WebKit Mac window.
 
 ## Current scope
 
@@ -31,4 +31,5 @@ The repo also includes a no-Xcode macOS Study Hub under `macos-app/` for private
 See:
 
 - `docs/GITHUB-UPLOAD-GUIDE.md`
+- `docs/NOTARY-COMMISSION-TO-REVENUE-SOP.md`
 - `macos-app/README.md`

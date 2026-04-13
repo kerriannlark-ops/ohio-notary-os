@@ -13,15 +13,6 @@ from pathlib import Path
 
 APP_SUPPORT_DIR = Path.home() / 'Library' / 'Application Support' / 'Notary OS Study Hub'
 STATE_FILE = APP_SUPPORT_DIR / 'server-state.json'
-CHROME_PROFILE_DIR = APP_SUPPORT_DIR / 'chrome-app-profile'
-CHROME_CANDIDATES = [
-    Path('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'),
-    Path.home() / 'Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    Path('/Applications/Chromium.app/Contents/MacOS/Chromium'),
-    Path('/Applications/Brave Browser.app/Contents/MacOS/Brave Browser'),
-    Path('/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge'),
-    Path('/Applications/Arc.app/Contents/MacOS/Arc'),
-]
 
 
 def pid_alive(pid: int) -> bool:
@@ -85,35 +76,7 @@ def ensure_server(web_dir: Path) -> int:
         time.sleep(0.2)
 
     raise RuntimeError('Failed to start local study server.')
-
-
-def chrome_binary() -> Path | None:
-    for candidate in CHROME_CANDIDATES:
-        if candidate.exists():
-            return candidate
-    return None
-
-
-def launch_standalone_window(url: str) -> None:
-    binary = chrome_binary()
-    if binary is not None:
-        CHROME_PROFILE_DIR.mkdir(parents=True, exist_ok=True)
-        subprocess.Popen(
-            [
-                str(binary),
-                f'--app={url}',
-                f'--user-data-dir={CHROME_PROFILE_DIR}',
-                '--window-size=1440,980',
-                '--window-position=120,80',
-                '--disable-session-crashed-bubble',
-                '--disable-features=Translate,ExtensionsToolbarMenu',
-            ],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            start_new_session=True,
-        )
-        return
-
+def open_workspace_url(url: str) -> None:
     subprocess.Popen(['open', url], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
@@ -133,7 +96,7 @@ def main() -> int:
         print(url)
         return 0
 
-    launch_standalone_window(url)
+    open_workspace_url(url)
     return 0
 
 

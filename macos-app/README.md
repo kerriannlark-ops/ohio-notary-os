@@ -5,16 +5,17 @@ Regular no-Xcode macOS study + launch app for Ohio Notary OS.
 It now opens in a **self-contained native macOS window** using WebKit, without Chrome.
 
 ## What it includes
-- Start Here dashboard with a study-first `Today’s Study Session` widget
+- Start Here dashboard with a commission-first next action and a lower study widget
 - Private local course library for packet, notes, transcripts, audio, and business docs
 - Resume packet page tracking
 - Packet outline by exam topic
 - Flashcards with keyboard support
 - Practice quizzes with weak-topic tracking
 - Final cram sheet with printable mode
-- Licensing / launch checklist
+- Licensing / launch checklist with filing-prep and launch-kit tracking
 - Ohio Notary Business Roadmap with per-phase status, notes, and next steps
 - Revenue ladder tracking for employer, mobile, specialty, RON, signing-agent, apostille, and I-9 lanes
+- Lane classification for Ohio authorization, tooling upgrade, industry credential, and non-notarial services
 - Dark mode / light mode / system theme preference
 - ADHD-friendly defaults: one primary next action, lighter planning density, low-motion mode, and progressive disclosure
 - Sidebar collapse and shortcut overlay
@@ -73,6 +74,12 @@ From repo root:
 ./macos-app/build_macos_app.sh
 ```
 
+Run the native release QA:
+
+```bash
+./macos-app/qa_native_release.sh
+```
+
 Build requirement:
 - Apple Command Line Tools with `clang`
 
@@ -123,7 +130,7 @@ The earlier SwiftUI native build script is preserved here if you ever want it la
 ## Notes
 - Uses Times New Roman for the calmer legal-study style requested.
 - Uses the red legal-scale + notepad icon system.
-- Uses browser local storage for study progress, roadmap status, service-lane tracking, theme preference, reduced-motion preference, and daily session state in the no-Xcode build.
+- Uses local WebKit storage for study progress, roadmap status, filing prep, launch-kit tracking, theme preference, reduced-motion preference, and daily session state in the no-Xcode build.
 - Uses the deployed web app as the business operations backend.
 - Paid course content may stay local-only or be stored in the private repo, depending on your chosen workflow.
-- Uses a native WebKit window launcher instead of a Chrome app window.
+- Uses a native WebKit window launcher rather than a browser-dependent app mode.

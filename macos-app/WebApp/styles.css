@@ -705,6 +705,7 @@ textarea {
 }
 
 input[type="number"],
+input[type="date"],
 input[type="text"],
 select,
 textarea {
@@ -739,6 +740,25 @@ textarea {
 
 .checklist-item input {
   margin-top: 4px;
+}
+
+.compact-grid {
+  grid-template-columns: 1fr !important;
+}
+
+.compact-item {
+  padding: 14px 16px;
+}
+
+.compact-fields {
+  align-items: end;
+}
+
+.warning-block {
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(159, 94, 23, 0.2);
+  background: color-mix(in srgb, var(--accent-soft) 60%, transparent);
 }
 
 .info-banner {
