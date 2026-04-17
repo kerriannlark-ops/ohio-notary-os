@@ -12,10 +12,14 @@ ZIP_PATH="$BUILD_DIR/Notary OS Study Hub.zip"
 APPLICATIONS_READY_DIR="$BUILD_DIR/Applications Ready"
 SOURCE_PDF="/Users/kerriannlark/Desktop/NOTARY LICENSE COURSE/Study Guide with PowerPoint Handouts-2.pdf"
 SOURCE_COURSE_DIR="/Users/kerriannlark/Desktop/NOTARY LICENSE COURSE"
+SOURCE_XLSX="$SOURCE_COURSE_DIR/ohio_notary_business_plan_financial_model.xlsx"
+SOURCE_DOCX="$SOURCE_COURSE_DIR/columbus_ohio_notary_business_plan.docx"
 REPO_SOURCE_PDF="$ROOT_DIR/macos-app/SeededCourse/OhioNotaryCoursePacket.pdf"
 SOURCE_JSON="$ROOT_DIR/macos-app/SeededCourse/notary-course-content.json"
 LIBRARY_JSON="$ROOT_DIR/macos-app/SeededCourse/course-library-content.json"
 ROADMAP_JSON="$ROOT_DIR/macos-app/SeededCourse/roadmap-content.json"
+FINANCE_JSON="$ROOT_DIR/macos-app/SeededCourse/finance-model-content.json"
+BUSINESS_PLAN_JSON="$ROOT_DIR/macos-app/SeededCourse/business-plan-content.json"
 REVENUE_MD="$ROOT_DIR/macos-app/SeededCourse/ohio_notary_codex_revenue_ladder.md"
 WEB_SOURCE_DIR="$ROOT_DIR/macos-app/WebApp"
 LAUNCH_HELPER="$ROOT_DIR/macos-app/launch_regular_app.py"
@@ -68,7 +72,8 @@ if [ ! -f "$NATIVE_LAUNCHER_SOURCE" ]; then
 fi
 
 PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_course_content.py" --source "$SOURCE_PDF" --output "$SOURCE_JSON"
-PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_course_library.py" --source-dir "$SOURCE_COURSE_DIR" --primary-pdf "$SOURCE_PDF" --output "$LIBRARY_JSON"
+PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_finance_content.py" --xlsx "$SOURCE_XLSX" --docx "$SOURCE_DOCX" --finance-output "$FINANCE_JSON" --business-plan-output "$BUSINESS_PLAN_JSON"
+PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_course_library.py" --source-dir "$SOURCE_COURSE_DIR" --primary-pdf "$SOURCE_PDF" --finance-json "$FINANCE_JSON" --output "$LIBRARY_JSON"
 python3 "$ROOT_DIR/macos-app/generate_icon_assets.py"
 
 if command -v xattr >/dev/null 2>&1; then
@@ -91,12 +96,24 @@ if [ ! -f "$LIBRARY_JSON" ]; then
   exit 1
 fi
 
+if [ ! -f "$FINANCE_JSON" ]; then
+  echo "Missing generated finance JSON at: $FINANCE_JSON" >&2
+  exit 1
+fi
+
+if [ ! -f "$BUSINESS_PLAN_JSON" ]; then
+  echo "Missing generated business plan JSON at: $BUSINESS_PLAN_JSON" >&2
+  exit 1
+fi
+
 cp -R "$WEB_SOURCE_DIR/"* "$WEBAPP_RESOURCES_DIR/"
 cp "$LAUNCH_HELPER" "$RESOURCES_DIR/launch_regular_app.py"
 chmod +x "$RESOURCES_DIR/launch_regular_app.py"
 cp "$SOURCE_JSON" "$SEEDED_DIR/notary-course-content.json"
 cp "$LIBRARY_JSON" "$SEEDED_DIR/course-library-content.json"
 cp "$ROADMAP_JSON" "$SEEDED_DIR/roadmap-content.json"
+cp "$FINANCE_JSON" "$SEEDED_DIR/finance-model-content.json"
+cp "$BUSINESS_PLAN_JSON" "$SEEDED_DIR/business-plan-content.json"
 cp "$REVENUE_MD" "$SEEDED_DIR/ohio_notary_codex_revenue_ladder.md"
 cp "$ROOT_DIR/macos-app/AppIcon.icns" "$RESOURCES_DIR/AppIcon.icns"
 
@@ -137,6 +154,26 @@ source = Path(os.environ['ROADMAP_JSON_ENV'])
 target = Path(os.environ['WEBAPP_RESOURCES_DIR_ENV']) / 'roadmap-data.js'
 data = json.loads(source.read_text(encoding='utf-8'))
 target.write_text('window.NOTARY_ROADMAP_CONTENT = ' + json.dumps(data, ensure_ascii=False) + ';', encoding='utf-8')
+PY
+
+FINANCE_JSON_ENV="$FINANCE_JSON" WEBAPP_RESOURCES_DIR_ENV="$WEBAPP_RESOURCES_DIR" python3 - <<'PY'
+import json
+import os
+from pathlib import Path
+source = Path(os.environ['FINANCE_JSON_ENV'])
+target = Path(os.environ['WEBAPP_RESOURCES_DIR_ENV']) / 'finance-data.js'
+data = json.loads(source.read_text(encoding='utf-8'))
+target.write_text('window.NOTARY_FINANCE_CONTENT = ' + json.dumps(data, ensure_ascii=False) + ';', encoding='utf-8')
+PY
+
+BUSINESS_PLAN_JSON_ENV="$BUSINESS_PLAN_JSON" WEBAPP_RESOURCES_DIR_ENV="$WEBAPP_RESOURCES_DIR" python3 - <<'PY'
+import json
+import os
+from pathlib import Path
+source = Path(os.environ['BUSINESS_PLAN_JSON_ENV'])
+target = Path(os.environ['WEBAPP_RESOURCES_DIR_ENV']) / 'business-plan-data.js'
+data = json.loads(source.read_text(encoding='utf-8'))
+target.write_text('window.NOTARY_BUSINESS_PLAN_CONTENT = ' + json.dumps(data, ensure_ascii=False) + ';', encoding='utf-8')
 PY
 
 if ! command -v clang >/dev/null 2>&1; then
@@ -193,6 +230,7 @@ This build does not require Xcode.
 Includes roadmap tracking, dark mode, keyboard shortcuts, and a printable cram sheet.
 This build opens in its own native Mac window and does not require Chrome.
 This build bundles the full local course library, including notes, transcripts, business docs, and audio files.
+This build also includes a Finance command center and a private exportable business plan.
 TXT
 
 ditto -c -k --sequesterRsrc --keepParent "$APP_DIR" "$ZIP_PATH"

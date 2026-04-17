@@ -18,17 +18,25 @@ test -f "$NATIVE_BIN"
 test -f "$RESOURCES_DIR/SeededCourse/notary-course-content.json"
 test -f "$RESOURCES_DIR/SeededCourse/course-library-content.json"
 test -f "$RESOURCES_DIR/SeededCourse/roadmap-content.json"
+test -f "$RESOURCES_DIR/SeededCourse/finance-model-content.json"
+test -f "$RESOURCES_DIR/SeededCourse/business-plan-content.json"
 test -f "$WEBAPP_DIR/index.html"
 test -f "$WEBAPP_DIR/app.js"
+test -f "$WEBAPP_DIR/finance-data.js"
+test -f "$WEBAPP_DIR/business-plan-data.js"
 echo 'Bundle files present.'
 
 printf '\n[3/5] Verifying native WebKit runtime...\n'
 otool -L "$NATIVE_BIN" | grep -q 'WebKit'
-if grep -Rqi 'Google Chrome\|Chromium\|Brave Browser\|Microsoft Edge\|Arc.app' "$RESOURCES_DIR"; then
+if strings "$NATIVE_BIN" | grep -Eqi 'Google Chrome|Chromium|Brave Browser|Microsoft Edge|Arc.app'; then
   echo 'Found browser-specific runtime reference inside app resources.' >&2
   exit 1
 fi
-echo 'Native WebKit runtime confirmed; no Chrome dependency text found in bundled resources.'
+if grep -Eqi 'Google Chrome|Chromium|Brave Browser|Microsoft Edge|Arc.app' "$HELPER" "$WEBAPP_DIR/index.html" "$WEBAPP_DIR/app.js"; then
+  echo 'Found browser-specific runtime reference in bundled launcher/web files.' >&2
+  exit 1
+fi
+echo 'Native WebKit runtime confirmed; no Chrome dependency text found in launcher code.'
 
 printf '\n[4/5] Starting bundled local workspace server and checking key files...\n'
 URL=$(python3 "$HELPER" --server-only "$WEBAPP_DIR")
@@ -40,6 +48,8 @@ paths = [
     '/study-data.js',
     '/library-data.js',
     '/roadmap-data.js',
+    '/finance-data.js',
+    '/business-plan-data.js',
     '/CourseLibrary/OhioNotaryCoursePacket.pdf',
 ]
 for path in paths:

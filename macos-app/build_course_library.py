@@ -15,6 +15,7 @@ from pypdf import PdfReader
 
 DEFAULT_SOURCE_DIR = Path('/Users/kerriannlark/Desktop/NOTARY LICENSE COURSE')
 DEFAULT_OUTPUT = Path(__file__).resolve().parent / 'SeededCourse' / 'course-library-content.json'
+DEFAULT_FINANCE_JSON = Path(__file__).resolve().parent / 'SeededCourse' / 'finance-model-content.json'
 
 DOC_META: dict[str, dict[str, Any]] = {
     'OhioNotaryCoursePacket.pdf': {
@@ -262,13 +263,33 @@ def generic_meta(path: Path) -> dict[str, Any]:
     }
 
 
-def build_business_snapshot() -> dict[str, Any]:
+def build_business_snapshot(finance_summary: dict[str, Any] | None = None) -> dict[str, Any]:
+    if finance_summary:
+        return {
+            'startupCashOutlay': finance_summary.get('startupCashOutlayLabel', '$2,114'),
+            'requiredCashNow': finance_summary.get('requiredCashNowLabel', '$595'),
+            'officialExtraCashNow': finance_summary.get('officialExtraCashNowLabel', '$22'),
+            'monthlyFixedOverhead': finance_summary.get('monthlyFixedOverheadLabel', '$540'),
+            'year1Revenue': finance_summary.get('year1RevenueLabel', '$36,645'),
+            'year1EBITDA': finance_summary.get('year1EbitdaLabel', '$20,538'),
+            'breakEvenMonthlyAppointments': f"{finance_summary.get('breakEvenAppointmentsPerMonthLabel', '13.31')} appointments / month",
+            'recommendedCapitalTarget': finance_summary.get('recommendedCapitalTargetLabel', '$7,500'),
+            'highestMarginLane': finance_summary.get('highestMarginLaneLabel', 'Loan signing'),
+            'fastestCashLane': finance_summary.get('fastestCashLaneLabel', 'Mobile general'),
+            'bestScaleLane': finance_summary.get('bestScaleLaneLabel', 'RON'),
+        }
     return {
         'startupCashOutlay': '$2,114',
+        'requiredCashNow': '$595',
+        'officialExtraCashNow': '$22',
+        'monthlyFixedOverhead': '$540',
         'year1Revenue': '$36,645',
         'year1EBITDA': '$20,538',
         'breakEvenMonthlyAppointments': '13 appointments / month',
         'recommendedCapitalTarget': '$7,500',
+        'highestMarginLane': 'Loan signing',
+        'fastestCashLane': 'Mobile general',
+        'bestScaleLane': 'RON',
     }
 
 
@@ -309,7 +330,7 @@ def build_document_entry(path: Path, served_name: str, meta: dict[str, Any]) -> 
     }
 
 
-def build_payload(source_dir: Path, primary_pdf: Path) -> dict[str, Any]:
+def build_payload(source_dir: Path, primary_pdf: Path, finance_summary: dict[str, Any] | None = None) -> dict[str, Any]:
     course_files: list[Path] = []
     if source_dir.exists():
         course_files.extend(sorted([path for path in source_dir.iterdir() if path.is_file() and not path.name.startswith('.')]))
@@ -346,7 +367,7 @@ def build_payload(source_dir: Path, primary_pdf: Path) -> dict[str, Any]:
             'totalAudioSeconds': total_audio_seconds,
             'privateUseOnly': True,
         },
-        'businessSnapshot': build_business_snapshot(),
+        'businessSnapshot': build_business_snapshot(finance_summary),
         'recommendedStudyStack': [
             'Ohio Notary Course Packet',
             'Notary Course Notes',
@@ -362,18 +383,24 @@ def main() -> None:
     parser = argparse.ArgumentParser(description='Build the private course-library manifest for the Mac app.')
     parser.add_argument('--source-dir', type=Path, default=DEFAULT_SOURCE_DIR)
     parser.add_argument('--primary-pdf', type=Path, required=True)
+    parser.add_argument('--finance-json', type=Path, default=DEFAULT_FINANCE_JSON)
     parser.add_argument('--output', type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
 
     source_dir = args.source_dir.expanduser().resolve()
     primary_pdf = args.primary_pdf.expanduser().resolve()
+    finance_json = args.finance_json.expanduser().resolve()
     output = args.output.expanduser().resolve()
 
     if not primary_pdf.exists():
         raise SystemExit(f'Missing primary PDF: {primary_pdf}')
 
     output.parent.mkdir(parents=True, exist_ok=True)
-    payload = build_payload(source_dir, primary_pdf)
+    finance_summary = None
+    if finance_json.exists():
+        finance_summary = json.loads(finance_json.read_text(encoding='utf-8')).get('summary')
+
+    payload = build_payload(source_dir, primary_pdf, finance_summary)
     output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
     print(f'Wrote course library content to {output}')
 

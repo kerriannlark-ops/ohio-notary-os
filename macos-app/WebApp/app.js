@@ -23,13 +23,32 @@ const library = window.NOTARY_COURSE_LIBRARY || {
   recommendedStudyStack: [],
   documents: [],
 };
+const finance = window.NOTARY_FINANCE_CONTENT || {
+  metadata: { strategyMode: 'aggressive_scale' },
+  summary: {},
+  officialRules: [],
+  marketContext: [],
+  startupCosts: [],
+  fixedCosts: [],
+  costGroups: { startup: {}, fixed: {} },
+  serviceLanes: [],
+  revenueModel: { months: [] },
+  scenarios: [],
+  capitalPlan: { useOfFunds: [], fundingSources: [], approaches: [] },
+};
+const businessPlanContent = window.NOTARY_BUSINESS_PLAN_CONTENT || {
+  title: 'Detailed Business Plan',
+  sections: [],
+  exportMarkdown: '',
+  onePageFinancialSummary: '',
+};
 
-const STORAGE_KEY = 'notary-os-study-hub-regular-v5';
+const STORAGE_KEY = 'notary-os-study-hub-regular-v6';
 const DEFAULT_PDF = './CourseLibrary/OhioNotaryCoursePacket.pdf';
 const OPERATIONS_URL = 'https://ohio-notary-os.netlify.app/dashboard';
 const APPLICATION_PORTAL_URL = 'https://notary.ohiosos.gov/';
 const LETTERS = ['A', 'B', 'C', 'D', 'E'];
-const SECTION_ORDER = ['dashboard', 'packet', 'modules', 'flashcards', 'quiz', 'cram', 'checklist', 'roadmap', 'operations'];
+const SECTION_ORDER = ['dashboard', 'packet', 'modules', 'flashcards', 'quiz', 'cram', 'checklist', 'roadmap', 'finance', 'operations'];
 const SECTION_SHORTCUTS = {
   '1': 'dashboard',
   '2': 'packet',
@@ -39,7 +58,8 @@ const SECTION_SHORTCUTS = {
   '6': 'cram',
   '7': 'checklist',
   '8': 'roadmap',
-  '9': 'operations',
+  '9': 'finance',
+  '0': 'operations',
 };
 const PASS_THRESHOLD = Number(content.metadata?.exam?.passingScore || 80);
 const POST_COURSE_PRESET_VERSION = 1;
@@ -110,6 +130,112 @@ const AUTHORIZATION_TRACKS = roadmap.authorizationTracks || [
   { id: 'apostille_support', label: 'Apostille support', classification: 'Non-notarial service', summary: 'Administrative coordination service, not a notary license.' },
   { id: 'i9_authorized_representative', label: 'I-9 authorized representative', classification: 'Non-notarial service', summary: 'Separate employer verification service; do not use a notary seal.' },
 ];
+const CERTIFICATION_PATHS = [
+  {
+    id: 'ron_authorization',
+    label: 'Remote Online Notary (RON)',
+    classification: 'Ohio authorization',
+    officialUrl: 'https://www.ohiosos.gov/notary/application-requirements/',
+    why: 'Only real additional Ohio notary authorization for remote online acts.',
+    steps: [
+      'Keep an active Ohio notary commission first.',
+      'Complete remote online notary education and testing with an approved vendor.',
+      'Apply online at notary.ohiosos.gov.',
+      'Upload the RON education/testing certificate.',
+      'Set up a compliant platform, electronic journal, e-signature, e-seal, and recording workflow before taking paid sessions.',
+    ],
+  },
+  {
+    id: 'electronic_in_person',
+    label: 'Electronic in-person notarization',
+    classification: 'Tooling upgrade',
+    officialUrl: 'https://www.ohiosos.gov/notary/summary-of-notary-law-changes/',
+    why: 'Not a separate Ohio license; this is an in-person tool path.',
+    steps: [
+      'Keep an active Ohio commission.',
+      'Use an electronic signature and an Ohio-compliant electronic seal.',
+      'Keep the signer physically present in person.',
+      'Use the same identity, certificate, and fee rules that apply to traditional in-person notarization.',
+    ],
+  },
+  {
+    id: 'signing_agent',
+    label: 'Notary Signing Agent',
+    classification: 'Industry credential',
+    officialUrl: 'https://www.nationalnotary.org/signing-agent',
+    why: 'Common title/loan-signing credential stack, but not a separate Ohio SOS license.',
+    steps: [
+      'Complete signing-agent training and exam through a recognized provider.',
+      'Pass a background screening commonly required by title/signing platforms.',
+      'Carry E&O insurance sized for premium package work.',
+      'Set up dual-tray printer, scanner, shipping, and package-tracking SOPs before accepting assignments.',
+    ],
+  },
+  {
+    id: 'apostille_support',
+    label: 'Apostille support',
+    classification: 'Non-notarial service',
+    officialUrl: 'https://www.ohiosos.gov/records/information/forms-and-fees/',
+    why: 'Administrative service lane, not a notary certification.',
+    steps: [
+      'Learn Ohio Authentication/Apostille request flow and Form 8003.',
+      'Charge for coordination/service time, not as a notarial act.',
+      'Confirm document type and destination country before quoting.',
+      'Keep the Ohio Secretary of State fee separate from your service fee.',
+    ],
+  },
+  {
+    id: 'i9_authorized_representative',
+    label: 'I-9 authorized representative',
+    classification: 'Non-notarial service',
+    officialUrl: 'https://www.uscis.gov/i-9-central/form-i-9-resources/handbook-for-employers-m-274/20-who-must-complete-form-i-9',
+    why: 'Employer-designated verification service, not a notarization.',
+    steps: [
+      'Work only as the employer’s authorized representative.',
+      'Review the employee’s original documents and complete the employer-side verification exactly as instructed.',
+      'Do not use your notary seal or notarial certificate.',
+      'Keep this lane outside the notarial billing and journal workflow.',
+    ],
+  },
+];
+const BUSINESS_STARTUP_STEPS = [
+  {
+    id: 'llc',
+    label: 'Form LLC if you want a business entity',
+    officialUrl: 'https://www.ohiosos.gov/businesses/filing-forms--fee-schedule/',
+    detail: 'Ohio domestic LLC Articles of Organization fee is currently $99. Form the entity before using the LLC name publicly if you want liability separation and cleaner banking.',
+  },
+  {
+    id: 'ein',
+    label: 'Get EIN from the IRS',
+    officialUrl: 'https://www.irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online',
+    detail: 'Apply directly through the IRS. Do not pay a third party for an EIN.',
+  },
+  {
+    id: 'banking',
+    label: 'Open business banking',
+    officialUrl: '',
+    detail: 'Use your entity documents and EIN to separate business income/expenses immediately.',
+  },
+  {
+    id: 'insurance',
+    label: 'Add E&O insurance',
+    officialUrl: '',
+    detail: 'Keep baseline E&O before first paid work, then increase coverage if you move into signing-agent or institutional work.',
+  },
+  {
+    id: 'ops_stack',
+    label: 'Set up your minimum operating stack',
+    officialUrl: '',
+    detail: 'Business phone/email, scheduling flow, intake form, invoice template, travel-zone policy, mileage tracking, and review-request text.',
+  },
+  {
+    id: 'marketing',
+    label: 'Launch your local demand layer',
+    officialUrl: '',
+    detail: 'Google Business Profile, a simple website, pricing clarity, and direct outreach to employers, title-adjacent contacts, elder-care facilities, and repeat-account targets.',
+  },
+];
 
 const checklistItems = [
   { key: 'coursePaid', label: 'Course paid', description: 'Keep the paid packet and course access organized in one place.', group: 'Study' },
@@ -140,7 +266,8 @@ const shortcutGroups = [
       ['⌘6', 'Open Final Cram'],
       ['⌘7', 'Open Licensing Checklist'],
       ['⌘8', 'Open Roadmap'],
-      ['⌘9', 'Open Operations'],
+      ['⌘9', 'Open Finance'],
+      ['⌘0', 'Open Operations'],
     ],
   },
   {
@@ -237,6 +364,10 @@ const defaultState = {
   postCoursePresetVersion: POST_COURSE_PRESET_VERSION,
   roadmapProgress: buildDefaultRoadmapProgress(),
   serviceLaneProgress: buildDefaultServiceLaneProgress(),
+  financeOverrides: {},
+  financeViewMode: 'overview',
+  businessPlanNotes: '',
+  exportPreferences: { includeNotes: true, format: 'markdown' },
 };
 
 let state = loadState();
@@ -270,6 +401,8 @@ function normalizeState(parsed) {
     quizHistory: Array.isArray(parsed.quizHistory) ? parsed.quizHistory : [],
     roadmapProgress: mergedRoadmap,
     serviceLaneProgress: mergedServiceLanes,
+    financeOverrides: parsed.financeOverrides || {},
+    exportPreferences: { includeNotes: true, format: 'markdown', ...(parsed.exportPreferences || {}) },
   };
 
   if ((parsed.postCoursePresetVersion || 0) < POST_COURSE_PRESET_VERSION) {
@@ -377,6 +510,504 @@ function fileSizeLabel(bytes, fallback = '') {
     index += 1;
   }
   return `${value.toFixed(index === 0 ? 0 : 1)} ${units[index]}`;
+}
+
+function formatMoney(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return '—';
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: numeric % 1 === 0 ? 0 : 2 }).format(numeric);
+}
+
+function formatNumber(value, digits = 0) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return '—';
+  return new Intl.NumberFormat('en-US', { maximumFractionDigits: digits, minimumFractionDigits: digits }).format(numeric);
+}
+
+function numericOrNull(value) {
+  if (value === '' || value === null || value === undefined) return null;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
+function roundMoney(value) {
+  return Math.round(Number(value || 0) * 100) / 100;
+}
+
+function rowAmountOverride(rowId) {
+  return numericOrNull(state.financeOverrides?.costs?.[rowId]?.amount);
+}
+
+function laneOverride(laneId) {
+  return state.financeOverrides?.lanes?.[laneId] || {};
+}
+
+function cloneCostRow(row, amount) {
+  return {
+    ...row,
+    amount,
+    amountLabel: formatMoney(amount),
+    overrideActive: roundMoney(amount) !== roundMoney(row.amount),
+  };
+}
+
+function effectiveStartupCosts() {
+  return (finance.startupCosts || []).map((row) => cloneCostRow(row, rowAmountOverride(row.id) ?? Number(row.amount || 0)));
+}
+
+function effectiveFixedCosts() {
+  return (finance.fixedCosts || []).map((row) => cloneCostRow(row, rowAmountOverride(row.id) ?? Number(row.amount || 0)));
+}
+
+function effectiveFinanceLanes() {
+  return (finance.serviceLanes || []).map((lane) => {
+    const override = laneOverride(lane.id);
+    const avgRevenuePerAppointment = numericOrNull(override.avgRevenuePerAppointment) ?? Number(lane.avgRevenuePerAppointment || 0);
+    const variableCostPerAppointment = numericOrNull(override.variableCostPerAppointment) ?? Number(lane.variableCostPerAppointment || 0);
+    const launchMonth = numericOrNull(override.launchMonth) ?? Number(lane.launchMonth || 0);
+    return {
+      ...lane,
+      avgRevenuePerAppointment,
+      avgRevenuePerAppointmentLabel: formatMoney(avgRevenuePerAppointment),
+      variableCostPerAppointment,
+      variableCostPerAppointmentLabel: formatMoney(variableCostPerAppointment),
+      contributionPerAppointment: roundMoney(avgRevenuePerAppointment - variableCostPerAppointment),
+      contributionPerAppointmentLabel: formatMoney(avgRevenuePerAppointment - variableCostPerAppointment),
+      launchMonth,
+      overrideActive: (
+        roundMoney(avgRevenuePerAppointment) !== roundMoney(lane.avgRevenuePerAppointment)
+        || roundMoney(variableCostPerAppointment) !== roundMoney(lane.variableCostPerAppointment)
+        || Number(launchMonth) !== Number(lane.launchMonth || 0)
+      ),
+    };
+  });
+}
+
+function effectiveRevenueModel(lanes = effectiveFinanceLanes()) {
+  const monthCount = Math.max(...lanes.map((lane) => lane.monthlyVolume?.length || 0), 12);
+  const baseMonths = finance.revenueModel?.months || [];
+  const months = Array.from({ length: monthCount }, (_, index) => {
+    const baseMonth = baseMonths[index] || { month: index + 1, label: `M${index + 1}` };
+    let totalRevenue = 0;
+    let totalVariableCost = 0;
+    let totalAppointments = 0;
+    lanes.forEach((lane) => {
+      const volume = Number(lane.monthlyVolume?.[index] || 0);
+      totalAppointments += volume;
+      totalRevenue += volume * Number(lane.avgRevenuePerAppointment || 0);
+      totalVariableCost += volume * Number(lane.variableCostPerAppointment || 0);
+    });
+    return {
+      ...baseMonth,
+      totalAppointments,
+      totalRevenue: roundMoney(totalRevenue),
+      totalVariableCost: roundMoney(totalVariableCost),
+      contributionMargin: roundMoney(totalRevenue - totalVariableCost),
+    };
+  });
+  const year1Revenue = months.reduce((sum, month) => sum + month.totalRevenue, 0);
+  const year1VariableCost = months.reduce((sum, month) => sum + month.totalVariableCost, 0);
+  return {
+    months,
+    year1Revenue: roundMoney(year1Revenue),
+    year1VariableCost: roundMoney(year1VariableCost),
+    year1Contribution: roundMoney(year1Revenue - year1VariableCost),
+  };
+}
+
+function effectiveCostGroups(startupCosts = effectiveStartupCosts(), fixedCosts = effectiveFixedCosts()) {
+  const startup = {};
+  const fixed = {};
+  for (const [group, rows] of Object.entries(finance.costGroups?.startup || {})) {
+    const ids = new Set(rows.map((row) => row.id));
+    startup[group] = startupCosts.filter((row) => ids.has(row.id));
+  }
+  for (const [group, rows] of Object.entries(finance.costGroups?.fixed || {})) {
+    const ids = new Set(rows.map((row) => row.id));
+    fixed[group] = fixedCosts.filter((row) => ids.has(row.id));
+  }
+  return { startup, fixed };
+}
+
+function effectiveCapitalPlan(startupCosts = effectiveStartupCosts(), fixedCosts = effectiveFixedCosts()) {
+  const startupCashOutlay = startupCosts.filter((row) => row.includedInModel !== false).reduce((sum, row) => sum + Number(row.amount || 0), 0);
+  const monthlyFixedOverhead = fixedCosts.reduce((sum, row) => sum + Number(row.amount || 0), 0);
+  const useOfFunds = (finance.capitalPlan?.useOfFunds || []).map((item) => ({ ...item }));
+  const startupIndex = useOfFunds.findIndex((item) => /startup cash outlay/i.test(item.label || ''));
+  if (startupIndex >= 0) {
+    useOfFunds[startupIndex].amount = roundMoney(startupCashOutlay);
+    useOfFunds[startupIndex].amountLabel = formatMoney(startupCashOutlay);
+  }
+  const reserveIndex = useOfFunds.findIndex((item) => /working capital reserve/i.test(item.label || ''));
+  if (reserveIndex >= 0) {
+    const reserve = Math.max(Number(useOfFunds[reserveIndex].amount || 0), roundMoney(monthlyFixedOverhead * 3));
+    useOfFunds[reserveIndex].amount = reserve;
+    useOfFunds[reserveIndex].amountLabel = formatMoney(reserve);
+  }
+  const recommendedCapitalTarget = roundMoney(useOfFunds.reduce((sum, item) => sum + Number(item.amount || 0), 0));
+  return {
+    ...(finance.capitalPlan || {}),
+    useOfFunds,
+    recommendedCapitalTarget,
+    recommendedCapitalTargetLabel: formatMoney(recommendedCapitalTarget),
+  };
+}
+
+function financeSummary() {
+  const startupCosts = effectiveStartupCosts();
+  const fixedCosts = effectiveFixedCosts();
+  const lanes = effectiveFinanceLanes();
+  const revenueModel = effectiveRevenueModel(lanes);
+  const capitalPlan = effectiveCapitalPlan(startupCosts, fixedCosts);
+  const startupCashOutlay = startupCosts.filter((row) => row.includedInModel !== false).reduce((sum, row) => sum + Number(row.amount || 0), 0);
+  const requiredCashNow = startupCosts
+    .filter((row) => ['file_now', 'before_first_paid_appointment'].includes(row.timing) && row.includedInModel !== false)
+    .reduce((sum, row) => sum + Number(row.amount || 0), 0);
+  const officialExtraCashNow = startupCosts
+    .filter((row) => ['file_now', 'before_first_paid_appointment'].includes(row.timing) && row.includedInModel === false)
+    .reduce((sum, row) => sum + Number(row.amount || 0), 0);
+  const monthlyFixedOverhead = fixedCosts.reduce((sum, row) => sum + Number(row.amount || 0), 0);
+  const totalAppointments = (lanes || []).reduce((sum, lane) => sum + (lane.monthlyVolume || []).reduce((laneSum, volume) => laneSum + Number(volume || 0), 0), 0);
+  const blendedContributionPerAppointment = totalAppointments ? revenueModel.year1Contribution / totalAppointments : 0;
+  const year1Ebitda = roundMoney(revenueModel.year1Contribution - (monthlyFixedOverhead * 12));
+  const breakEvenAppointmentsPerMonth = blendedContributionPerAppointment > 0
+    ? roundMoney(monthlyFixedOverhead / blendedContributionPerAppointment)
+    : Number(finance.summary?.breakEvenAppointmentsPerMonth || 0);
+  const highestMarginLane = [...lanes].sort((a, b) => Number(b.contributionPerAppointment || 0) - Number(a.contributionPerAppointment || 0))[0] || null;
+  const fastestCashLane = lanes.find((lane) => lane.id === 'mobile_general') || lanes[0] || null;
+  const bestScaleLane = lanes.find((lane) => lane.id === 'ron') || lanes[0] || null;
+  const currentProfitMove = nextBestFinanceLane(financeLanesOrdered(lanes)) || fastestCashLane;
+  return {
+    ...(finance.summary || {}),
+    startupCashOutlay: roundMoney(startupCashOutlay),
+    startupCashOutlayLabel: formatMoney(startupCashOutlay),
+    requiredCashNow: roundMoney(requiredCashNow),
+    requiredCashNowLabel: formatMoney(requiredCashNow),
+    officialExtraCashNow: roundMoney(officialExtraCashNow),
+    officialExtraCashNowLabel: formatMoney(officialExtraCashNow),
+    monthlyFixedOverhead: roundMoney(monthlyFixedOverhead),
+    monthlyFixedOverheadLabel: formatMoney(monthlyFixedOverhead),
+    year1Revenue: roundMoney(revenueModel.year1Revenue),
+    year1RevenueLabel: formatMoney(revenueModel.year1Revenue),
+    year1VariableCost: roundMoney(revenueModel.year1VariableCost),
+    year1VariableCostLabel: formatMoney(revenueModel.year1VariableCost),
+    year1Contribution: roundMoney(revenueModel.year1Contribution),
+    year1ContributionLabel: formatMoney(revenueModel.year1Contribution),
+    year1Ebitda: roundMoney(year1Ebitda),
+    year1EbitdaLabel: formatMoney(year1Ebitda),
+    breakEvenAppointmentsPerMonth: breakEvenAppointmentsPerMonth,
+    breakEvenAppointmentsPerMonthLabel: formatNumber(breakEvenAppointmentsPerMonth, 2),
+    recommendedCapitalTarget: capitalPlan.recommendedCapitalTarget,
+    recommendedCapitalTargetLabel: capitalPlan.recommendedCapitalTargetLabel,
+    highestMarginLaneId: highestMarginLane?.id || finance.summary?.highestMarginLaneId,
+    highestMarginLaneLabel: highestMarginLane?.label || finance.summary?.highestMarginLaneLabel || '—',
+    fastestCashLaneId: fastestCashLane?.id || finance.summary?.fastestCashLaneId,
+    fastestCashLaneLabel: fastestCashLane?.label || finance.summary?.fastestCashLaneLabel || '—',
+    bestScaleLaneId: bestScaleLane?.id || finance.summary?.bestScaleLaneId,
+    bestScaleLaneLabel: bestScaleLane?.label || finance.summary?.bestScaleLaneLabel || '—',
+    currentProfitMove: currentProfitMove ? {
+      label: `Advance ${currentProfitMove.label}`,
+      why: currentProfitMove.bestFor || currentProfitMove.notes || 'Use this lane to improve contribution without wasting startup cash.',
+      unlocks: currentProfitMove.id === 'mobile_general' ? 'Specialty mobile margin and then RON scale' : 'The next higher-value lane in the stack',
+    } : (finance.summary?.currentProfitMove || {}),
+  };
+}
+
+function financeLaneById(id) {
+  return effectiveFinanceLanes().find((lane) => lane.id === id) || null;
+}
+
+function financeLanesOrdered(lanes = effectiveFinanceLanes()) {
+  const order = ['employer_in_office', 'mobile_general', 'specialty_mobile', 'ron', 'loan_signing', 'recurring_b2b'];
+  return order.map((id) => lanes.find((lane) => lane.id === id)).filter(Boolean);
+}
+
+function roadmapLaneFinance(laneId) {
+  return financeLanesOrdered().find((lane) => (lane.roadmapLaneIds || []).includes(laneId)) || null;
+}
+
+function financeCategoryLabel(key) {
+  return {
+    compliance: 'Compliance / filings',
+    entity: 'Entity / business setup',
+    insurance: 'Insurance',
+    equipment: 'Equipment / supplies',
+    software_systems: 'Software / platforms / systems',
+    marketing_launch: 'Marketing / launch',
+    systems: 'Systems / software',
+    marketing: 'Marketing',
+    operations: 'Operations / admin',
+  }[key] || key;
+}
+
+function financeTimingLabel(key) {
+  return {
+    file_now: 'File now',
+    before_first_paid_appointment: 'Before first paid appointment',
+    before_mobile_launch: 'Before mobile launch',
+    before_ron_launch: 'Before RON launch',
+    before_signing_agent_launch: 'Before signing-agent launch',
+    growth_optional: 'Growth optional',
+  }[key] || key;
+}
+
+function timingRank(key) {
+  return ['file_now', 'before_first_paid_appointment', 'before_mobile_launch', 'before_ron_launch', 'before_signing_agent_launch', 'growth_optional'].indexOf(key);
+}
+
+function costRowsByTiming(timing) {
+  return [...effectiveStartupCosts(), ...effectiveFixedCosts()].filter((row) => row.timing === timing);
+}
+
+function currentRequiredSpendRows() {
+  return effectiveStartupCosts().filter((row) => ['file_now', 'before_first_paid_appointment'].includes(row.timing));
+}
+
+function laneUnlocked(lane) {
+  if (!lane) return false;
+  if (lane.id === 'employer_in_office') return commissionReady();
+  if (lane.id === 'mobile_general') return Boolean(state.checklist.firstRevenueMade || commissionReady());
+  if (lane.id === 'specialty_mobile') return Boolean(state.checklist.mobileLaunchReady);
+  if (lane.id === 'ron') return Boolean(state.checklist.ronReady);
+  if (lane.id === 'loan_signing') return Boolean(state.checklist.premiumServicesReady);
+  if (lane.id === 'recurring_b2b') return Boolean(state.checklist.b2bAccountsReady);
+  return false;
+}
+
+function laneCompletionFlag(lane) {
+  if (!lane) return false;
+  if (lane.id === 'employer_in_office') return Boolean(state.checklist.firstRevenueMade);
+  if (lane.id === 'mobile_general') return Boolean(state.checklist.mobileLaunchReady);
+  if (lane.id === 'specialty_mobile') return Boolean(state.checklist.specialtyNicheReady);
+  if (lane.id === 'ron') return Boolean(state.checklist.ronReady);
+  if (lane.id === 'loan_signing') return Boolean(state.checklist.premiumServicesReady);
+  if (lane.id === 'recurring_b2b') return Boolean(state.checklist.b2bAccountsReady);
+  return false;
+}
+
+function laneBlocker(lane) {
+  if (!lane) return 'Lane not found.';
+  if (lane.id === 'employer_in_office' && !commissionReady()) return 'Wait until commission approval, oath, and seal are complete.';
+  if (lane.id === 'mobile_general' && !state.checklist.firstRevenueMade && !commissionReady()) return 'Commission must be active before public mobile work.';
+  if (lane.id === 'specialty_mobile' && !state.checklist.mobileLaunchReady) return 'Finish mobile launch setup and low-risk reps first.';
+  if (lane.id === 'ron' && !state.checklist.ronReady) return 'RON needs separate authorization plus platform, e-seal, and recording workflow.';
+  if (lane.id === 'loan_signing' && !state.checklist.premiumServicesReady) return 'Do not unlock this before printer/scanner, package workflow, and premium SOPs are ready.';
+  if (lane.id === 'recurring_b2b' && !state.checklist.b2bAccountsReady) return 'Recurring accounts come after repeatable delivery and invoicing discipline.';
+  return '';
+}
+
+function nextBestFinanceLane(lanes = financeLanesOrdered()) {
+  for (const lane of lanes) {
+    if (!lane || laneCompletionFlag(lane)) continue;
+    return lane;
+  }
+  return lanes[lanes.length - 1] || null;
+}
+
+function scenarioByName(name) {
+  const scenarios = effectiveScenarios();
+  return scenarios.find((scenario) => scenario.name === name) || null;
+}
+
+function scenarioCardMeta() {
+  const base = scenarioByName('Base');
+  const growth = scenarioByName('Growth');
+  const conservative = scenarioByName('Conservative');
+  return { base, growth, conservative };
+}
+
+function effectiveScenarios() {
+  const lanes = effectiveFinanceLanes();
+  const revenueModel = effectiveRevenueModel(lanes);
+  const monthlyFixedOverhead = effectiveFixedCosts().reduce((sum, row) => sum + Number(row.amount || 0), 0);
+  const annualFixed = monthlyFixedOverhead * 12;
+  const totalAppointments = lanes.reduce((sum, lane) => sum + (lane.monthlyVolume || []).reduce((laneSum, volume) => laneSum + Number(volume || 0), 0), 0);
+  const blendedRevenue = totalAppointments ? revenueModel.year1Revenue / totalAppointments : 0;
+  const blendedVariable = totalAppointments ? revenueModel.year1VariableCost / totalAppointments : 0;
+  const blendedContribution = totalAppointments ? revenueModel.year1Contribution / totalAppointments : 0;
+  return (finance.scenarios || []).map((scenario) => {
+    const factor = Number(scenario.volumeFactor || 1);
+    const revenue = roundMoney(revenueModel.year1Revenue * factor);
+    const variable = roundMoney(revenueModel.year1VariableCost * factor);
+    const contribution = roundMoney(revenue - variable);
+    const ebitda = roundMoney(contribution - annualFixed);
+    return {
+      ...scenario,
+      year1Revenue: revenue,
+      year1VariableCost: variable,
+      year1Ebitda: ebitda,
+      avgRevenuePerAppointment: roundMoney(blendedRevenue),
+      avgVariableCostPerAppointment: roundMoney(blendedVariable),
+      avgContributionPerAppointment: roundMoney(blendedContribution),
+      breakEvenAppointmentsPerMonth: blendedContribution > 0 ? roundMoney(monthlyFixedOverhead / blendedContribution) : Number(scenario.breakEvenAppointmentsPerMonth || 0),
+    };
+  });
+}
+
+function financeOverrideCount() {
+  const costCount = Object.values(state.financeOverrides?.costs || {}).filter((item) => item && item.amount !== '' && item.amount !== null && item.amount !== undefined).length;
+  const laneCount = Object.values(state.financeOverrides?.lanes || {}).reduce((sum, lane) => sum + Object.values(lane || {}).filter((value) => value !== '' && value !== null && value !== undefined).length, 0);
+  return costCount + laneCount;
+}
+
+function updateCostOverride(rowId, amount) {
+  state.financeOverrides.costs ||= {};
+  const original = [...(finance.startupCosts || []), ...(finance.fixedCosts || [])].find((row) => row.id === rowId);
+  const numeric = numericOrNull(amount);
+  if (!original || numeric === null || roundMoney(numeric) === roundMoney(original.amount)) {
+    delete state.financeOverrides.costs[rowId];
+  } else {
+    state.financeOverrides.costs[rowId] = { amount: numeric };
+  }
+  if (!Object.keys(state.financeOverrides.costs).length) delete state.financeOverrides.costs;
+  saveState();
+}
+
+function updateLaneOverrideField(laneId, field, value) {
+  state.financeOverrides.lanes ||= {};
+  const original = (finance.serviceLanes || []).find((lane) => lane.id === laneId);
+  if (!original) return;
+  const numeric = numericOrNull(value);
+  const normalizedOriginal = field === 'launchMonth' ? Number(original[field] || 0) : roundMoney(Number(original[field] || 0));
+  const normalizedNext = field === 'launchMonth' ? Number(numeric || 0) : roundMoney(Number(numeric || 0));
+  const current = { ...(state.financeOverrides.lanes[laneId] || {}) };
+  if (numeric === null || normalizedNext === normalizedOriginal) {
+    delete current[field];
+  } else {
+    current[field] = field === 'launchMonth' ? Math.max(0, Math.round(normalizedNext)) : normalizedNext;
+  }
+  if (Object.keys(current).length) {
+    state.financeOverrides.lanes[laneId] = current;
+  } else {
+    delete state.financeOverrides.lanes[laneId];
+  }
+  if (!Object.keys(state.financeOverrides.lanes).length) delete state.financeOverrides.lanes;
+  saveState();
+}
+
+function resetCostOverride(rowId) {
+  if (!state.financeOverrides?.costs?.[rowId]) return;
+  delete state.financeOverrides.costs[rowId];
+  if (!Object.keys(state.financeOverrides.costs).length) delete state.financeOverrides.costs;
+  saveState();
+  renderApp();
+}
+
+function resetLaneOverride(laneId) {
+  if (!state.financeOverrides?.lanes?.[laneId]) return;
+  delete state.financeOverrides.lanes[laneId];
+  if (!Object.keys(state.financeOverrides.lanes).length) delete state.financeOverrides.lanes;
+  saveState();
+  renderApp();
+}
+
+function resetAllFinanceOverrides() {
+  state.financeOverrides = {};
+  saveState();
+  renderApp();
+}
+
+function setFinanceViewMode(mode) {
+  state.financeViewMode = mode;
+  saveState();
+  renderApp();
+}
+
+function downloadTextFile(filename, body, mimeType = 'text/plain;charset=utf-8') {
+  const blob = new Blob([body], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function financeViewButtons(active) {
+  const modes = [
+    ['overview', 'Overview'],
+    ['startup', 'Startup Costs'],
+    ['lanes', 'Revenue Lanes'],
+    ['scenarios', 'Scenarios'],
+    ['business-plan', 'Business Plan'],
+  ];
+  return modes.map(([mode, label]) => `<button class="${mode === active ? 'button' : 'secondary-button'} finance-view-btn" data-finance-view="${mode}">${escapeHtml(label)}</button>`).join('');
+}
+
+function costRowsHtml(rows, includeRecurring = false, editable = false) {
+  if (!rows.length) return '<p class="muted">No costs loaded.</p>';
+  return rows.map((row) => `
+    <article class="finance-row-card">
+      <div>
+        <p class="eyebrow">${escapeHtml(financeTimingLabel(row.timing))}</p>
+        <h4>${escapeHtml(row.label)}</h4>
+        <p class="muted">${escapeHtml(row.requiredFor || row.notes || '')}</p>
+        <p class="muted small" style="margin-top:6px;">Source: ${escapeHtml(row.sourceLabel || row.sourceType || 'Model')}</p>
+      </div>
+      <div class="finance-row-meta">
+        <span class="status-chip ${row.timing === 'file_now' ? 'chip-active' : row.timing === 'growth_optional' ? 'chip-deferred' : 'chip-in-progress'}">${escapeHtml(row.includedInModel === false ? 'Official add-on' : includeRecurring ? 'Monthly' : 'Modeled')}</span>
+        <strong>${escapeHtml(row.amountLabel || formatMoney(row.amount))}${includeRecurring ? '/mo' : ''}</strong>
+        ${editable ? `
+          <label class="finance-input-label" for="finance-row-${escapeHtml(row.id)}">Override amount</label>
+          <input class="finance-input" id="finance-row-${escapeHtml(row.id)}" type="number" min="0" step="0.01" value="${escapeHtml(formatNumber(row.amount, 2))}" data-finance-row-amount="${escapeHtml(row.id)}" />
+          ${row.overrideActive ? `<button class="ghost-button finance-reset-btn" data-finance-row-reset="${escapeHtml(row.id)}">Reset</button>` : ''}
+        ` : ''}
+      </div>
+    </article>
+  `).join('');
+}
+
+function businessPlanMarkdown() {
+  const summary = financeSummary();
+  const notes = state.businessPlanNotes?.trim();
+  const overrideCount = financeOverrideCount();
+  const overrideLines = overrideCount ? [
+    '## Live app override snapshot',
+    `- Startup cash outlay: ${summary.startupCashOutlayLabel || '—'}`,
+    `- Required cash now: ${summary.requiredCashNowLabel || '—'}`,
+    `- Monthly fixed overhead: ${summary.monthlyFixedOverheadLabel || '—'}`,
+    `- Year 1 revenue: ${summary.year1RevenueLabel || '—'}`,
+    `- Year 1 EBITDA: ${summary.year1EbitdaLabel || '—'}`,
+    `- Break-even: ${summary.breakEvenAppointmentsPerMonthLabel || '—'} appointments/month`,
+    `- Overrides active: ${overrideCount}`,
+  ].join('\n') : '';
+  const certificationAddendum = [
+    '## Other authorizations, certifications, and service lanes',
+    ...CERTIFICATION_PATHS.map((path) => `### ${path.label}\n- Classification: ${path.classification}\n- Why: ${path.why}\n${path.steps.map((step) => `- ${step}`).join('\n')}`),
+  ].join('\n\n');
+  const startupAddendum = [
+    '## Start-up business sequence',
+    ...BUSINESS_STARTUP_STEPS.map((step, index) => `${index + 1}. ${step.label} — ${step.detail}`),
+  ].join('\n');
+  const ownerNotes = notes && state.exportPreferences?.includeNotes ? `\n\n## Owner working notes\n${notes}` : '';
+  return `${businessPlanContent.exportMarkdown || ''}\n\n${certificationAddendum}\n\n${startupAddendum}${overrideLines ? `\n\n${overrideLines}` : ''}${ownerNotes}`;
+}
+
+function onePageFinancialSummaryMarkdown() {
+  const summary = financeSummary();
+  return `# Columbus Ohio Notary Services — One-Page Financial Summary
+
+## Core numbers
+- Startup cash outlay: ${summary.startupCashOutlayLabel || '—'}
+- Required cash now: ${summary.requiredCashNowLabel || '—'}
+- Monthly fixed overhead: ${summary.monthlyFixedOverheadLabel || '—'}
+- Year 1 revenue: ${summary.year1RevenueLabel || '—'}
+- Year 1 EBITDA: ${summary.year1EbitdaLabel || '—'}
+- Break-even: ${summary.breakEvenAppointmentsPerMonthLabel || '—'} appointments/month
+- Recommended capital target: ${summary.recommendedCapitalTargetLabel || '—'}
+
+## Best lane calls
+- Fastest cash: ${summary.fastestCashLaneLabel || '—'}
+- Highest margin: ${summary.highestMarginLaneLabel || '—'}
+- Best scale: ${summary.bestScaleLaneLabel || '—'}
+
+## Do this now
+- ${summary.currentProfitMove?.label || 'Use the finance command center to sequence spend and revenue lanes.'}
+- Why: ${summary.currentProfitMove?.why || 'Protect margin and focus on the next profitable lane.'}
+- Unlocks: ${summary.currentProfitMove?.unlocks || 'A cleaner path to the next revenue lane.'}
+`;
 }
 
 function durationLabel(seconds, fallback = '—') {
@@ -779,6 +1410,28 @@ function businessNextAction() {
     return { label: 'Take first low-risk in-person revenue', why: 'A clean first appointment builds confidence and process discipline.', unlocks: 'Mobile launch and specialty lanes', target: 'checklist' };
   }
 
+  const financeLane = nextBestFinanceLane();
+  if (financeLane && !laneCompletionFlag(financeLane)) {
+    const blocker = laneBlocker(financeLane);
+    if (blocker) {
+      return {
+        label: `Unlock ${financeLane.label}`,
+        why: blocker,
+        unlocks: financeLane.label,
+        target: 'finance',
+        financeLaneId: financeLane.id,
+      };
+    }
+    const laterLane = financeLanesOrdered().find((lane) => !laneCompletionFlag(lane) && lane.id !== financeLane.id);
+    return {
+      label: `Advance ${financeLane.label}`,
+      why: financeLane.bestFor || financeLane.notes || 'This is the next revenue lane to strengthen.',
+      unlocks: laterLane?.label || 'Recurring business strategy',
+      target: 'finance',
+      financeLaneId: financeLane.id,
+    };
+  }
+
   for (const laneId of LANE_RECOMMENDATION_ORDER) {
     const lane = serviceLaneById(laneId);
     if (!lane) continue;
@@ -808,7 +1461,7 @@ function businessNextAction() {
       };
     }
   }
-  return { label: 'Refine and scale', why: 'The foundation is in place, so optimization becomes the next move.', unlocks: 'Higher-margin and recurring revenue', target: 'roadmap' };
+  return { label: 'Refine and scale', why: 'The foundation is in place, so optimization becomes the next move.', unlocks: 'Higher-margin and recurring revenue', target: 'finance' };
 }
 
 function blockers() {
@@ -832,6 +1485,7 @@ function roadmapSummaryHtml() {
   const counts = roadmapCounts();
   const activeLane = LANE_RECOMMENDATION_ORDER.map(serviceLaneById).find((lane) => lane && ['active', 'in_progress'].includes(serviceLaneState(lane.id).status));
   const filing = filingWarnings();
+  const summary = financeSummary();
   return `
     <article class="card">
       <p class="eyebrow">Ohio Notary Business Roadmap</p>
@@ -844,8 +1498,13 @@ function roadmapSummaryHtml() {
       </div>
       ${activeLane ? `<p class="muted" style="margin-top:12px;"><strong>Current lane:</strong> ${escapeHtml(activeLane.label)}</p>` : ''}
       ${!state.checklist.applicationFiled ? `<p class="muted" style="margin-top:12px;"><strong>Filing status:</strong> ${filing.ready ? 'Ready to file now' : 'Prep still incomplete before filing'}</p>` : ''}
+      <div class="toolbar-pill-row" style="margin-top:12px;">
+        <span class="toolbar-chip">Required cash now: ${escapeHtml(summary.requiredCashNowLabel || '—')}</span>
+        <span class="toolbar-chip">Break-even: ${escapeHtml(summary.breakEvenAppointmentsPerMonthLabel || '—')}</span>
+      </div>
       <div class="action-row" style="margin-top:14px;">
         <button class="secondary-button" id="open-roadmap-from-dashboard">Open roadmap</button>
+        <button class="ghost-button" id="open-finance-from-dashboard">Open finance</button>
       </div>
     </article>
   `;
@@ -1102,6 +1761,16 @@ function renderDashboard() {
         <div class="stat-value">${filing.ready ? 'Ready' : 'Prep'}</div>
         <p class="muted">${filing.ready ? 'Upload set looks ready' : `${filing.missing.length + filing.warnings.length} item(s) still need review`}</p>
       </article>
+      <article class="mini-card">
+        <p class="eyebrow">Required cash now</p>
+        <div class="stat-value">${escapeHtml(financeSummary().requiredCashNowLabel || '—')}</div>
+        <p class="muted">Model cash before first paid appointment</p>
+      </article>
+      <article class="mini-card">
+        <p class="eyebrow">Fixed overhead</p>
+        <div class="stat-value">${escapeHtml(financeSummary().monthlyFixedOverheadLabel || '—')}</div>
+        <p class="muted">Monthly carry cost</p>
+      </article>
     </div>
 
     <div class="grid-2" style="margin-top:18px;">
@@ -1117,6 +1786,24 @@ function renderDashboard() {
 
     <div class="grid-2" style="margin-top:18px;">
       ${roadmapSummaryHtml()}
+      <article class="card">
+        <p class="eyebrow">Finance command center</p>
+        <h3>${escapeHtml(financeSummary().currentProfitMove?.label || 'Use finance to separate required cash now from later expansion spend.')}</h3>
+        <p><strong>Why:</strong> ${escapeHtml(financeSummary().currentProfitMove?.why || 'Margin improves when you spend in the right order.')}</p>
+        <p><strong>Unlocks:</strong> ${escapeHtml(financeSummary().currentProfitMove?.unlocks || 'Cleaner margin and lower capital risk.')}</p>
+        <div class="toolbar-pill-row" style="margin-top:12px;">
+          <span class="toolbar-chip">Highest margin: ${escapeHtml(financeSummary().highestMarginLaneLabel || '—')}</span>
+          <span class="toolbar-chip">Fastest cash: ${escapeHtml(financeSummary().fastestCashLaneLabel || '—')}</span>
+          <span class="toolbar-chip">Best scale: ${escapeHtml(financeSummary().bestScaleLaneLabel || '—')}</span>
+        </div>
+        <div class="action-row" style="margin-top:14px;">
+          <button class="secondary-button" id="dashboard-open-finance-btn">Open finance</button>
+          <button class="ghost-button" id="dashboard-export-one-page-btn">Export one-page summary</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="grid-2" style="margin-top:18px;">
       <article class="card">
         <p class="eyebrow">Must memorize</p>
         <ul class="cram-list">
@@ -1145,9 +1832,18 @@ function renderDashboard() {
   document.getElementById('dashboard-print-cram-btn')?.addEventListener('click', handlePrintCram);
   document.getElementById('open-roadmap-btn')?.addEventListener('click', () => setActiveSection('roadmap'));
   document.getElementById('open-roadmap-from-dashboard')?.addEventListener('click', () => setActiveSection('roadmap'));
+  document.getElementById('open-finance-from-dashboard')?.addEventListener('click', () => setActiveSection('finance'));
+  document.getElementById('dashboard-open-finance-btn')?.addEventListener('click', () => setActiveSection('finance'));
+  document.getElementById('dashboard-export-one-page-btn')?.addEventListener('click', () => {
+    downloadTextFile('notary-os-one-page-financial-summary.md', onePageFinancialSummaryMarkdown(), 'text/markdown;charset=utf-8');
+  });
   document.getElementById('dashboard-primary-business-btn')?.addEventListener('click', () => {
     if (business.label === 'File the Ohio commission application' || business.label === 'Finish the filing packet') {
       setActiveSection('checklist');
+      return;
+    }
+    if (business.target === 'finance') {
+      setActiveSection('finance');
       return;
     }
     if (business.laneId) {
@@ -2179,6 +2875,7 @@ function renderRoadmap() {
                 const laneStatus = statusMeta(laneState.status);
                 const focus = laneFocusLabel(lane);
                 const unmet = unmetPhaseGates(lane.phaseId);
+                const financeLane = roadmapLaneFinance(lane.id);
                 return `
                   <details class="card lane-card" ${laneState.status === 'active' || laneState.status === 'in_progress' ? 'open' : ''}>
                     <summary class="lane-summary">
@@ -2186,6 +2883,7 @@ function renderRoadmap() {
                         <p class="eyebrow">${escapeHtml(lane.label)}</p>
                         <h3>${escapeHtml(lane.useCase)}</h3>
                         <p class="muted">Startup cost: ${escapeHtml(lane.startupCost)}</p>
+                        ${financeLane ? `<div class="toolbar-pill-row" style="margin-top:10px;"><span class="toolbar-chip">Contribution: ${escapeHtml(financeLane.contributionPerAppointmentLabel || '—')}</span><span class="toolbar-chip">Launch month: M${escapeHtml(String(financeLane.launchMonth || '—'))}</span></div>` : ''}
                       </div>
                       <div class="lane-summary-meta">
                         <span class="status-chip ${focus.className}">${focus.label}</span>
@@ -2197,6 +2895,7 @@ function renderRoadmap() {
                         <p><strong>Lane type:</strong> ${escapeHtml(lane.laneType || 'Core commissioned service')}</p>
                         <p><strong>Primary revenue:</strong> ${escapeHtml((lane.primaryRevenue || []).join(' · '))}</p>
                         <p><strong>App modules:</strong> ${escapeHtml((lane.appModules || []).join(' · '))}</p>
+                        ${financeLane ? `<p><strong>Modeled margin:</strong> ${escapeHtml(financeLane.avgRevenuePerAppointmentLabel || '—')} revenue · ${escapeHtml(financeLane.variableCostPerAppointmentLabel || '—')} variable cost · ${escapeHtml(financeLane.contributionPerAppointmentLabel || '—')} contribution</p>` : ''}
                         <p><strong>Linked study topics:</strong> ${lane.studyModuleLinks?.length ? escapeHtml(lane.studyModuleLinks.map((id) => moduleById(id)?.title || id).join(' · ')) : 'No direct study topic — admin/process lane'}</p>
                         <p class="muted"><strong>Planning note:</strong> ${escapeHtml(lane.notes || 'No additional note yet.')}</p>
                         ${unmet.length ? `<p class="roadmap-risk"><strong>Unlock gate:</strong> ${escapeHtml(unmet[0])}</p>` : ''}
@@ -2249,8 +2948,52 @@ function renderRoadmap() {
         </ol>
         <div class="toolbar-pill-row" style="margin-top:14px;">
           <span class="toolbar-chip">Startup cash: ${escapeHtml(library.businessSnapshot?.startupCashOutlay || '—')}</span>
+          <span class="toolbar-chip">Required now: ${escapeHtml(library.businessSnapshot?.requiredCashNow || '—')}</span>
+          <span class="toolbar-chip">Fixed overhead: ${escapeHtml(library.businessSnapshot?.monthlyFixedOverhead || '—')}</span>
           <span class="toolbar-chip">Year 1 revenue: ${escapeHtml(library.businessSnapshot?.year1Revenue || '—')}</span>
           <span class="toolbar-chip">Break-even: ${escapeHtml(library.businessSnapshot?.breakEvenMonthlyAppointments || '—')}</span>
+        </div>
+      </article>
+    </div>
+
+    <div class="grid-2" style="margin-top:18px;">
+      <article class="card">
+        <p class="eyebrow">How to obtain other certifications / authorizations</p>
+        <div class="finance-row-stack">
+          ${CERTIFICATION_PATHS.map((path) => `
+            <details class="lane-card">
+              <summary class="lane-summary">
+                <div>
+                  <p class="eyebrow">${escapeHtml(path.classification)}</p>
+                  <h3>${escapeHtml(path.label)}</h3>
+                  <p class="muted">${escapeHtml(path.why)}</p>
+                </div>
+              </summary>
+              <div style="padding:0 18px 18px;">
+                <ol class="ordered-list">
+                  ${path.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}
+                </ol>
+                ${path.officialUrl ? `<div class="action-row" style="margin-top:14px;"><a class="ghost-button" href="${escapeHtml(path.officialUrl)}" target="_blank" rel="noreferrer">Open source</a></div>` : ''}
+              </div>
+            </details>
+          `).join('')}
+        </div>
+      </article>
+      <article class="card">
+        <p class="eyebrow">Start-up business steps</p>
+        <div class="finance-row-stack">
+          ${BUSINESS_STARTUP_STEPS.map((step) => `
+            <article class="finance-row-card">
+              <div>
+                <h4>${escapeHtml(step.label)}</h4>
+                <p class="muted">${escapeHtml(step.detail)}</p>
+              </div>
+              <div class="finance-row-meta">
+                <span class="status-chip chip-in-progress">Start-up</span>
+                ${step.officialUrl ? `<a class="ghost-button" href="${escapeHtml(step.officialUrl)}" target="_blank" rel="noreferrer">Open source</a>` : '<span class="muted small">Operational step</span>'}
+              </div>
+            </article>
+          `).join('')}
         </div>
       </article>
     </div>
@@ -2341,6 +3084,335 @@ function renderRoadmap() {
   });
 }
 
+function renderFinance() {
+  const section = document.getElementById('finance');
+  const mode = state.financeViewMode || 'overview';
+  const summary = financeSummary();
+  const startupCosts = effectiveStartupCosts();
+  const fixedCosts = effectiveFixedCosts();
+  const revenueLanes = financeLanesOrdered();
+  const revenueModel = effectiveRevenueModel(revenueLanes);
+  const costGroups = effectiveCostGroups(startupCosts, fixedCosts);
+  const capitalPlan = effectiveCapitalPlan(startupCosts, fixedCosts);
+  const { base, growth, conservative } = scenarioCardMeta();
+  const requiredNow = currentRequiredSpendRows();
+  const visiblePlanSections = businessPlanContent.sections || [];
+  const overridesActive = financeOverrideCount();
+
+  const viewHtml = (() => {
+    if (mode === 'startup') {
+      const startupGroups = costGroups.startup || {};
+      const fixedGroups = costGroups.fixed || {};
+      return `
+        <div class="grid-2 finance-grid">
+          ${Object.entries(startupGroups).map(([key, rows]) => `
+            <article class="card">
+              <p class="eyebrow">${escapeHtml(financeCategoryLabel(key))}</p>
+              <h3>${escapeHtml(formatMoney(rows.reduce((sum, row) => sum + Number(row.amount || 0), 0)))}</h3>
+              <div class="finance-row-stack">${costRowsHtml(rows, false, true)}</div>
+            </article>
+          `).join('')}
+          ${Object.entries(fixedGroups).map(([key, rows]) => `
+            <article class="card">
+              <p class="eyebrow">${escapeHtml(financeCategoryLabel(key))}</p>
+              <h3>${escapeHtml(formatMoney(rows.reduce((sum, row) => sum + Number(row.amount || 0), 0)))}/mo</h3>
+              <div class="finance-row-stack">${costRowsHtml(rows, true, true)}</div>
+            </article>
+          `).join('')}
+        </div>
+      `;
+    }
+    if (mode === 'lanes') {
+      return `
+        <div class="lane-list finance-lane-list">
+          ${revenueLanes.map((lane) => `
+	            <article class="card finance-lane-card">
+              <div class="lane-group-header">
+                <div>
+                  <p class="eyebrow">${escapeHtml(lane.label)}</p>
+                  <h3>${escapeHtml(lane.bestFor || lane.notes || 'Revenue lane')}</h3>
+                </div>
+                <span class="status-chip ${laneUnlocked(lane) ? 'chip-active' : 'chip-deferred'}">${laneUnlocked(lane) ? 'Unlocked / active' : 'Locked / later'}</span>
+              </div>
+              <div class="metrics-grid finance-metrics-grid" style="margin-top:14px;">
+                <article class="mini-card">
+                  <p class="eyebrow">Avg revenue</p>
+                  <div class="stat-value">${escapeHtml(lane.avgRevenuePerAppointmentLabel || formatMoney(lane.avgRevenuePerAppointment))}</div>
+                  <p class="muted">Per appointment</p>
+                </article>
+                <article class="mini-card">
+                  <p class="eyebrow">Variable cost</p>
+                  <div class="stat-value">${escapeHtml(lane.variableCostPerAppointmentLabel || formatMoney(lane.variableCostPerAppointment))}</div>
+                  <p class="muted">Per appointment</p>
+                </article>
+                <article class="mini-card">
+                  <p class="eyebrow">Contribution</p>
+                  <div class="stat-value">${escapeHtml(lane.contributionPerAppointmentLabel || formatMoney(lane.contributionPerAppointment))}</div>
+                  <p class="muted">Per appointment</p>
+                </article>
+                <article class="mini-card">
+                  <p class="eyebrow">Launch month</p>
+                  <div class="stat-value">${lane.launchMonth ? `M${escapeHtml(String(lane.launchMonth))}` : 'Now'}</div>
+                  <p class="muted">${escapeHtml(lane.profitPriority || 'Priority lane')}</p>
+                </article>
+              </div>
+	              <div class="toolbar-pill-row" style="margin-top:12px;">
+	                ${(lane.unlockRequirements || []).map((item) => `<span class="toolbar-chip">${escapeHtml(item)}</span>`).join('')}
+	              </div>
+                <div class="grid-3 finance-override-grid" style="margin-top:14px;">
+                  <label class="finance-input-block">
+                    <span>Avg revenue / appointment</span>
+                    <input class="finance-input" type="number" min="0" step="0.01" value="${escapeHtml(formatNumber(lane.avgRevenuePerAppointment, 2))}" data-lane-override="${escapeHtml(lane.id)}" data-lane-field="avgRevenuePerAppointment" />
+                  </label>
+                  <label class="finance-input-block">
+                    <span>Variable cost / appointment</span>
+                    <input class="finance-input" type="number" min="0" step="0.01" value="${escapeHtml(formatNumber(lane.variableCostPerAppointment, 2))}" data-lane-override="${escapeHtml(lane.id)}" data-lane-field="variableCostPerAppointment" />
+                  </label>
+                  <label class="finance-input-block">
+                    <span>Launch month</span>
+                    <input class="finance-input" type="number" min="0" step="1" value="${escapeHtml(String(lane.launchMonth || 0))}" data-lane-override="${escapeHtml(lane.id)}" data-lane-field="launchMonth" />
+                  </label>
+                </div>
+	              ${laneBlocker(lane) ? `<p class="roadmap-risk" style="margin-top:12px;"><strong>Blocker:</strong> ${escapeHtml(laneBlocker(lane))}</p>` : '<p class="muted" style="margin-top:12px;">Lane is ready to tighten and scale.</p>'}
+	              <div class="action-row" style="margin-top:14px;">
+	                ${lane.studyModuleLinks?.[0] ? `<button class="button finance-open-study-btn" data-finance-study="${escapeHtml(lane.studyModuleLinks[0])}">Open linked study topic</button>` : `<button class="button finance-open-roadmap-btn">Open roadmap</button>`}
+	                <button class="secondary-button finance-open-checklist-btn">Open checklist</button>
+                  ${lane.overrideActive ? `<button class="ghost-button" data-reset-lane-override="${escapeHtml(lane.id)}">Reset lane overrides</button>` : ''}
+	              </div>
+	            </article>
+	          `).join('')}
+	        </div>
+	      `;
+	    }
+	    if (mode === 'scenarios') {
+	      const months = revenueModel?.months || [];
+	      const maxRevenue = Math.max(1, ...months.map((month) => Number(month.totalRevenue || 0)));
+	      return `
+	        <div class="grid-3 finance-grid">
+          ${[conservative, base, growth].filter(Boolean).map((scenario) => `
+            <article class="card">
+              <p class="eyebrow">${escapeHtml(scenario.name)}</p>
+              <h3>${escapeHtml(formatMoney(scenario.year1Revenue))}</h3>
+              <p class="muted">Year 1 revenue</p>
+              <ul class="cram-list">
+                <li>EBITDA: ${escapeHtml(formatMoney(scenario.year1Ebitda))}</li>
+                <li>Contribution per appointment: ${escapeHtml(formatMoney(scenario.avgContributionPerAppointment))}</li>
+                <li>Break-even: ${escapeHtml(formatNumber(scenario.breakEvenAppointmentsPerMonth, 2))} appointments / month</li>
+              </ul>
+            </article>
+          `).join('')}
+        </div>
+        <article class="card" style="margin-top:18px;">
+          <p class="eyebrow">Monthly revenue ramp</p>
+          <div class="finance-bar-chart">
+            ${months.map((month) => `
+              <div class="finance-bar-card">
+                <div class="finance-bar-track"><div class="finance-bar" style="height:${Math.max(12, Math.round((Number(month.totalRevenue || 0) / maxRevenue) * 180))}px"></div></div>
+                <strong>${escapeHtml(month.label)}</strong>
+                <span>${escapeHtml(formatMoney(month.totalRevenue))}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="toolbar-pill-row" style="margin-top:16px;">
+            <span class="toolbar-chip">Capital target: ${escapeHtml(summary.recommendedCapitalTargetLabel || '—')}</span>
+            <span class="toolbar-chip">Fixed overhead: ${escapeHtml(summary.monthlyFixedOverheadLabel || '—')}</span>
+            <span class="toolbar-chip">Break-even: ${escapeHtml(summary.breakEvenAppointmentsPerMonthLabel || '—')}</span>
+          </div>
+        </article>
+      `;
+    }
+    if (mode === 'business-plan') {
+      return `
+        <div class="grid-2 finance-grid">
+          <article class="card">
+            <p class="eyebrow">Business plan controls</p>
+            <h3>${escapeHtml(businessPlanContent.title || 'Detailed Business Plan')}</h3>
+            <p class="muted">Export Markdown, print the plan, or create a one-page financial summary from the same underlying numbers.</p>
+            <label for="business-plan-notes">Owner working notes</label>
+            <textarea id="business-plan-notes" placeholder="Add lender notes, launch changes, or overrides you want included in exports.">${escapeHtml(state.businessPlanNotes || '')}</textarea>
+            <div class="action-row" style="margin-top:14px;">
+              <button class="button" id="export-business-plan-md-btn">Export Markdown</button>
+              <button class="secondary-button" id="print-business-plan-btn">Print Business Plan</button>
+              <button class="ghost-button" id="export-one-page-btn">Export one-page summary</button>
+            </div>
+          </article>
+          <article class="card">
+            <p class="eyebrow">Profit plan</p>
+            <ul class="cram-list">
+              <li><strong>Required cash now:</strong> ${escapeHtml(summary.requiredCashNowLabel || '—')}</li>
+              <li><strong>Official add-on not in model total:</strong> ${escapeHtml(summary.officialExtraCashNowLabel || '—')}</li>
+              <li><strong>Fastest cash:</strong> ${escapeHtml(summary.fastestCashLaneLabel || '—')}</li>
+              <li><strong>Highest margin:</strong> ${escapeHtml(summary.highestMarginLaneLabel || '—')}</li>
+              <li><strong>Best scale:</strong> ${escapeHtml(summary.bestScaleLaneLabel || '—')}</li>
+            </ul>
+          </article>
+        </div>
+        <div class="business-plan-stack" id="business-plan-print-root">
+          ${visiblePlanSections.map((planSection) => `
+            <article class="card business-plan-card">
+              <p class="eyebrow">Business plan section</p>
+              <h3>${escapeHtml(planSection.title)}</h3>
+              <div class="business-plan-copy">${markdownLinesToHtml((parseMarkdownSections(planSection.contentMarkdown)[0] || { lines: [] }).lines)}</div>
+            </article>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    const buyMatrix = summary.buyNowVsLater || {};
+    return `
+      <div class="metrics-grid finance-metrics-grid">
+        <article class="mini-card">
+          <p class="eyebrow">Startup cash outlay</p>
+          <div class="stat-value">${escapeHtml(summary.startupCashOutlayLabel || '—')}</div>
+          <p class="muted">Model startup total</p>
+        </article>
+        <article class="mini-card">
+          <p class="eyebrow">Required cash now</p>
+          <div class="stat-value">${escapeHtml(summary.requiredCashNowLabel || '—')}</div>
+          <p class="muted">Before first paid appointment</p>
+        </article>
+        <article class="mini-card">
+          <p class="eyebrow">Monthly fixed overhead</p>
+          <div class="stat-value">${escapeHtml(summary.monthlyFixedOverheadLabel || '—')}</div>
+          <p class="muted">Monthly carry cost</p>
+        </article>
+        <article class="mini-card">
+          <p class="eyebrow">Year 1 revenue</p>
+          <div class="stat-value">${escapeHtml(summary.year1RevenueLabel || '—')}</div>
+          <p class="muted">Base case</p>
+        </article>
+        <article class="mini-card">
+          <p class="eyebrow">Year 1 EBITDA</p>
+          <div class="stat-value">${escapeHtml(summary.year1EbitdaLabel || '—')}</div>
+          <p class="muted">Base case</p>
+        </article>
+        <article class="mini-card">
+          <p class="eyebrow">Break-even</p>
+          <div class="stat-value">${escapeHtml(summary.breakEvenAppointmentsPerMonthLabel || '—')}</div>
+          <p class="muted">Appointments / month</p>
+        </article>
+      </div>
+	      <div class="grid-2 finance-grid" style="margin-top:18px;">
+	        <article class="business-next-card">
+          <p class="eyebrow">Highest-profit next move</p>
+          <h3>${escapeHtml(summary.currentProfitMove?.label || 'Use finance to separate required cash now from later expansion spend.')}</h3>
+          <p><strong>Why it matters:</strong> ${escapeHtml(summary.currentProfitMove?.why || 'Better spend order protects your margin.')}</p>
+          <p><strong>What it unlocks next:</strong> ${escapeHtml(summary.currentProfitMove?.unlocks || 'Cleaner cash flow and later high-margin lanes.')}</p>
+          <div class="toolbar-pill-row" style="margin-top:12px;">
+            <span class="toolbar-chip">Highest margin: ${escapeHtml(summary.highestMarginLaneLabel || '—')}</span>
+            <span class="toolbar-chip">Fastest cash: ${escapeHtml(summary.fastestCashLaneLabel || '—')}</span>
+            <span class="toolbar-chip">Best scale: ${escapeHtml(summary.bestScaleLaneLabel || '—')}</span>
+          </div>
+          <div class="action-row" style="margin-top:14px;">
+            <button class="button" id="finance-open-lanes-btn">Open revenue lanes</button>
+            <button class="secondary-button" id="finance-export-summary-btn">Export one-page summary</button>
+          </div>
+	        </article>
+	        <article class="card">
+	          <p class="eyebrow">Capital at risk</p>
+	          <h3>${escapeHtml(summary.recommendedCapitalTargetLabel || '—')}</h3>
+	          <p class="muted">Recommended capital target combines required spend, reserve, marketing, automation, and contingency.</p>
+	          <ul class="cram-list">
+	            ${(capitalPlan?.useOfFunds || []).map((item) => `<li><strong>${escapeHtml(item.label)}</strong> — ${escapeHtml(item.amountLabel)}</li>`).join('')}
+	          </ul>
+	        </article>
+	      </div>
+      <div class="grid-2 finance-grid" style="margin-top:18px;">
+        <article class="card">
+          <p class="eyebrow">Buy now</p>
+          <ul class="cram-list">${(buyMatrix.buyNow || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+        </article>
+        <article class="card">
+          <p class="eyebrow">Buy later / delay until demand is proven</p>
+          <ul class="cram-list">
+            ${(buyMatrix.buyLater || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
+            ${(buyMatrix.delayUntilDemandIsProven || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
+          </ul>
+        </article>
+      </div>
+      <div class="grid-2 finance-grid" style="margin-top:18px;">
+        <article class="card">
+          <p class="eyebrow">Required cash now</p>
+          <div class="finance-row-stack">${costRowsHtml(requiredNow)}</div>
+        </article>
+        <article class="card">
+          <p class="eyebrow">High-ROI spend</p>
+          <ul class="cram-list">${(buyMatrix.highRoiSpend || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+          <p class="muted">Use this view to protect cash while still spending where the conversion payoff is highest.</p>
+        </article>
+      </div>
+    `;
+  })();
+
+  section.innerHTML = `
+    <div class="page-header">
+      <div>
+        <p class="eyebrow">Finance</p>
+        <h2>Profit planning dashboard for startup cash, monthly overhead, lane margin, and business-plan export.</h2>
+        <p class="muted">Use this private view to separate what must be paid now from what should wait until demand is proven.</p>
+        <div class="toolbar-pill-row" style="margin-top:12px;">
+          <span class="toolbar-chip">Overrides active: ${escapeHtml(String(overridesActive))}</span>
+          <span class="toolbar-chip">Required now: ${escapeHtml(summary.requiredCashNowLabel || '—')}</span>
+          <span class="toolbar-chip">Fixed overhead: ${escapeHtml(summary.monthlyFixedOverheadLabel || '—')}</span>
+        </div>
+      </div>
+      <div class="action-row">
+        ${financeViewButtons(mode)}
+        <button class="ghost-button" id="reset-finance-overrides-btn" ${overridesActive ? '' : 'disabled'}>Reset overrides</button>
+      </div>
+    </div>
+    ${viewHtml}
+  `;
+
+  document.querySelectorAll('[data-finance-view]').forEach((button) => {
+    button.addEventListener('click', () => setFinanceViewMode(button.dataset.financeView));
+  });
+  document.getElementById('finance-open-lanes-btn')?.addEventListener('click', () => setFinanceViewMode('lanes'));
+  document.getElementById('reset-finance-overrides-btn')?.addEventListener('click', resetAllFinanceOverrides);
+  document.getElementById('finance-export-summary-btn')?.addEventListener('click', () => {
+    downloadTextFile('notary-os-one-page-financial-summary.md', onePageFinancialSummaryMarkdown(), 'text/markdown;charset=utf-8');
+  });
+  document.querySelectorAll('.finance-open-study-btn').forEach((button) => {
+    button.addEventListener('click', () => switchModule(button.dataset.financeStudy, 'modules'));
+  });
+  document.querySelectorAll('.finance-open-checklist-btn').forEach((button) => {
+    button.addEventListener('click', () => setActiveSection('checklist'));
+  });
+  document.querySelectorAll('.finance-open-roadmap-btn').forEach((button) => {
+    button.addEventListener('click', () => setActiveSection('roadmap'));
+  });
+  document.querySelectorAll('[data-finance-row-amount]').forEach((input) => {
+    input.addEventListener('change', () => {
+      updateCostOverride(input.dataset.financeRowAmount, input.value);
+      renderApp();
+    });
+  });
+  document.querySelectorAll('[data-finance-row-reset]').forEach((button) => {
+    button.addEventListener('click', () => resetCostOverride(button.dataset.financeRowReset));
+  });
+  document.querySelectorAll('[data-lane-override]').forEach((input) => {
+    input.addEventListener('change', () => {
+      updateLaneOverrideField(input.dataset.laneOverride, input.dataset.laneField, input.value);
+      renderApp();
+    });
+  });
+  document.querySelectorAll('[data-reset-lane-override]').forEach((button) => {
+    button.addEventListener('click', () => resetLaneOverride(button.dataset.resetLaneOverride));
+  });
+  document.getElementById('business-plan-notes')?.addEventListener('input', (event) => {
+    state.businessPlanNotes = event.target.value;
+    saveState();
+  });
+  document.getElementById('export-business-plan-md-btn')?.addEventListener('click', () => {
+    downloadTextFile('notary-os-detailed-business-plan.md', businessPlanMarkdown(), 'text/markdown;charset=utf-8');
+  });
+  document.getElementById('print-business-plan-btn')?.addEventListener('click', handlePrintBusinessPlan);
+  document.getElementById('export-one-page-btn')?.addEventListener('click', () => {
+    downloadTextFile('notary-os-one-page-financial-summary.md', onePageFinancialSummaryMarkdown(), 'text/markdown;charset=utf-8');
+  });
+}
+
 function renderOperations() {
   const section = document.getElementById('operations');
   section.innerHTML = `
@@ -2401,8 +3473,18 @@ function handlePrintCram() {
   window.print();
 }
 
+function handlePrintBusinessPlan() {
+  state.activeSection = 'finance';
+  state.financeViewMode = 'business-plan';
+  saveState();
+  renderApp();
+  document.body.classList.add('print-business-plan');
+  window.print();
+}
+
 function afterPrintCleanup() {
   document.body.classList.remove('print-cram');
+  document.body.classList.remove('print-business-plan');
 }
 
 function renderApp() {
@@ -2418,6 +3500,7 @@ function renderApp() {
   renderCram();
   renderChecklist();
   renderRoadmap();
+  renderFinance();
   renderOperations();
 }
 

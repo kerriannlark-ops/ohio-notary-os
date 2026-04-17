@@ -1,17 +1,23 @@
 {
   "metadata": {
     "sourceDirectory": "/Users/kerriannlark/Desktop/NOTARY LICENSE COURSE",
-    "documentCount": 16,
+    "documentCount": 20,
     "audioFileCount": 5,
     "totalAudioSeconds": 13775.69997732426,
     "privateUseOnly": true
   },
   "businessSnapshot": {
     "startupCashOutlay": "$2,114",
+    "requiredCashNow": "$595",
+    "officialExtraCashNow": "$22",
+    "monthlyFixedOverhead": "$540",
     "year1Revenue": "$36,645",
     "year1EBITDA": "$20,538",
-    "breakEvenMonthlyAppointments": "13 appointments / month",
-    "recommendedCapitalTarget": "$7,500"
+    "breakEvenMonthlyAppointments": "13.31 appointments / month",
+    "recommendedCapitalTarget": "$7,500",
+    "highestMarginLane": "Loan signing",
+    "fastestCashLane": "Mobile general",
+    "bestScaleLane": "RON"
   },
   "recommendedStudyStack": [
     "Ohio Notary Course Packet",
@@ -85,12 +91,100 @@
       "sourceFileName": "Ohio_Notary_Exam_Study_Guide_v2.docx",
       "servedFileName": "Ohio_Notary_Exam_Study_Guide_v2.docx",
       "url": "./CourseLibrary/Ohio_Notary_Exam_Study_Guide_v2.docx",
-      "fileSizeBytes": 40003,
+      "fileSizeBytes": 40006,
       "fileSizeLabel": "39.1 KB",
       "pageCount": null,
       "durationSeconds": null,
       "durationLabel": null,
       "previewText": "Ohio Notary Exam Study Notes and Study Guide\nCleaned and organized from the uploaded course transcripts, with official Ohio Secretary of State verification where useful.\nPrepared from\nUploaded transcript files (filtered to substantive notary content only)\nScope\nDetailed notes, exam outline, procedures, memory aids, and practice questions for Ohio\nVerified current through\nApril 7, 2026\nUse this as a study guide, not as legal advice. The guide tracks the course transcript, but any live work as a notary should be checked against the Ohio Revised Code and Ohio Secretary of State resources.\n1. How this guide was built\nThis document consolidates the substantive Ohio notary information discussed in the uploaded course transcripts into a cleaner, exam-ready format. Non-substantive interruptions, profanity, and unrelated speaker dialogue were intentionally excluded. Where transcript material touched on rules that are sensitive to legislative change, the guide was cross-checked against current Ohio Secretary of State pages so your notes are usable for present-day studying.\n2. Fast exam facts\nThe transcript states that the required exam is 30 multiple-choice questions.\nThe transcript states that a score of at least 80% is required to pass.\nThe required subject areas include: the terms of commission, renewal, revocation, legal notarial acts, depositions, acknowledgments, and jurats.\nExam domain\nWhat to know cold\nCommission basics",
+      "isPrimaryPacket": false
+    },
+    {
+      "id": "bci_background_check",
+      "title": "Bci Background Check",
+      "category": "support",
+      "kind": "pdf",
+      "priority": "support",
+      "description": "Supporting course asset: bci background check .pdf",
+      "recommendedUse": "Use as a supporting reference inside the course library.",
+      "tags": [
+        "pdf"
+      ],
+      "sourceFileName": "bci background check .pdf",
+      "servedFileName": "bci background check .pdf",
+      "url": "./CourseLibrary/bci%20background%20check%20.pdf",
+      "fileSizeBytes": 4338734,
+      "fileSizeLabel": "4.1 MB",
+      "pageCount": 1,
+      "durationSeconds": null,
+      "durationLabel": null,
+      "previewText": "",
+      "isPrimaryPacket": false
+    },
+    {
+      "id": "bible_to_european_royal_lines_chart",
+      "title": "Bible To European Royal Lines Chart",
+      "category": "support",
+      "kind": "pdf",
+      "priority": "support",
+      "description": "Supporting course asset: Bible_to_European_Royal_Lines_Chart.pdf",
+      "recommendedUse": "Use as a supporting reference inside the course library.",
+      "tags": [
+        "pdf"
+      ],
+      "sourceFileName": "Bible_to_European_Royal_Lines_Chart.pdf",
+      "servedFileName": "Bible_to_European_Royal_Lines_Chart.pdf",
+      "url": "./CourseLibrary/Bible_to_European_Royal_Lines_Chart.pdf",
+      "fileSizeBytes": 109643,
+      "fileSizeLabel": "107.1 KB",
+      "pageCount": 3,
+      "durationSeconds": null,
+      "durationLabel": null,
+      "previewText": "Bible Family Trees to European Royal Lines Three-lane visual chart with documented, legendary, and speculative connections Important: the biblical-to-modern royal bridge is usually ideological, legendary, or speculative rather than continuously documented. DCE: Documented within Europe LBB: Legendary / biblicalized bridge SP: Speculative possibility Lane 1 — Biblical Line Lane 2 — Legendary / Biblicalized Bridge Figures Lane 3 — Documented European Royal Line, 1500s to Now Adam ↓ Noah ↓ Shem / Ham / Japheth ↓ Japheth = traditional broad link used for Europe ↓ Shem ↓ Abraham ↓ Isaac ↓ Jacob ↓ Judah ↓ David\nNoah ↓ Japheth ↓ peoples of Europe ↓ national origin legends ↓ royal pedigrees extended backward\nJames VI & I ↓ Stuart succession ↓ Hanover succession ↓ Victoria ↓ George V ↓ Elizabeth II ↓ Charles III\nRoyal significance inside the Bible • Judah = royal tribe • David = covenant king\nCommon bridge figures • Woden in Anglo-Saxon pedigrees • Sceaf / Scyld-type ancestral figures\nParallel modern royals often shown on a companion branch • Spain: Juan Carlos I → Felipe VI • Belgium: Albert II → Philippe\n• Davidic throne = later messianic model • Levi / Aaron = priestly line, not the main royal line • Trojan-origin legends such as Brutus of Troy These were used to place kingdoms into sacred or universal history.\nThese are documentable dynastic lines inside Europe.\nThis lane is canonically solid inside Scripture. What is not solid: a continuous, historian-accepted bloodline from David to early modern or modern European monarchs.\nStatus These figures matter as ideological connectors. They show how rulers explained legitimacy. They do not provide modern documentary proof of descent from biblical patriarchs.\nStatus This lane is historically strongest. It shows real genealogy from early modern monarchy forward. The gap is the jump from these lines back into biblical antiquity.\nNamed Individuals and How to Classify Them Individual Category Why they matter in the chain Caution level Noah Biblical anchor Universal post-Flood ancestor in biblical world history; later used to organize nations and peoples. Biblical, but not a documentary gateway to modern royals.\nJapheth Biblical anchor Traditional route by which Europe was often placed into Noah-based sacred history. Broad ethnographic tradition, not modern proof.\nDavid Biblical royal anchor Defines the royal line inside Scripture and later messianic expectation. Historically central in the Bible; no accepted continuous line to modern Europe. Woden Legendary bridge Appears in royal pedigrees that were later Christianized and sometimes pushed back toward Noah. Legendary / ideological.\nSceaf Legendary bridge Used in some Anglo-Saxon genealogical expansions toward biblical time. Legendary / biblicalized ancestry device.\nJames VI & I Documented royal Good starting point for a post-1500 British royal chain. Strong within European records. Queen Victoria Documented royal hub Dynastic hub connecting many modern European houses. Strong within European records. George V Documented royal Formalized the House of Windsor in 1917. Strong within European records. Elizabeth II Documented royal Modern continuity point linking older European dynastic networks to the present era. Strong within European records.\nCharles III Documented royal Current British monarch; often the end-point in modern charting. Strong within European records. Felipe VI Documented royal Modern Spanish royal line, useful for parallel comparison. Strong within European records. Philippe of Belgium Documented royal Modern Belgian royal line, useful for parallel comparison. Strong within European records. Victoria / Elizabeth II / Charles III as “Davidic” heirs Speculative possibility Claim appears in British-Israel-style theories that link the British throne to the house of David. Speculative; not accepted as mainstream proof.\nInterpretive bottom line: the safest chain is Bible → sacred-history models → legendary bridge figures → documented European dynasties. The weakest step is any claimed continuous bloodline from David or the tribes of Israel to modern European monarchs.",
+      "isPrimaryPacket": false
+    },
+    {
+      "id": "certificate",
+      "title": "Certificate",
+      "category": "support",
+      "kind": "pdf",
+      "priority": "support",
+      "description": "Supporting course asset: certificate.pdf",
+      "recommendedUse": "Use as a supporting reference inside the course library.",
+      "tags": [
+        "pdf"
+      ],
+      "sourceFileName": "certificate.pdf",
+      "servedFileName": "certificate.pdf",
+      "url": "./CourseLibrary/certificate.pdf",
+      "fileSizeBytes": 145058,
+      "fileSizeLabel": "141.7 KB",
+      "pageCount": 1,
+      "durationSeconds": null,
+      "durationLabel": null,
+      "previewText": "Certificate of Completion - Credit Awarded\nThis certifies that\nKerriAnn Lark (ONS ID: 10084673)\n480 West Broad Street\nColumbus, OH 43215\nCompleted an online, self-paced Ohio Notary Services, LLC notary training program entitled:\nTraditional Notary: New Applicant Class & Exam for Non-Attorneys for after April 2025\nParticipant started program at: 4/2/2026 1:00 PM Central\nParticipant completed program at: 4/11/2026 4:14 PM Central\nTotal time spent in program: 490 Minutes\nApproved for Notary Education credits with the Ohio Secretary of State:\n3.0 Traditional Notary Public credits\nExam Score: 100%\nThiscertificateservesasproofofthesuccessfulcompletionofthenotaryeducationrequirementsas\nwellas proofyoupassedthenotarytest.(Renewingnotariesandnewattorneyapplicantsforthe\ntraditionalnotarycommissionareNOTrequiredtotakeone).VisitthewebsiteoftheOhioSecretary\nof State(https://notary.ohiosos.gov/) anduploada copyof thiscertificatetoyourapplicationin the\nfollowing places:",
+      "isPrimaryPacket": false
+    },
+    {
+      "id": "oath_of_office",
+      "title": "OATH Of OFFICE",
+      "category": "support",
+      "kind": "pdf",
+      "priority": "support",
+      "description": "Supporting course asset: OATH of OFFICE.pdf",
+      "recommendedUse": "Use as a supporting reference inside the course library.",
+      "tags": [
+        "pdf"
+      ],
+      "sourceFileName": "OATH of OFFICE.pdf",
+      "servedFileName": "OATH of OFFICE.pdf",
+      "url": "./CourseLibrary/OATH%20of%20OFFICE.pdf",
+      "fileSizeBytes": 10376129,
+      "fileSizeLabel": "9.9 MB",
+      "pageCount": 2,
+      "durationSeconds": null,
+      "durationLabel": null,
+      "previewText": "",
       "isPrimaryPacket": false
     },
     {

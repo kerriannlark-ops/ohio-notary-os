@@ -1,0 +1,1349 @@
+{
+  "metadata": {
+    "generatedAt": "2026-04-17T22:47:45.368587+00:00",
+    "privateUseOnly": true,
+    "strategyMode": "aggressive_scale",
+    "sourceFiles": {
+      "financialModel": "/Users/kerriannlark/Desktop/NOTARY LICENSE COURSE/ohio_notary_business_plan_financial_model.xlsx",
+      "businessPlan": "/Users/kerriannlark/Desktop/NOTARY LICENSE COURSE/columbus_ohio_notary_business_plan.docx"
+    }
+  },
+  "summary": {
+    "strategyMode": "aggressive_scale",
+    "strategyLabel": "Aggressive scale",
+    "startupCashOutlay": 2114.0,
+    "startupCashOutlayLabel": "$2,114",
+    "requiredCashNow": 595.0,
+    "requiredCashNowLabel": "$595",
+    "officialExtraCashNow": 22,
+    "officialExtraCashNowLabel": "$22",
+    "monthlyFixedOverhead": 540.0,
+    "monthlyFixedOverheadLabel": "$540",
+    "year1Revenue": 36645.0,
+    "year1RevenueLabel": "$36,645",
+    "year1VariableCost": 9627.0,
+    "year1VariableCostLabel": "$9,627",
+    "year1Contribution": 27018.0,
+    "year1ContributionLabel": "$27,018",
+    "year1Ebitda": 20538.0,
+    "year1EbitdaLabel": "$20,538",
+    "breakEvenAppointmentsPerMonth": 13.31,
+    "breakEvenAppointmentsPerMonthLabel": "13.31",
+    "recommendedCapitalTarget": 7500.0,
+    "recommendedCapitalTargetLabel": "$7,500",
+    "highestMarginLaneId": "loan_signing",
+    "highestMarginLaneLabel": "Loan signing",
+    "fastestCashLaneId": "mobile_general",
+    "fastestCashLaneLabel": "Mobile general",
+    "bestScaleLaneId": "ron",
+    "bestScaleLaneLabel": "RON",
+    "currentProfitMove": {
+      "label": "Launch mobile general first, then tilt into specialty mobile as soon as the SOPs are clean.",
+      "why": "Aggressive scale works best when you create fast local cash first and then shift into higher-margin specialty visits.",
+      "unlocks": "Specialty margin, RON scale, and later premium signings without burning cash too early."
+    },
+    "buyNowVsLater": {
+      "buyNow": [
+        "Ohio notary education/testing",
+        "Ohio commission filing",
+        "Seal, journal, supplies",
+        "E&O insurance"
+      ],
+      "buyLater": [
+        "RON education/testing",
+        "RON filing",
+        "E-seal / digital certificate / RON setup",
+        "Printer / scanner / signing supplies"
+      ],
+      "delayUntilDemandIsProven": [
+        "Heavy printer/scanner spend for loan signings",
+        "RON stack before commission is active"
+      ],
+      "highRoiSpend": [
+        "Marketing / reviews / local SEO",
+        "App workflow tools / automations",
+        "Website / domain / brand setup"
+      ]
+    }
+  },
+  "officialRules": [
+    {
+      "id": "traditional_fee_cap",
+      "label": "Traditional act fee cap",
+      "value": 5,
+      "unit": "$/act",
+      "sourceLabel": "Ohio Revised Code 147.08",
+      "sourceUrl": "https://codes.ohio.gov/orc/147.08",
+      "notes": "Up to $5 for any notarial act that is not an online notarization. Effective April 3, 2025."
+    },
+    {
+      "id": "ron_fee_cap",
+      "label": "RON act fee cap",
+      "value": 30,
+      "unit": "$/act",
+      "sourceLabel": "Ohio Revised Code 147.08",
+      "sourceUrl": "https://codes.ohio.gov/orc/147.08",
+      "notes": "Online notarizations may be charged up to $30 per notarial act."
+    },
+    {
+      "id": "ron_tech_fee_cap",
+      "label": "RON technology fee cap",
+      "value": 10,
+      "unit": "$/session",
+      "sourceLabel": "Ohio Revised Code 147.08",
+      "sourceUrl": "https://codes.ohio.gov/orc/147.08",
+      "notes": "A technology fee up to $10 may be charged for the online notarization system per session."
+    },
+    {
+      "id": "travel_fee_rule",
+      "label": "Travel fee rule",
+      "value": "Reasonable travel fee allowed",
+      "unit": "rule",
+      "sourceLabel": "Ohio Revised Code 147.08",
+      "sourceUrl": "https://codes.ohio.gov/orc/147.08",
+      "notes": "Travel must be agreed to in advance and is not charged per signature."
+    },
+    {
+      "id": "application_upload_set",
+      "label": "Application upload set",
+      "value": "Signature sample, BCI report, education/testing certificate",
+      "unit": "requirements",
+      "sourceLabel": "Ohio Secretary of State application requirements",
+      "sourceUrl": "https://www.ohiosos.gov/notary/application-requirements/",
+      "notes": "These are the core upload requirements for filing the Ohio commission application."
+    },
+    {
+      "id": "education_testing_currency",
+      "label": "Education/testing proof window",
+      "value": 12,
+      "unit": "months",
+      "sourceLabel": "Ohio Secretary of State education/testing information",
+      "sourceUrl": "https://www.ohiosos.gov/notary/education-and-testing/",
+      "notes": "Education must be completed no later than 12 months before the application date."
+    },
+    {
+      "id": "bci_background_fee",
+      "label": "BCI background check fee",
+      "value": 22,
+      "unit": "$",
+      "sourceLabel": "Ohio BCI civilian background check procedures",
+      "sourceUrl": "https://www.ohioattorneygeneral.gov/Files/Publications-Files/Background-Check-Publications/BCI-Civilian-Background-Check-Procedures-PDF",
+      "notes": "Required for filing but not included in the spreadsheet startup total."
+    },
+    {
+      "id": "ohio_llc_articles_fee",
+      "label": "Ohio LLC Articles of Organization fee",
+      "value": 99,
+      "unit": "$",
+      "sourceLabel": "Ohio Secretary of State filing forms and fee schedule",
+      "sourceUrl": "https://www.ohiosos.gov/businesses/filing-forms--fee-schedule/",
+      "notes": "Matches the business-plan spreadsheet LLC filing assumption."
+    }
+  ],
+  "marketContext": [
+    {
+      "label": "Franklin County population",
+      "value": "1323807",
+      "unit": "people",
+      "source": "2020 Census profile / serviceable market context"
+    },
+    {
+      "label": "Franklin County employer establishments",
+      "value": "30700",
+      "unit": "establishments",
+      "source": "QuickFacts 2023"
+    },
+    {
+      "label": "Franklin County nonemployer establishments",
+      "value": "125504",
+      "unit": "establishments",
+      "source": "QuickFacts 2023"
+    },
+    {
+      "label": "Central Ohio 2025 closed home sales",
+      "value": "29626",
+      "unit": "sales",
+      "source": "Columbus REALTORS 2025 market activity"
+    },
+    {
+      "label": "Central Ohio 2025 gross home sales",
+      "value": "11100000000",
+      "unit": "$",
+      "source": "Columbus REALTORS 2025 market activity"
+    }
+  ],
+  "startupCosts": [
+    {
+      "id": "ohio_notary_education_testing",
+      "label": "Ohio notary education/testing",
+      "category": "Compliance",
+      "subCategory": "Compliance",
+      "amount": 130.0,
+      "amountLabel": "$130",
+      "timing": "file_now",
+      "requiredFor": "Commission filing",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Startup_Costs sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Approved provider fee for non-attorney initial commission"
+    },
+    {
+      "id": "ohio_commission_filing",
+      "label": "Ohio commission filing",
+      "category": "Compliance",
+      "subCategory": "Compliance",
+      "amount": 15.0,
+      "amountLabel": "$15",
+      "timing": "file_now",
+      "requiredFor": "Commission filing",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Startup_Costs sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Secretary of State filing"
+    },
+    {
+      "id": "bci_background_check",
+      "label": "BCI background check",
+      "category": "Compliance",
+      "subCategory": "Compliance",
+      "amount": 22,
+      "amountLabel": "$22",
+      "timing": "file_now",
+      "requiredFor": "Commission filing",
+      "sourceType": "official_rule",
+      "sourceLabel": "Ohio BCI civilian background check procedures",
+      "editable": false,
+      "includedInModel": false,
+      "notes": "Required before filing the commission application. The spreadsheet startup total does not include this cost."
+    },
+    {
+      "id": "seal_journal_supplies",
+      "label": "Seal, journal, supplies",
+      "category": "Compliance",
+      "subCategory": "Compliance",
+      "amount": 150.0,
+      "amountLabel": "$150",
+      "timing": "before_first_paid_appointment",
+      "requiredFor": "In-person launch",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Startup_Costs sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Basic setup"
+    },
+    {
+      "id": "ohio_llc_filing",
+      "label": "Ohio LLC filing",
+      "category": "Entity",
+      "subCategory": "Entity",
+      "amount": 99.0,
+      "amountLabel": "$99",
+      "timing": "before_mobile_launch",
+      "requiredFor": "Mobile launch setup",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Startup_Costs sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "State formation filing"
+    },
+    {
+      "id": "website_domain_brand_setup",
+      "label": "Website / domain / brand setup",
+      "category": "Launch",
+      "subCategory": "Launch",
+      "amount": 300.0,
+      "amountLabel": "$300",
+      "timing": "before_mobile_launch",
+      "requiredFor": "Mobile launch setup",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Startup_Costs sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Initial launch kit"
+    },
+    {
+      "id": "phone_scheduling_software_setup",
+      "label": "Phone / scheduling / software setup",
+      "category": "Launch",
+      "subCategory": "Launch",
+      "amount": 150.0,
+      "amountLabel": "$150",
+      "timing": "before_mobile_launch",
+      "requiredFor": "Mobile launch setup",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Startup_Costs sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Initial setup"
+    },
+    {
+      "id": "e_o_insurance",
+      "label": "E&O insurance",
+      "category": "Insurance",
+      "subCategory": "Insurance",
+      "amount": 300.0,
+      "amountLabel": "$300",
+      "timing": "before_first_paid_appointment",
+      "requiredFor": "Risk protection",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Startup_Costs sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "First-year premium"
+    },
+    {
+      "id": "ron_education_testing",
+      "label": "RON education/testing",
+      "category": "Compliance",
+      "subCategory": "Compliance",
+      "amount": 250.0,
+      "amountLabel": "$250",
+      "timing": "before_ron_launch",
+      "requiredFor": "RON launch",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Startup_Costs sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Approved provider fee"
+    },
+    {
+      "id": "ron_filing",
+      "label": "RON filing",
+      "category": "Compliance",
+      "subCategory": "Compliance",
+      "amount": 20.0,
+      "amountLabel": "$20",
+      "timing": "before_ron_launch",
+      "requiredFor": "RON launch",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Startup_Costs sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Secretary of State filing"
+    },
+    {
+      "id": "e_seal_digital_certificate_ron_setup",
+      "label": "E-seal / digital certificate / RON setup",
+      "category": "Technology",
+      "subCategory": "Technology",
+      "amount": 250.0,
+      "amountLabel": "$250",
+      "timing": "before_ron_launch",
+      "requiredFor": "RON launch",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Startup_Costs sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Digital notarization tools"
+    },
+    {
+      "id": "printer_scanner_signing_supplies",
+      "label": "Printer / scanner / signing supplies",
+      "category": "Equipment",
+      "subCategory": "Equipment",
+      "amount": 450.0,
+      "amountLabel": "$450",
+      "timing": "before_signing_agent_launch",
+      "requiredFor": "Loan signing launch",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Startup_Costs sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Needed for higher-value signings"
+    }
+  ],
+  "fixedCosts": [
+    {
+      "id": "software_scheduling_cloud",
+      "label": "Software / scheduling / cloud",
+      "category": "Systems",
+      "subCategory": "Software / scheduling / cloud",
+      "amount": 65.0,
+      "amountLabel": "$65",
+      "timing": "before_mobile_launch",
+      "requiredFor": "Mobile launch setup",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Editable monthly overhead input"
+    },
+    {
+      "id": "phone_connectivity",
+      "label": "Phone / connectivity",
+      "category": "Operations",
+      "subCategory": "Phone / connectivity",
+      "amount": 60.0,
+      "amountLabel": "$60",
+      "timing": "before_mobile_launch",
+      "requiredFor": "Mobile launch setup",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Editable monthly overhead input"
+    },
+    {
+      "id": "insurance",
+      "label": "Insurance",
+      "category": "Operations",
+      "subCategory": "Insurance",
+      "amount": 25.0,
+      "amountLabel": "$25",
+      "timing": "before_first_paid_appointment",
+      "requiredFor": "Risk protection",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Editable monthly overhead input"
+    },
+    {
+      "id": "marketing_reviews_local_seo",
+      "label": "Marketing / reviews / local SEO",
+      "category": "Marketing",
+      "subCategory": "Marketing / reviews / local SEO",
+      "amount": 200.0,
+      "amountLabel": "$200",
+      "timing": "before_mobile_launch",
+      "requiredFor": "Client acquisition",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Editable monthly overhead input"
+    },
+    {
+      "id": "office_admin_supplies",
+      "label": "Office / admin / supplies",
+      "category": "Operations",
+      "subCategory": "Office / admin / supplies",
+      "amount": 75.0,
+      "amountLabel": "$75",
+      "timing": "before_first_paid_appointment",
+      "requiredFor": "Office/admin support",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Editable monthly overhead input"
+    },
+    {
+      "id": "app_workflow_tools_automations",
+      "label": "App workflow tools / automations",
+      "category": "Systems",
+      "subCategory": "App workflow tools / automations",
+      "amount": 75.0,
+      "amountLabel": "$75",
+      "timing": "growth_optional",
+      "requiredFor": "Automation and scale",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Editable monthly overhead input"
+    },
+    {
+      "id": "contingency_misc",
+      "label": "Contingency / misc.",
+      "category": "Operations",
+      "subCategory": "Contingency / misc.",
+      "amount": 40.0,
+      "amountLabel": "$40",
+      "timing": "growth_optional",
+      "requiredFor": "Reserve",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions sheet",
+      "editable": true,
+      "includedInModel": true,
+      "notes": "Editable monthly overhead input"
+    }
+  ],
+  "costGroups": {
+    "startup": {
+      "compliance": [
+        {
+          "id": "seal_journal_supplies",
+          "label": "Seal, journal, supplies",
+          "category": "Compliance",
+          "subCategory": "Compliance",
+          "amount": 150.0,
+          "amountLabel": "$150",
+          "timing": "before_first_paid_appointment",
+          "requiredFor": "In-person launch",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Startup_Costs sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Basic setup"
+        },
+        {
+          "id": "ron_education_testing",
+          "label": "RON education/testing",
+          "category": "Compliance",
+          "subCategory": "Compliance",
+          "amount": 250.0,
+          "amountLabel": "$250",
+          "timing": "before_ron_launch",
+          "requiredFor": "RON launch",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Startup_Costs sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Approved provider fee"
+        },
+        {
+          "id": "ron_filing",
+          "label": "RON filing",
+          "category": "Compliance",
+          "subCategory": "Compliance",
+          "amount": 20.0,
+          "amountLabel": "$20",
+          "timing": "before_ron_launch",
+          "requiredFor": "RON launch",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Startup_Costs sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Secretary of State filing"
+        },
+        {
+          "id": "bci_background_check",
+          "label": "BCI background check",
+          "category": "Compliance",
+          "subCategory": "Compliance",
+          "amount": 22,
+          "amountLabel": "$22",
+          "timing": "file_now",
+          "requiredFor": "Commission filing",
+          "sourceType": "official_rule",
+          "sourceLabel": "Ohio BCI civilian background check procedures",
+          "editable": false,
+          "includedInModel": false,
+          "notes": "Required before filing the commission application. The spreadsheet startup total does not include this cost."
+        },
+        {
+          "id": "ohio_commission_filing",
+          "label": "Ohio commission filing",
+          "category": "Compliance",
+          "subCategory": "Compliance",
+          "amount": 15.0,
+          "amountLabel": "$15",
+          "timing": "file_now",
+          "requiredFor": "Commission filing",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Startup_Costs sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Secretary of State filing"
+        },
+        {
+          "id": "ohio_notary_education_testing",
+          "label": "Ohio notary education/testing",
+          "category": "Compliance",
+          "subCategory": "Compliance",
+          "amount": 130.0,
+          "amountLabel": "$130",
+          "timing": "file_now",
+          "requiredFor": "Commission filing",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Startup_Costs sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Approved provider fee for non-attorney initial commission"
+        }
+      ],
+      "entity": [
+        {
+          "id": "ohio_llc_filing",
+          "label": "Ohio LLC filing",
+          "category": "Entity",
+          "subCategory": "Entity",
+          "amount": 99.0,
+          "amountLabel": "$99",
+          "timing": "before_mobile_launch",
+          "requiredFor": "Mobile launch setup",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Startup_Costs sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "State formation filing"
+        }
+      ],
+      "insurance": [
+        {
+          "id": "e_o_insurance",
+          "label": "E&O insurance",
+          "category": "Insurance",
+          "subCategory": "Insurance",
+          "amount": 300.0,
+          "amountLabel": "$300",
+          "timing": "before_first_paid_appointment",
+          "requiredFor": "Risk protection",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Startup_Costs sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "First-year premium"
+        }
+      ],
+      "equipment": [
+        {
+          "id": "printer_scanner_signing_supplies",
+          "label": "Printer / scanner / signing supplies",
+          "category": "Equipment",
+          "subCategory": "Equipment",
+          "amount": 450.0,
+          "amountLabel": "$450",
+          "timing": "before_signing_agent_launch",
+          "requiredFor": "Loan signing launch",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Startup_Costs sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Needed for higher-value signings"
+        }
+      ],
+      "software_systems": [
+        {
+          "id": "phone_scheduling_software_setup",
+          "label": "Phone / scheduling / software setup",
+          "category": "Launch",
+          "subCategory": "Launch",
+          "amount": 150.0,
+          "amountLabel": "$150",
+          "timing": "before_mobile_launch",
+          "requiredFor": "Mobile launch setup",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Startup_Costs sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Initial setup"
+        },
+        {
+          "id": "e_seal_digital_certificate_ron_setup",
+          "label": "E-seal / digital certificate / RON setup",
+          "category": "Technology",
+          "subCategory": "Technology",
+          "amount": 250.0,
+          "amountLabel": "$250",
+          "timing": "before_ron_launch",
+          "requiredFor": "RON launch",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Startup_Costs sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Digital notarization tools"
+        }
+      ],
+      "marketing_launch": [
+        {
+          "id": "website_domain_brand_setup",
+          "label": "Website / domain / brand setup",
+          "category": "Launch",
+          "subCategory": "Launch",
+          "amount": 300.0,
+          "amountLabel": "$300",
+          "timing": "before_mobile_launch",
+          "requiredFor": "Mobile launch setup",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Startup_Costs sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Initial launch kit"
+        }
+      ]
+    },
+    "fixed": {
+      "systems": [
+        {
+          "id": "software_scheduling_cloud",
+          "label": "Software / scheduling / cloud",
+          "category": "Systems",
+          "subCategory": "Software / scheduling / cloud",
+          "amount": 65.0,
+          "amountLabel": "$65",
+          "timing": "before_mobile_launch",
+          "requiredFor": "Mobile launch setup",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Assumptions sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Editable monthly overhead input"
+        },
+        {
+          "id": "app_workflow_tools_automations",
+          "label": "App workflow tools / automations",
+          "category": "Systems",
+          "subCategory": "App workflow tools / automations",
+          "amount": 75.0,
+          "amountLabel": "$75",
+          "timing": "growth_optional",
+          "requiredFor": "Automation and scale",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Assumptions sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Editable monthly overhead input"
+        }
+      ],
+      "marketing": [
+        {
+          "id": "marketing_reviews_local_seo",
+          "label": "Marketing / reviews / local SEO",
+          "category": "Marketing",
+          "subCategory": "Marketing / reviews / local SEO",
+          "amount": 200.0,
+          "amountLabel": "$200",
+          "timing": "before_mobile_launch",
+          "requiredFor": "Client acquisition",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Assumptions sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Editable monthly overhead input"
+        }
+      ],
+      "operations": [
+        {
+          "id": "insurance",
+          "label": "Insurance",
+          "category": "Operations",
+          "subCategory": "Insurance",
+          "amount": 25.0,
+          "amountLabel": "$25",
+          "timing": "before_first_paid_appointment",
+          "requiredFor": "Risk protection",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Assumptions sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Editable monthly overhead input"
+        },
+        {
+          "id": "office_admin_supplies",
+          "label": "Office / admin / supplies",
+          "category": "Operations",
+          "subCategory": "Office / admin / supplies",
+          "amount": 75.0,
+          "amountLabel": "$75",
+          "timing": "before_first_paid_appointment",
+          "requiredFor": "Office/admin support",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Assumptions sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Editable monthly overhead input"
+        },
+        {
+          "id": "phone_connectivity",
+          "label": "Phone / connectivity",
+          "category": "Operations",
+          "subCategory": "Phone / connectivity",
+          "amount": 60.0,
+          "amountLabel": "$60",
+          "timing": "before_mobile_launch",
+          "requiredFor": "Mobile launch setup",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Assumptions sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Editable monthly overhead input"
+        },
+        {
+          "id": "contingency_misc",
+          "label": "Contingency / misc.",
+          "category": "Operations",
+          "subCategory": "Contingency / misc.",
+          "amount": 40.0,
+          "amountLabel": "$40",
+          "timing": "growth_optional",
+          "requiredFor": "Reserve",
+          "sourceType": "spreadsheet_model",
+          "sourceLabel": "Assumptions sheet",
+          "editable": true,
+          "includedInModel": true,
+          "notes": "Editable monthly overhead input"
+        }
+      ]
+    }
+  },
+  "serviceLanes": [
+    {
+      "id": "employer_in_office",
+      "label": "Employer / in-office",
+      "avgRevenuePerAppointment": 15,
+      "avgRevenuePerAppointmentLabel": "$15",
+      "variableCostPerAppointment": 3,
+      "variableCostPerAppointmentLabel": "$3",
+      "contributionPerAppointment": 12,
+      "contributionPerAppointmentLabel": "$12",
+      "launchMonth": 0,
+      "profitPriority": "low-risk reps first",
+      "unlockRequirements": [
+        "Commission approved",
+        "Oath completed",
+        "Seal received"
+      ],
+      "phaseId": "foundation",
+      "roadmapLaneIds": [
+        "employer_in_office"
+      ],
+      "studyModuleLinks": [
+        "identity-and-appearance-rules",
+        "acknowledgments",
+        "jurats-affidavits-oaths-affirmations"
+      ],
+      "classification": "foundation_cash",
+      "bestFor": "practice volume, clean reps, and referral confidence",
+      "sourceType": "doc_plan",
+      "sourceLabel": "Business-plan narrative",
+      "inSpreadsheetModel": false,
+      "notes": "Proxy lane not modeled as a standalone sheet line. Use it for low-risk repetitions and internal referrals, not as the long-term profit engine."
+    },
+    {
+      "id": "mobile_general",
+      "label": "Mobile general",
+      "avgRevenuePerAppointment": 45.0,
+      "avgRevenuePerAppointmentLabel": "$45",
+      "variableCostPerAppointment": 12.0,
+      "variableCostPerAppointmentLabel": "$12",
+      "contributionPerAppointment": 33.0,
+      "contributionPerAppointmentLabel": "$33",
+      "launchMonth": 1,
+      "profitPriority": "fastest cash",
+      "unlockRequirements": [
+        "Commission approved",
+        "Oath completed",
+        "Seal received",
+        "Travel fee policy set"
+      ],
+      "phaseId": "local_mobile_launch",
+      "roadmapLaneIds": [
+        "mobile_general",
+        "same_day_after_hours"
+      ],
+      "studyModuleLinks": [
+        "acknowledgments",
+        "jurats-affidavits-oaths-affirmations",
+        "identity-and-appearance-rules"
+      ],
+      "classification": "fast_cash",
+      "bestFor": "fastest lawful local cash flow after commissioning",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions + Revenue_Model sheets",
+      "inSpreadsheetModel": true,
+      "notes": "Use this lane to validate real demand and refine route efficiency before heavier specialty spend.",
+      "monthlyRevenue": [
+        810.0,
+        855.0,
+        945.0,
+        1035.0,
+        1080.0,
+        1170.0,
+        1305.0,
+        1395.0,
+        1485.0,
+        1620.0,
+        1755.0,
+        1890.0
+      ],
+      "monthlyVolume": [
+        18.0,
+        19.0,
+        21.0,
+        23.0,
+        24.0,
+        26.0,
+        29.0,
+        31.0,
+        33.0,
+        36.0,
+        39.0,
+        42.0
+      ]
+    },
+    {
+      "id": "specialty_mobile",
+      "label": "Specialty mobile",
+      "avgRevenuePerAppointment": 85.0,
+      "avgRevenuePerAppointmentLabel": "$85",
+      "variableCostPerAppointment": 22.0,
+      "variableCostPerAppointmentLabel": "$22",
+      "contributionPerAppointment": 63.0,
+      "contributionPerAppointmentLabel": "$63",
+      "launchMonth": 1,
+      "profitPriority": "best early margin",
+      "unlockRequirements": [
+        "Clean mobile reps",
+        "Specialty checklists ready",
+        "Refusal logic documented"
+      ],
+      "phaseId": "specialty_niche_expansion",
+      "roadmapLaneIds": [
+        "hospital_hospice_nursing_home",
+        "vehicle_title_auto"
+      ],
+      "studyModuleLinks": [
+        "jurats-affidavits-oaths-affirmations",
+        "vehicle-title-notarization",
+        "identity-and-appearance-rules"
+      ],
+      "classification": "high_margin",
+      "bestFor": "urgent bedside/title/estate appointments with higher contribution per visit",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions + Revenue_Model sheets",
+      "inSpreadsheetModel": true,
+      "notes": "Highest early-stage margin lane before loan signings. Activate only after you trust your screening and refusal SOPs.",
+      "monthlyRevenue": [
+        425.0,
+        425.0,
+        510.0,
+        510.0,
+        595.0,
+        595.0,
+        680.0,
+        765.0,
+        765.0,
+        850.0,
+        935.0,
+        1020.0
+      ],
+      "monthlyVolume": [
+        5.0,
+        5.0,
+        6.0,
+        6.0,
+        7.0,
+        7.0,
+        8.0,
+        9.0,
+        9.0,
+        10.0,
+        11.0,
+        12.0
+      ]
+    },
+    {
+      "id": "ron",
+      "label": "RON",
+      "avgRevenuePerAppointment": 40.0,
+      "avgRevenuePerAppointmentLabel": "$40",
+      "variableCostPerAppointment": 10.0,
+      "variableCostPerAppointmentLabel": "$10",
+      "contributionPerAppointment": 30.0,
+      "contributionPerAppointmentLabel": "$30",
+      "launchMonth": 4,
+      "profitPriority": "best scale lane",
+      "unlockRequirements": [
+        "Commission active",
+        "Separate Ohio RON authorization",
+        "RON platform + e-seal + recording workflow"
+      ],
+      "phaseId": "digital_scale",
+      "roadmapLaneIds": [
+        "ron"
+      ],
+      "studyModuleLinks": [
+        "electronic-notarizations-vs-ron",
+        "ron-core-rules"
+      ],
+      "classification": "scale_lane",
+      "bestFor": "margin protection by removing drive time and increasing scheduling flexibility",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions + Revenue_Model sheets",
+      "inSpreadsheetModel": true,
+      "notes": "Scales best once the in-person workflow is stable and the Ohio RON authorization is active.",
+      "monthlyRevenue": [
+        0.0,
+        0.0,
+        0.0,
+        400.0,
+        440.0,
+        520.0,
+        560.0,
+        640.0,
+        720.0,
+        800.0,
+        880.0,
+        1000.0
+      ],
+      "monthlyVolume": [
+        0.0,
+        0.0,
+        0.0,
+        10.0,
+        11.0,
+        13.0,
+        14.0,
+        16.0,
+        18.0,
+        20.0,
+        22.0,
+        25.0
+      ]
+    },
+    {
+      "id": "loan_signing",
+      "label": "Loan signing",
+      "avgRevenuePerAppointment": 125.0,
+      "avgRevenuePerAppointmentLabel": "$125",
+      "variableCostPerAppointment": 35.0,
+      "variableCostPerAppointmentLabel": "$35",
+      "contributionPerAppointment": 90.0,
+      "contributionPerAppointmentLabel": "$90",
+      "launchMonth": 6,
+      "profitPriority": "highest margin later",
+      "unlockRequirements": [
+        "Printer/scanner ready",
+        "Signing package workflow",
+        "Title/escrow discipline"
+      ],
+      "phaseId": "premium_services",
+      "roadmapLaneIds": [
+        "notary_signing_agent"
+      ],
+      "studyModuleLinks": [
+        "acknowledgments",
+        "jurats-affidavits-oaths-affirmations",
+        "identity-and-appearance-rules"
+      ],
+      "classification": "premium_lane",
+      "bestFor": "highest contribution per appointment after premium workflow setup",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions + Revenue_Model sheets",
+      "inSpreadsheetModel": true,
+      "notes": "Highest modeled contribution per appointment, but do not unlock it before equipment, package discipline, and return-shipping workflow are ready.",
+      "monthlyRevenue": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        500.0,
+        500.0,
+        625.0,
+        625.0,
+        750.0,
+        750.0,
+        875.0
+      ],
+      "monthlyVolume": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        4.0,
+        4.0,
+        5.0,
+        5.0,
+        6.0,
+        6.0,
+        7.0
+      ]
+    },
+    {
+      "id": "recurring_b2b",
+      "label": "Recurring B2B",
+      "avgRevenuePerAppointment": 60.0,
+      "avgRevenuePerAppointmentLabel": "$60",
+      "variableCostPerAppointment": 15.0,
+      "variableCostPerAppointmentLabel": "$15",
+      "contributionPerAppointment": 45.0,
+      "contributionPerAppointmentLabel": "$45",
+      "launchMonth": 7,
+      "profitPriority": "most stable revenue",
+      "unlockRequirements": [
+        "Repeatable pricing",
+        "Account package",
+        "Client management process"
+      ],
+      "phaseId": "recurring_accounts",
+      "roadmapLaneIds": [],
+      "studyModuleLinks": [
+        "identity-and-appearance-rules",
+        "acknowledgments"
+      ],
+      "classification": "stability_lane",
+      "bestFor": "stable repeat revenue and lower dependence on one-off bookings",
+      "sourceType": "spreadsheet_model",
+      "sourceLabel": "Assumptions + Revenue_Model sheets",
+      "inSpreadsheetModel": true,
+      "notes": "Best long-term stabilizer once the lane package, retention follow-up, and invoicing process are standardized.",
+      "monthlyRevenue": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        360.0,
+        360.0,
+        420.0,
+        480.0,
+        480.0,
+        540.0
+      ],
+      "monthlyVolume": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        6.0,
+        6.0,
+        7.0,
+        8.0,
+        8.0,
+        9.0
+      ]
+    }
+  ],
+  "revenueModel": {
+    "months": [
+      {
+        "month": 1,
+        "label": "M1",
+        "serialDate": "46143",
+        "totalRevenue": 1235.0,
+        "totalVariableCost": 326.0,
+        "contributionMargin": 909.0
+      },
+      {
+        "month": 2,
+        "label": "M2",
+        "serialDate": "46174",
+        "totalRevenue": 1280.0,
+        "totalVariableCost": 338.0,
+        "contributionMargin": 942.0
+      },
+      {
+        "month": 3,
+        "label": "M3",
+        "serialDate": "46204",
+        "totalRevenue": 1455.0,
+        "totalVariableCost": 384.0,
+        "contributionMargin": 1071.0
+      },
+      {
+        "month": 4,
+        "label": "M4",
+        "serialDate": "46235",
+        "totalRevenue": 1945.0,
+        "totalVariableCost": 508.0,
+        "contributionMargin": 1437.0
+      },
+      {
+        "month": 5,
+        "label": "M5",
+        "serialDate": "46266",
+        "totalRevenue": 2115.0,
+        "totalVariableCost": 552.0,
+        "contributionMargin": 1563.0
+      },
+      {
+        "month": 6,
+        "label": "M6",
+        "serialDate": "46296",
+        "totalRevenue": 2785.0,
+        "totalVariableCost": 736.0,
+        "contributionMargin": 2049.0
+      },
+      {
+        "month": 7,
+        "label": "M7",
+        "serialDate": "46327",
+        "totalRevenue": 3405.0,
+        "totalVariableCost": 894.0,
+        "contributionMargin": 2511.0
+      },
+      {
+        "month": 8,
+        "label": "M8",
+        "serialDate": "46357",
+        "totalRevenue": 3785.0,
+        "totalVariableCost": 995.0,
+        "contributionMargin": 2790.0
+      },
+      {
+        "month": 9,
+        "label": "M9",
+        "serialDate": "46388",
+        "totalRevenue": 4015.0,
+        "totalVariableCost": 1054.0,
+        "contributionMargin": 2961.0
+      },
+      {
+        "month": 10,
+        "label": "M10",
+        "serialDate": "46419",
+        "totalRevenue": 4500.0,
+        "totalVariableCost": 1182.0,
+        "contributionMargin": 3318.0
+      },
+      {
+        "month": 11,
+        "label": "M11",
+        "serialDate": "46447",
+        "totalRevenue": 4800.0,
+        "totalVariableCost": 1260.0,
+        "contributionMargin": 3540.0
+      },
+      {
+        "month": 12,
+        "label": "M12",
+        "serialDate": "46478",
+        "totalRevenue": 5325.0,
+        "totalVariableCost": 1398.0,
+        "contributionMargin": 3927.0
+      }
+    ],
+    "year1Revenue": 36645.0,
+    "year1VariableCost": 9627.0,
+    "year1Contribution": 27018.0
+  },
+  "scenarios": [
+    {
+      "name": "Conservative",
+      "volumeFactor": 0.8,
+      "year1Revenue": 29316.0,
+      "year1VariableCost": 7701.6,
+      "year1FixedCost": 6480.0,
+      "year1Ebitda": 15134.400000000001,
+      "avgRevenuePerAppointment": 55.022522522522515,
+      "avgVariableCostPerAppointment": 14.454954954954953,
+      "avgContributionPerAppointment": 40.567567567567565,
+      "breakEvenAppointmentsPerMonth": 13.311125916055964
+    },
+    {
+      "name": "Base",
+      "volumeFactor": 1.0,
+      "year1Revenue": 36645.0,
+      "year1VariableCost": 9627.0,
+      "year1FixedCost": 6480.0,
+      "year1Ebitda": 20538.0,
+      "avgRevenuePerAppointment": 55.02252252252252,
+      "avgVariableCostPerAppointment": 14.454954954954955,
+      "avgContributionPerAppointment": 40.567567567567565,
+      "breakEvenAppointmentsPerMonth": 13.311125916055964
+    },
+    {
+      "name": "Growth",
+      "volumeFactor": 1.25,
+      "year1Revenue": 45806.25,
+      "year1VariableCost": 12033.75,
+      "year1FixedCost": 6480.0,
+      "year1Ebitda": 27292.5,
+      "avgRevenuePerAppointment": 55.02252252252252,
+      "avgVariableCostPerAppointment": 14.454954954954955,
+      "avgContributionPerAppointment": 40.567567567567565,
+      "breakEvenAppointmentsPerMonth": 13.311125916055964
+    }
+  ],
+  "capitalPlan": {
+    "recommendedCapitalTarget": 7500.0,
+    "recommendedCapitalTargetLabel": "$7,500",
+    "useOfFunds": [
+      {
+        "id": "startup_cash_outlay",
+        "label": "Startup cash outlay",
+        "amount": 2114.0,
+        "amountLabel": "$2,114",
+        "type": "Required",
+        "rationale": "Commission, RON, entity, tools, printer, supplies"
+      },
+      {
+        "id": "working_capital_reserve",
+        "label": "Working capital reserve",
+        "amount": 2000.0,
+        "amountLabel": "$2,000",
+        "type": "Reserve",
+        "rationale": "Covers ramp period and no-show / timing volatility"
+      },
+      {
+        "id": "initial_marketing_and_reviews_budget",
+        "label": "Initial marketing and reviews budget",
+        "amount": 1500.0,
+        "amountLabel": "$1,500",
+        "type": "Growth",
+        "rationale": "Google Business Profile, local SEO, reviews, flyers"
+      },
+      {
+        "id": "app_workflow_automation_build",
+        "label": "App / workflow automation build",
+        "amount": 1000.0,
+        "amountLabel": "$1,000",
+        "type": "Growth",
+        "rationale": "Codex-powered intake, reminders, invoicing workflow"
+      },
+      {
+        "id": "contingency_buffer",
+        "label": "Contingency buffer",
+        "amount": 886.0,
+        "amountLabel": "$886",
+        "type": "Reserve",
+        "rationale": "Brings recommended total target to $7,500"
+      }
+    ],
+    "fundingSources": [
+      {
+        "id": "owner_equity_bootstrapped_cash",
+        "label": "Owner equity / bootstrapped cash",
+        "amount": 2500.0,
+        "amountLabel": "$2,500",
+        "type": "Primary",
+        "rationale": "Retains control and aligns with SBA self-funding guidance"
+      },
+      {
+        "id": "small_grant_local_program",
+        "label": "Small grant / local program",
+        "amount": 2000.0,
+        "amountLabel": "$2,000",
+        "type": "Optional",
+        "rationale": "Reduces repayment burden if available"
+      },
+      {
+        "id": "microloan_sba_backed_or_community_loan",
+        "label": "Microloan / SBA-backed or community loan",
+        "amount": 3000.0,
+        "amountLabel": "$3,000",
+        "type": "Optional",
+        "rationale": "Completes capital stack without overleveraging"
+      }
+    ],
+    "approaches": [
+      {
+        "id": "bootstrapping_strategy",
+        "label": "Bootstrapping strategy",
+        "whenToUse": "Before proof of demand",
+        "recommendedScale": "$2k-$3.5k",
+        "summary": "Use personal savings and current-job cash flow to control risk and retain control."
+      },
+      {
+        "id": "feasibility_plan",
+        "label": "Feasibility plan",
+        "whenToUse": "First 90 days",
+        "recommendedScale": "$0-$2k incremental",
+        "summary": "Pilot the business, validate demand, and gather KPI evidence before borrowing."
+      },
+      {
+        "id": "startup_plan",
+        "label": "Startup plan",
+        "whenToUse": "Lender / grant application",
+        "recommendedScale": "$5k-$10k",
+        "summary": "Present startup costs, 12-month cash flow, and ROI path to outside capital."
+      },
+      {
+        "id": "expansion_growth_plan",
+        "label": "Expansion / growth plan",
+        "whenToUse": "After repeat demand appears",
+        "recommendedScale": "$7.5k-$20k",
+        "summary": "Scale marketing, RON capacity, equipment, and B2B outreach."
+      }
+    ]
+  }
+}
