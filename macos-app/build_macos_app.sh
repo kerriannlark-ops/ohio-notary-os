@@ -52,8 +52,8 @@ else
 fi
 
 if [ ! -d "$SOURCE_COURSE_DIR" ]; then
-  echo "Missing source course directory at: $SOURCE_COURSE_DIR" >&2
-  exit 1
+  echo "Source course directory not found; continuing with repo-stored/generated private assets:"
+  echo "  $SOURCE_COURSE_DIR"
 fi
 
 if [ ! -f "$ROADMAP_JSON" ]; then
@@ -71,10 +71,45 @@ if [ ! -f "$NATIVE_LAUNCHER_SOURCE" ]; then
   exit 1
 fi
 
-PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_course_content.py" --source "$SOURCE_PDF" --output "$SOURCE_JSON"
-PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_finance_content.py" --xlsx "$SOURCE_XLSX" --docx "$SOURCE_DOCX" --finance-output "$FINANCE_JSON" --business-plan-output "$BUSINESS_PLAN_JSON"
-PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_course_library.py" --source-dir "$SOURCE_COURSE_DIR" --primary-pdf "$SOURCE_PDF" --finance-json "$FINANCE_JSON" --output "$LIBRARY_JSON"
-python3 "$ROOT_DIR/macos-app/generate_icon_assets.py"
+if PYTHONPYCACHEPREFIX=/tmp/pyc python3 -c "import pypdf" >/dev/null 2>&1; then
+  PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_course_content.py" --source "$SOURCE_PDF" --output "$SOURCE_JSON"
+else
+  if [ -f "$SOURCE_JSON" ]; then
+    echo "pypdf not installed; reusing generated study JSON."
+  else
+    echo "pypdf is required to generate study JSON and no generated JSON exists." >&2
+    exit 1
+  fi
+fi
+if [ -f "$SOURCE_XLSX" ] && [ -f "$SOURCE_DOCX" ]; then
+  PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_finance_content.py" --xlsx "$SOURCE_XLSX" --docx "$SOURCE_DOCX" --finance-output "$FINANCE_JSON" --business-plan-output "$BUSINESS_PLAN_JSON"
+elif [ -f "$FINANCE_JSON" ] && [ -f "$BUSINESS_PLAN_JSON" ]; then
+  echo "Finance source files not found; reusing generated finance/business-plan JSON."
+else
+  echo "Missing finance source files and generated finance JSON." >&2
+  echo "Expected source files:" >&2
+  echo "  $SOURCE_XLSX" >&2
+  echo "  $SOURCE_DOCX" >&2
+  exit 1
+fi
+if PYTHONPYCACHEPREFIX=/tmp/pyc python3 -c "import pypdf" >/dev/null 2>&1; then
+  PYTHONPYCACHEPREFIX=/tmp/pyc python3 "$ROOT_DIR/macos-app/build_course_library.py" --source-dir "$SOURCE_COURSE_DIR" --primary-pdf "$SOURCE_PDF" --finance-json "$FINANCE_JSON" --output "$LIBRARY_JSON"
+else
+  if [ -f "$LIBRARY_JSON" ]; then
+    echo "pypdf not installed; reusing generated course-library JSON."
+  else
+    echo "pypdf is required to generate course-library JSON and no generated JSON exists." >&2
+    exit 1
+  fi
+fi
+if PYTHONPYCACHEPREFIX=/tmp/pyc python3 -c "import PIL" >/dev/null 2>&1; then
+  python3 "$ROOT_DIR/macos-app/generate_icon_assets.py"
+elif [ -f "$ROOT_DIR/macos-app/AppIcon.icns" ]; then
+  echo "Pillow not installed; reusing existing AppIcon.icns."
+else
+  echo "Pillow is required to generate icon assets and AppIcon.icns is missing." >&2
+  exit 1
+fi
 
 if command -v xattr >/dev/null 2>&1; then
   xattr -cr "$ROOT_DIR/macos-app/AppIcon.iconset" || true
@@ -118,13 +153,15 @@ cp "$REVENUE_MD" "$SEEDED_DIR/ohio_notary_codex_revenue_ladder.md"
 cp "$ROOT_DIR/macos-app/AppIcon.icns" "$RESOURCES_DIR/AppIcon.icns"
 
 cp "$SOURCE_PDF" "$COURSE_LIBRARY_DIR/OhioNotaryCoursePacket.pdf"
-find "$SOURCE_COURSE_DIR" -maxdepth 1 -type f ! -name '.DS_Store' | while IFS= read -r source_file; do
-  base_name="$(basename "$source_file")"
-  if [ "$source_file" = "$SOURCE_PDF" ] || [ "$base_name" = "Study Guide with PowerPoint Handouts-2.pdf" ]; then
-    continue
-  fi
-  cp "$source_file" "$COURSE_LIBRARY_DIR/$base_name"
-done
+if [ -d "$SOURCE_COURSE_DIR" ]; then
+  find "$SOURCE_COURSE_DIR" -maxdepth 1 -type f ! -name '.DS_Store' | while IFS= read -r source_file; do
+    base_name="$(basename "$source_file")"
+    if [ "$source_file" = "$SOURCE_PDF" ] || [ "$base_name" = "Study Guide with PowerPoint Handouts-2.pdf" ]; then
+      continue
+    fi
+    cp "$source_file" "$COURSE_LIBRARY_DIR/$base_name"
+  done
+fi
 
 SOURCE_JSON_ENV="$SOURCE_JSON" WEBAPP_RESOURCES_DIR_ENV="$WEBAPP_RESOURCES_DIR" python3 - <<'PY'
 import json

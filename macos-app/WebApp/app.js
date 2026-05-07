@@ -236,6 +236,98 @@ const BUSINESS_STARTUP_STEPS = [
     detail: 'Google Business Profile, a simple website, pricing clarity, and direct outreach to employers, title-adjacent contacts, elder-care facilities, and repeat-account targets.',
   },
 ];
+const FREE_FOUNDATION_STACK = [
+  {
+    id: 'google_business_profile',
+    group: 'Local visibility',
+    label: 'Create Google Business Profile',
+    platform: 'Google Business Profile',
+    cost: '$0',
+    officialUrl: 'https://business.google.com/us/business-profile/',
+    doNow: 'Create/claim the profile, add Columbus/Franklin County service area, hours, phone, website, and services.',
+    outcome: 'Shows up on Google Search/Maps and becomes the main review engine.',
+  },
+  {
+    id: 'free_website',
+    group: 'Website setup',
+    label: 'Publish free starter website',
+    platform: 'Google Sites or Netlify Free',
+    cost: '$0',
+    officialUrl: 'https://www.netlify.com/pricing/',
+    doNow: 'Publish a one-page site with services, service area, pricing disclosure, booking/intake link, and review link.',
+    outcome: 'Gives clients one trusted link before you buy custom tools.',
+  },
+  {
+    id: 'intake_form',
+    group: 'Booking flow',
+    label: 'Create free intake form',
+    platform: 'Google Forms',
+    cost: '$0',
+    officialUrl: 'https://forms.google.com/',
+    doNow: 'Collect name, phone, location, document type, signer count, ID status, urgency, and preferred appointment window.',
+    outcome: 'Prevents bad bookings and gives you quote details before texting back.',
+  },
+  {
+    id: 'booking_calendar',
+    group: 'Booking flow',
+    label: 'Set up free scheduling link',
+    platform: 'Google Calendar appointment schedule or Square Appointments Free',
+    cost: '$0 to start',
+    officialUrl: 'https://calendar.google.com/',
+    doNow: 'Create a simple appointment block for phone consults or local notary requests.',
+    outcome: 'Reduces back-and-forth and makes the business feel real without paid software.',
+  },
+  {
+    id: 'invoice_template',
+    group: 'Money flow',
+    label: 'Create free invoice workflow',
+    platform: 'Wave Starter or Google Docs/Sheets',
+    cost: '$0',
+    officialUrl: 'https://www.waveapps.com/pricing',
+    doNow: 'Create invoice template with act fee, travel fee, convenience/same-day line, payment status, and mileage.',
+    outcome: 'Makes every appointment trackable and keeps pricing consistent.',
+  },
+  {
+    id: 'brand_kit',
+    group: 'Marketing assets',
+    label: 'Build free mini brand kit',
+    platform: 'Canva Free',
+    cost: '$0',
+    officialUrl: 'https://www.canva.com/free/',
+    doNow: 'Make logo/header, Google profile cover, service flyer, review-request card, and one social template.',
+    outcome: 'Creates repeatable marketing without paying for design tools.',
+  },
+  {
+    id: 'social_profiles',
+    group: 'Marketing assets',
+    label: 'Claim basic social profiles',
+    platform: 'Facebook Page + LinkedIn + Nextdoor',
+    cost: '$0',
+    officialUrl: 'https://www.facebook.com/pages/create',
+    doNow: 'Use the same name, photo, service area, phone/email, and website link on each profile.',
+    outcome: 'Adds trust signals and referral paths without ad spend.',
+  },
+  {
+    id: 'review_pipeline',
+    group: 'Trust building',
+    label: 'Create review request system',
+    platform: 'Google Business Profile + text template',
+    cost: '$0',
+    officialUrl: 'https://support.google.com/business/answer/3474122',
+    doNow: 'Draft a short text message asking satisfied clients to leave a Google review after appointment completion.',
+    outcome: 'Turns first appointments into trust assets.',
+  },
+  {
+    id: 'free_crm',
+    group: 'Client tracking',
+    label: 'Start free client tracker',
+    platform: 'Google Sheets',
+    cost: '$0',
+    officialUrl: 'https://sheets.google.com/',
+    doNow: 'Track date, client, source, service type, fee, travel, miles, follow-up, review requested, and repeat potential.',
+    outcome: 'Shows which channels and services make money before buying CRM software.',
+  },
+];
 
 const checklistItems = [
   { key: 'coursePaid', label: 'Course paid', description: 'Keep the paid packet and course access organized in one place.', group: 'Study' },
@@ -334,6 +426,18 @@ function buildDefaultServiceLaneProgress() {
   }, {});
 }
 
+function buildDefaultFreeFoundationProgress() {
+  return FREE_FOUNDATION_STACK.reduce((acc, item, index) => {
+    acc[item.id] = {
+      status: index === 0 ? 'in_progress' : 'not_started',
+      notes: '',
+      nextStep: item.doNow,
+      touchedAt: '',
+    };
+    return acc;
+  }, {});
+}
+
 const defaultState = {
   activeSection: 'dashboard',
   activeModuleId: content.modules[0]?.id || '',
@@ -364,6 +468,7 @@ const defaultState = {
   postCoursePresetVersion: POST_COURSE_PRESET_VERSION,
   roadmapProgress: buildDefaultRoadmapProgress(),
   serviceLaneProgress: buildDefaultServiceLaneProgress(),
+  freeFoundationProgress: buildDefaultFreeFoundationProgress(),
   financeOverrides: {},
   financeViewMode: 'overview',
   businessPlanNotes: '',
@@ -376,6 +481,7 @@ let currentQuiz = null;
 function normalizeState(parsed) {
   const roadmapDefaults = buildDefaultRoadmapProgress();
   const laneDefaults = buildDefaultServiceLaneProgress();
+  const foundationDefaults = buildDefaultFreeFoundationProgress();
   const mergedRoadmap = Object.keys(roadmapDefaults).reduce((acc, phaseId) => {
     acc[phaseId] = {
       ...roadmapDefaults[phaseId],
@@ -390,6 +496,13 @@ function normalizeState(parsed) {
     };
     return acc;
   }, {});
+  const mergedFreeFoundation = Object.keys(foundationDefaults).reduce((acc, itemId) => {
+    acc[itemId] = {
+      ...foundationDefaults[itemId],
+      ...((parsed.freeFoundationProgress || {})[itemId] || {}),
+    };
+    return acc;
+  }, {});
 
   const normalized = {
     ...deepClone(defaultState),
@@ -401,6 +514,7 @@ function normalizeState(parsed) {
     quizHistory: Array.isArray(parsed.quizHistory) ? parsed.quizHistory : [],
     roadmapProgress: mergedRoadmap,
     serviceLaneProgress: mergedServiceLanes,
+    freeFoundationProgress: mergedFreeFoundation,
     financeOverrides: parsed.financeOverrides || {},
     exportPreferences: { includeNotes: true, format: 'markdown', ...(parsed.exportPreferences || {}) },
   };
@@ -981,8 +1095,13 @@ function businessPlanMarkdown() {
     '## Start-up business sequence',
     ...BUSINESS_STARTUP_STEPS.map((step, index) => `${index + 1}. ${step.label} — ${step.detail}`),
   ].join('\n');
+  const freeFoundationAddendum = [
+    '## Phase 2 free business foundation',
+    'Use the free stack first. Upgrade only after real inquiries, booked appointments, or repeat clients prove demand.',
+    ...FREE_FOUNDATION_STACK.map((item, index) => `${index + 1}. ${item.label} (${item.platform}, ${item.cost}) — ${item.doNow} Outcome: ${item.outcome}`),
+  ].join('\n');
   const ownerNotes = notes && state.exportPreferences?.includeNotes ? `\n\n## Owner working notes\n${notes}` : '';
-  return `${businessPlanContent.exportMarkdown || ''}\n\n${certificationAddendum}\n\n${startupAddendum}${overrideLines ? `\n\n${overrideLines}` : ''}${ownerNotes}`;
+  return `${businessPlanContent.exportMarkdown || ''}\n\n${certificationAddendum}\n\n${startupAddendum}\n\n${freeFoundationAddendum}${overrideLines ? `\n\n${overrideLines}` : ''}${ownerNotes}`;
 }
 
 function onePageFinancialSummaryMarkdown() {
@@ -1297,6 +1416,42 @@ function updateServiceLane(laneId, field, value) {
   saveState();
 }
 
+function freeFoundationState(itemId) {
+  return state.freeFoundationProgress?.[itemId] || buildDefaultFreeFoundationProgress()[itemId] || { status: 'not_started', notes: '', nextStep: '', touchedAt: '' };
+}
+
+function updateFreeFoundation(itemId, field, value) {
+  state.freeFoundationProgress ||= buildDefaultFreeFoundationProgress();
+  state.freeFoundationProgress[itemId] = {
+    ...freeFoundationState(itemId),
+    [field]: value,
+    touchedAt: new Date().toISOString(),
+  };
+  saveState();
+}
+
+function freeFoundationCompletion() {
+  const total = FREE_FOUNDATION_STACK.length;
+  const completed = FREE_FOUNDATION_STACK.filter((item) => freeFoundationState(item.id).status === 'completed').length;
+  const active = FREE_FOUNDATION_STACK.find((item) => ['in_progress', 'active'].includes(freeFoundationState(item.id).status))
+    || FREE_FOUNDATION_STACK.find((item) => freeFoundationState(item.id).status !== 'completed')
+    || FREE_FOUNDATION_STACK[0];
+  return { total, completed, percent: percent(completed, total), active };
+}
+
+function freeFoundationGroups() {
+  const groups = [];
+  FREE_FOUNDATION_STACK.forEach((item) => {
+    let group = groups.find((entry) => entry.label === item.group);
+    if (!group) {
+      group = { label: item.group, items: [] };
+      groups.push(group);
+    }
+    group.items.push(item);
+  });
+  return groups;
+}
+
 function phaseGateSatisfied(phaseId) {
   const gates = PHASE_CHECKLIST_GATE[phaseId] || [];
   return gates.every((key) => state.checklist[key]);
@@ -1558,6 +1713,7 @@ function renderDashboard() {
   const commissionFirst = Boolean(state.checklist.courseCompleted && state.checklist.examPassed);
   const filing = filingWarnings();
   const launchKit = launchKitCompletion();
+  const freeFoundation = freeFoundationCompletion();
 
   section.innerHTML = `
     <div class="page-header">
@@ -1766,12 +1922,17 @@ function renderDashboard() {
         <div class="stat-value">${escapeHtml(financeSummary().requiredCashNowLabel || '—')}</div>
         <p class="muted">Model cash before first paid appointment</p>
       </article>
-      <article class="mini-card">
-        <p class="eyebrow">Fixed overhead</p>
-        <div class="stat-value">${escapeHtml(financeSummary().monthlyFixedOverheadLabel || '—')}</div>
-        <p class="muted">Monthly carry cost</p>
-      </article>
-    </div>
+	      <article class="mini-card">
+	        <p class="eyebrow">Fixed overhead</p>
+	        <div class="stat-value">${escapeHtml(financeSummary().monthlyFixedOverheadLabel || '—')}</div>
+	        <p class="muted">Monthly carry cost</p>
+	      </article>
+	      <article class="mini-card">
+	        <p class="eyebrow">Phase 2 free setup</p>
+	        <div class="stat-value">${freeFoundation.completed}/${freeFoundation.total}</div>
+	        <p class="muted">Current: ${escapeHtml(freeFoundation.active?.label || 'Free platform stack')}</p>
+	      </article>
+	    </div>
 
     <div class="grid-2" style="margin-top:18px;">
       <article class="card">
@@ -1784,9 +1945,9 @@ function renderDashboard() {
       </article>
     </div>
 
-    <div class="grid-2" style="margin-top:18px;">
-      ${roadmapSummaryHtml()}
-      <article class="card">
+	    <div class="grid-2" style="margin-top:18px;">
+	      ${roadmapSummaryHtml()}
+	      <article class="card">
         <p class="eyebrow">Finance command center</p>
         <h3>${escapeHtml(financeSummary().currentProfitMove?.label || 'Use finance to separate required cash now from later expansion spend.')}</h3>
         <p><strong>Why:</strong> ${escapeHtml(financeSummary().currentProfitMove?.why || 'Margin improves when you spend in the right order.')}</p>
@@ -1800,8 +1961,34 @@ function renderDashboard() {
           <button class="secondary-button" id="dashboard-open-finance-btn">Open finance</button>
           <button class="ghost-button" id="dashboard-export-one-page-btn">Export one-page summary</button>
         </div>
-      </article>
-    </div>
+	      </article>
+	    </div>
+
+	    <div class="grid-2" style="margin-top:18px;">
+	      <article class="business-next-card">
+	        <p class="eyebrow">Phase 2 focus: free business foundation</p>
+	        <h3>Build the no-cost web + marketing setup before paying for tools.</h3>
+	        <p><strong>Do this now:</strong> ${escapeHtml(freeFoundation.active?.doNow || 'Create the free platform stack.')}</p>
+	        <p><strong>What it unlocks next:</strong> ${escapeHtml(freeFoundation.active?.outcome || 'A credible local launch without monthly software cost.')}</p>
+	        <div class="progress-track"><div class="progress-bar" style="width:${freeFoundation.percent}%"></div></div>
+	        <div class="toolbar-pill-row" style="margin-top:12px;">
+	          <span class="toolbar-chip">$0 platform plan</span>
+	          <span class="toolbar-chip">${freeFoundation.completed}/${freeFoundation.total} complete</span>
+	          <span class="toolbar-chip">${escapeHtml(freeFoundation.active?.platform || 'Google + free tools')}</span>
+	        </div>
+	        <div class="action-row" style="margin-top:14px;">
+	          <button class="button" id="dashboard-open-free-foundation-btn">Open free setup plan</button>
+	          ${freeFoundation.active?.officialUrl ? `<a class="ghost-button" href="${escapeHtml(freeFoundation.active.officialUrl)}" target="_blank" rel="noreferrer">Open free platform</a>` : ''}
+	        </div>
+	      </article>
+	      <article class="card">
+	        <p class="eyebrow">Free stack order</p>
+	        <ol class="ordered-list">
+	          ${FREE_FOUNDATION_STACK.slice(0, 5).map((item) => `<li><strong>${escapeHtml(item.label)}</strong> — ${escapeHtml(item.platform)}</li>`).join('')}
+	        </ol>
+	        <p class="muted">Default rule: only upgrade to paid tools after real inquiries or repeat appointments prove demand.</p>
+	      </article>
+	    </div>
 
     <div class="grid-2" style="margin-top:18px;">
       <article class="card">
@@ -1834,6 +2021,7 @@ function renderDashboard() {
   document.getElementById('open-roadmap-from-dashboard')?.addEventListener('click', () => setActiveSection('roadmap'));
   document.getElementById('open-finance-from-dashboard')?.addEventListener('click', () => setActiveSection('finance'));
   document.getElementById('dashboard-open-finance-btn')?.addEventListener('click', () => setActiveSection('finance'));
+  document.getElementById('dashboard-open-free-foundation-btn')?.addEventListener('click', () => setActiveSection('roadmap'));
   document.getElementById('dashboard-export-one-page-btn')?.addEventListener('click', () => {
     downloadTextFile('notary-os-one-page-financial-summary.md', onePageFinancialSummaryMarkdown(), 'text/markdown;charset=utf-8');
   });
@@ -2810,8 +2998,8 @@ function renderRoadmap() {
       </div>
     </div>
 
-    <div class="grid-2" style="margin-bottom:18px;">
-      <article class="phase-card focus-card">
+	    <div class="grid-2" style="margin-bottom:18px;">
+	      <article class="phase-card focus-card">
         <div class="phase-meta">
           <div>
             <p class="eyebrow">Current phase</p>
@@ -2849,11 +3037,74 @@ function renderRoadmap() {
             `;
           }).join('')}
         </div>
-      </article>
-    </div>
+	      </article>
+	    </div>
 
-    <div class="stack-block">
-      <div class="page-header" style="margin-bottom:14px;">
+	    <div class="stack-block" style="margin-bottom:18px;">
+	      <div class="page-header" style="margin-bottom:14px;">
+	        <div>
+	          <p class="eyebrow">Phase 2 free business foundation</p>
+	          <h2 style="font-size:2.1rem;">Set up web presence, marketing, booking, invoicing, and tracking for $0.</h2>
+	          <p class="muted">Use this before paid subscriptions. The goal is a credible public presence and repeatable client flow without monthly software cost.</p>
+	        </div>
+	        <div class="roadmap-controls">
+	          <span class="status-chip chip-active">${freeFoundationCompletion().completed}/${freeFoundationCompletion().total} complete</span>
+	          <span class="status-chip chip-in-progress">$0 setup stack</span>
+	        </div>
+	      </div>
+	      <div class="lane-group-stack">
+	        ${freeFoundationGroups().map((group) => `
+	          <section class="lane-group">
+	            <div class="lane-group-header">
+	              <div>
+	                <p class="eyebrow">Free foundation group</p>
+	                <h3>${escapeHtml(group.label)}</h3>
+	              </div>
+	            </div>
+	            <div class="lane-list">
+	              ${group.items.map((item) => {
+	                const saved = freeFoundationState(item.id);
+	                const meta = statusMeta(saved.status);
+	                return `
+	                  <details class="card lane-card" ${['active', 'in_progress'].includes(saved.status) ? 'open' : ''}>
+	                    <summary class="lane-summary">
+	                      <div>
+	                        <p class="eyebrow">${escapeHtml(item.platform)} · ${escapeHtml(item.cost)}</p>
+	                        <h3>${escapeHtml(item.label)}</h3>
+	                        <p class="muted">${escapeHtml(item.doNow)}</p>
+	                      </div>
+	                      <div class="lane-summary-meta">
+	                        <span class="status-chip ${meta.chipClass}">${meta.label}</span>
+	                      </div>
+	                    </summary>
+	                    <div class="lane-detail-grid">
+	                      <div>
+	                        <p><strong>Outcome:</strong> ${escapeHtml(item.outcome)}</p>
+	                        <p><strong>Cost rule:</strong> Stay free until demand is proven. Upgrade only when this saves time or increases booked appointments.</p>
+	                        ${item.officialUrl ? `<div class="action-row" style="margin-top:14px;"><a class="ghost-button" href="${escapeHtml(item.officialUrl)}" target="_blank" rel="noreferrer">Open free platform</a></div>` : ''}
+	                      </div>
+	                      <div>
+	                        <label for="free-status-${escapeHtml(item.id)}">Status</label>
+	                        <select class="status-select" id="free-status-${escapeHtml(item.id)}" data-free-foundation-status="${escapeHtml(item.id)}">
+	                          ${Object.entries(ROADMAP_STATUS_META).map(([key, status]) => `<option value="${key}" ${saved.status === key ? 'selected' : ''}>${escapeHtml(status.label)}</option>`).join('')}
+	                        </select>
+	                        <label for="free-next-${escapeHtml(item.id)}" style="margin-top:12px;">Next step</label>
+	                        <input id="free-next-${escapeHtml(item.id)}" type="text" data-free-foundation-next="${escapeHtml(item.id)}" value="${escapeHtml(saved.nextStep || '')}" />
+	                        <label for="free-note-${escapeHtml(item.id)}" style="margin-top:12px;">Notes</label>
+	                        <textarea id="free-note-${escapeHtml(item.id)}" data-free-foundation-note="${escapeHtml(item.id)}" placeholder="Link, login note, setup decision, or blocker.">${escapeHtml(saved.notes || '')}</textarea>
+	                      </div>
+	                    </div>
+	                  </details>
+	                `;
+	              }).join('')}
+	            </div>
+	          </section>
+	        `).join('')}
+	      </div>
+	    </div>
+
+	    <div class="stack-block">
+	      <div class="page-header" style="margin-bottom:14px;">
         <div>
           <p class="eyebrow">Revenue ladder</p>
           <h2 style="font-size:2.1rem;">Track service lanes without overwhelming the screen.</h2>
@@ -3055,12 +3306,24 @@ function renderRoadmap() {
   document.querySelectorAll('[data-roadmap-next]').forEach((input) => {
     input.addEventListener('input', () => updateRoadmapPhase(input.dataset.roadmapNext, 'nextStep', input.value));
   });
-  document.querySelectorAll('[data-roadmap-note]').forEach((input) => {
-    input.addEventListener('input', () => updateRoadmapPhase(input.dataset.roadmapNote, 'notes', input.value));
-  });
-  document.querySelectorAll('[data-lane-status]').forEach((input) => {
-    input.addEventListener('change', () => {
-      updateServiceLane(input.dataset.laneStatus, 'status', input.value);
+	  document.querySelectorAll('[data-roadmap-note]').forEach((input) => {
+	    input.addEventListener('input', () => updateRoadmapPhase(input.dataset.roadmapNote, 'notes', input.value));
+	  });
+	  document.querySelectorAll('[data-free-foundation-status]').forEach((input) => {
+	    input.addEventListener('change', () => {
+	      updateFreeFoundation(input.dataset.freeFoundationStatus, 'status', input.value);
+	      renderApp();
+	    });
+	  });
+	  document.querySelectorAll('[data-free-foundation-next]').forEach((input) => {
+	    input.addEventListener('input', () => updateFreeFoundation(input.dataset.freeFoundationNext, 'nextStep', input.value));
+	  });
+	  document.querySelectorAll('[data-free-foundation-note]').forEach((input) => {
+	    input.addEventListener('input', () => updateFreeFoundation(input.dataset.freeFoundationNote, 'notes', input.value));
+	  });
+	  document.querySelectorAll('[data-lane-status]').forEach((input) => {
+	    input.addEventListener('change', () => {
+	      updateServiceLane(input.dataset.laneStatus, 'status', input.value);
       renderApp();
     });
   });
